@@ -23,8 +23,8 @@ namespace JobShopSchedulingProblemCP
         public static void Main(String[] args)
         {
             Importer importer = new Importer();
-            importer.ImportInstance(@"C:\Users\tommi\Documents\GitHub\Scheduling24_25\Projektseminar\instance1.csv");
-            importer.ImportSetup(@"C:\Users\tommi\Documents\GitHub\Scheduling24_25\Projektseminar\instance1_setups.csv");
+            importer.ImportInstance(@"..\instance1.csv");
+            importer.ImportSetup(@"..\instance1_setups.csv");
             Problem problem = importer.GenerateProblem();
 
             Console.WriteLine("Problem imported, Press any key to continue:");
@@ -40,7 +40,7 @@ namespace JobShopSchedulingProblemCP
             
             OpeningHeuristic.Giffler_Thompson giffler_Thompson = new Giffler_Thompson();
             Problem enhancedProblem = giffler_Thompson.InitialSolution(problem);
-            enhancedProblem.ProblemAsDiagramm(@$"C:\Users\tommi\Documents\GitHub\Scheduling24_25\Projektseminar\diagrammInitial.html");
+            enhancedProblem.ProblemAsDiagramm(@$"..\diagrammInitial.html");
 
 
             Console.WriteLine("Initial solution created, Press any key to continue:");
@@ -62,7 +62,7 @@ namespace JobShopSchedulingProblemCP
                 {
                     int oldMakespan = enhancedProblem.CalculateMakespan(); 
                     enhancedProblem = local_search.DoLocalSearch(false, enhancedProblem, "N3");
-                    enhancedProblem.ProblemAsDiagramm(@$"C:\Users\tommi\Documents\GitHub\Scheduling24_25\Projektseminar\diagrammLocalSearchIteration{i}.html");
+                    enhancedProblem.ProblemAsDiagramm(@$"..\diagrammLocalSearchIteration{i}.html");
 
                     Console.WriteLine($"Iteration {i}");
 
@@ -77,7 +77,7 @@ namespace JobShopSchedulingProblemCP
             /*SimulatedAnnealing simAnneal = new SimulatedAnnealing(enhancedProblem, 100, 0.88, 10);
             enhancedProblem = simAnneal.DoSimulatedAnnealing();*/
 
-            enhancedProblem.ProblemAsDiagramm(@$"C:\Users\tommi\Documents\GitHub\Scheduling24_25\Projektseminar\diagramm.html");
+            enhancedProblem.ProblemAsDiagramm(@$"..\diagramm.html");
 
             stopwatch.Stop();
             Console.WriteLine($"Local Search ran {stopwatch.Elapsed.Minutes} Minutes {stopwatch.Elapsed.Seconds} Seconds {stopwatch.Elapsed.Milliseconds} Milliseconds");

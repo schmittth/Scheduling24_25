@@ -151,7 +151,7 @@ namespace JobShopSchedulingProblemCP.Instance
         //Problem als Diagramm in den angegebenen Pfad schreiben
         public void ProblemAsDiagramm(string filepath)
         {
-            File.Copy(@"C:\Users\tommi\Documents\GitHub\Scheduling24_25\Projektseminar\template.html", filepath, true);
+            File.Copy(@"..\template.html", filepath, true);
 
             using (StreamWriter sw = File.AppendText(filepath))
             {
