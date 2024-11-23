@@ -40,7 +40,7 @@ namespace Projektseminar.MetaHeuristic
                 for (int i = 0; i < Iterations; i++)
                 {
                     Console.WriteLine($"Current Iteration Simulated Annealing {i}");
-                    CurrentProblem.ProblemAsDiagramm(@$"G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\diagrammAnnealingTemp{Temperature}Iteration{i}.html");
+                    CurrentProblem.ProblemAsDiagramm(@$"C:\Users\tommi\Documents\GitHub\Scheduling24_25\Projektseminar\diagrammAnnealingTemp{Temperature}Iteration{i}.html");
 
                     Random random = new Random();
 

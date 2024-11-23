@@ -5,7 +5,8 @@ using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Text.Json.Serialization;
+using System.Text.
+.Serialization;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic.FileIO;
 using static System.Reflection.Metadata.BlobBuilder;
@@ -103,7 +104,7 @@ namespace JobShopSchedulingProblemCP.Instance
         //Problem als Diagramm in den angegebenen Pfad schreiben
         public void ProblemAsDiagramm(string filepath)
         {
-            File.Copy(@"G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\template.html", filepath, true);
+            File.Copy(@"C:\Users\tommi\Documents\GitHub\Scheduling24_25\Projektseminar\template.html", filepath, true);
 
             using (StreamWriter sw = File.AppendText(filepath))
             {
