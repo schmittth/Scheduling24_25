@@ -8,7 +8,7 @@ using Google.OrTools.Sat;
 using JobShopSchedulingProblemCP.OpeningHeuristic;
 using JobShopSchedulingProblemCP.Instance;
 using System.Diagnostics;
-using scheduling24-25-main.MetaHeuristic;
+using Projektseminar.MetaHeuristic;
 
 namespace JobShopSchedulingProblemCP
 {
@@ -23,16 +23,16 @@ namespace JobShopSchedulingProblemCP
         public static void Main(String[] args)
         {
             Importer importer = new Importer();
-            importer.ImportInstance(@"C:\Users\tommi\Documents\GitHub\Scheduling24_25\scheduling24-25-main\instance1.csv");
-            importer.ImportSetup(@"C:\Users\tommi\Documents\GitHub\Scheduling24_25\scheduling24-25-main\instance1_setups.csv");
+            importer.ImportInstance(@"C:\Users\tommi\Documents\GitHub\Scheduling24_25\Projektseminar\instance1.csv");
+            importer.ImportSetup(@"C:\Users\tommi\Documents\GitHub\Scheduling24_25\Projektseminar\instance1_setups.csv");
             Problem problem = importer.GenerateProblem();
 
             Console.WriteLine("Problem imported, Press any key to continue:");
             Console.ReadKey();
             
             //Instance.Problem newProblem = new Instance.Problem(1);
-            //newProblem.importProblem(@"G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\scheduling24-25-main\instance2.csv");
-            //newProblem.ImportSetup(@"G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\scheduling24-25-main\instance2_setups.csv");
+            //newProblem.importProblem(@"G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\instance2.csv");
+            //newProblem.ImportSetup(@"G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\instance2_setups.csv");
 
             //ORToolsSolver.GoogleOR newSolver = new ORToolsSolver.GoogleOR();
             //newSolver.SolveProblem(problem);
@@ -40,7 +40,7 @@ namespace JobShopSchedulingProblemCP
             
             OpeningHeuristic.Giffler_Thompson giffler_Thompson = new Giffler_Thompson();
             Problem enhancedProblem = giffler_Thompson.InitialSolution(problem);
-            enhancedProblem.ProblemAsDiagramm(@$"C:\Users\tommi\Documents\GitHub\Scheduling24_25\scheduling24-25-main\diagrammInitial.html");
+            enhancedProblem.ProblemAsDiagramm(@$"C:\Users\tommi\Documents\GitHub\Scheduling24_25\Projektseminar\diagrammInitial.html");
 
 
             Console.WriteLine("Initial solution created, Press any key to continue:");
@@ -62,7 +62,7 @@ namespace JobShopSchedulingProblemCP
                 {
                     int oldMakespan = enhancedProblem.CalculateMakespan(); 
                     enhancedProblem = local_search.DoLocalSearch(false, enhancedProblem, "N3");
-                    enhancedProblem.ProblemAsDiagramm(@$"C:\Users\tommi\Documents\GitHub\Scheduling24_25\scheduling24-25-main\diagrammLocalSearchIteration{i}.html");
+                    enhancedProblem.ProblemAsDiagramm(@$"C:\Users\tommi\Documents\GitHub\Scheduling24_25\Projektseminar\diagrammLocalSearchIteration{i}.html");
 
                     Console.WriteLine($"Iteration {i}");
 
@@ -77,7 +77,7 @@ namespace JobShopSchedulingProblemCP
             /*SimulatedAnnealing simAnneal = new SimulatedAnnealing(enhancedProblem, 100, 0.88, 10);
             enhancedProblem = simAnneal.DoSimulatedAnnealing();*/
 
-            enhancedProblem.ProblemAsDiagramm(@$"C:\Users\tommi\Documents\GitHub\Scheduling24_25\scheduling24-25-main\diagramm.html");
+            enhancedProblem.ProblemAsDiagramm(@$"C:\Users\tommi\Documents\GitHub\Scheduling24_25\Projektseminar\diagramm.html");
 
             stopwatch.Stop();
             Console.WriteLine($"Local Search ran {stopwatch.Elapsed.Minutes} Minutes {stopwatch.Elapsed.Seconds} Seconds {stopwatch.Elapsed.Milliseconds} Milliseconds");
