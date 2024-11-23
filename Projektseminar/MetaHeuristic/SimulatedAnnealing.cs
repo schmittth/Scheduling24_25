@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Projektseminar.MetaHeuristic
+namespace scheduling24-25-main.MetaHeuristic
 {
     internal class SimulatedAnnealing
     {
@@ -40,7 +40,7 @@ namespace Projektseminar.MetaHeuristic
                 for (int i = 0; i < Iterations; i++)
                 {
                     Console.WriteLine($"Current Iteration Simulated Annealing {i}");
-                    CurrentProblem.ProblemAsDiagramm(@$"G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\diagrammAnnealingTemp{Temperature}Iteration{i}.html");
+                    CurrentProblem.ProblemAsDiagramm(@$"G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\scheduling24-25-main\diagrammAnnealingTemp{Temperature}Iteration{i}.html");
 
                     Random random = new Random();
 

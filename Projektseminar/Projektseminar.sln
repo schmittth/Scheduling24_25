@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projektseminar", "Projektseminar.csproj", "{07F75C3A-B1A9-4190-B8CE-A5334AFF7617}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "scheduling24-25-main", "scheduling24-25-main.csproj", "{07F75C3A-B1A9-4190-B8CE-A5334AFF7617}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
