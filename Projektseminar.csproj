@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <Configurations>Debug;Release;Fast</Configurations>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="AssignedTask.cs" />
+    <Compile Include="Dialog.cs" />
+    <Compile Include="Importer.cs" />
+    <Compile Include="LocalSearch\LocalSearch.cs" />
+    <Compile Include="MetaHeuristic\SimulatedAnnealing.cs" />
+    <Compile Include="OpeningHeuristic\Giffler-Thompson.cs" />
+    <Compile Include="Instance\Machine.cs" />
+    <Compile Include="ORToolsSolver\GoogleOR.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="Instance\Job.cs" />
+    <Compile Include="Instance\Problem.cs" />
+    <Compile Include="Instance\Task.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.OrTools" Version="9.10.*" />
+  </ItemGroup>
+
+</Project>
