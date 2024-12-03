@@ -1,0 +1,46 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+  google.charts.load("current", {packages:["timeline"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+
+    var container = document.getElementById('example3.1');
+    var chart = new google.visualization.Timeline(container);
+    var dataTable = new google.visualization.DataTable();
+	dataTable.addColumn({ type: 'string', id: 'MachineNumber' });
+    dataTable.addColumn({ type: 'string', id: 'JobTask' });
+    dataTable.addColumn({ type: 'date', id: 'Start' });
+    dataTable.addColumn({ type: 'date', id: 'End' });
+	dataTable.addColumn({ type: 'string', id: 'style', role: 'style' });
+	dataTable.addRows([
+[ 'Machine 2' , '27' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 27), '#4D81B2' ],
+[ 'Machine 2' , '76' , new Date(0, 0, 0, 0, 0, 42) , new Date(0, 0, 0, 0, 0, 118), '#F2FAD6' ],
+[ 'Machine 2' , '15' , new Date(0, 0, 0, 0, 0, 27) , new Date(0, 0, 0, 0, 0, 42), '#111557' ],
+[ 'Machine 2' , '25' , new Date(0, 0, 0, 0, 0, 136) , new Date(0, 0, 0, 0, 0, 161), '#4D8F7A' ],
+[ 'Machine 2' , '18' , new Date(0, 0, 0, 0, 0, 118) , new Date(0, 0, 0, 0, 0, 136), '#111557' ],
+[ 'Machine 2' , '41' , new Date(0, 0, 0, 0, 0, 369) , new Date(0, 0, 0, 0, 0, 410), '#A8AF6E' ],
+[ 'Machine 2' , '10' , new Date(0, 0, 0, 0, 0, 359) , new Date(0, 0, 0, 0, 0, 369), '#111557' ],
+[ 'Machine 1' , '94' , new Date(0, 0, 0, 0, 0, 27) , new Date(0, 0, 0, 0, 0, 121), '#3D0345' ],
+[ 'Machine 1' , '56' , new Date(0, 0, 0, 0, 0, 172) , new Date(0, 0, 0, 0, 0, 228), '#30E4BB' ],
+[ 'Machine 1' , '15' , new Date(0, 0, 0, 0, 0, 157) , new Date(0, 0, 0, 0, 0, 172), '#111557' ],
+[ 'Machine 1' , '91' , new Date(0, 0, 0, 0, 0, 246) , new Date(0, 0, 0, 0, 0, 337), '#7E7847' ],
+[ 'Machine 1' , '18' , new Date(0, 0, 0, 0, 0, 228) , new Date(0, 0, 0, 0, 0, 246), '#111557' ],
+[ 'Machine 1' , '72' , new Date(0, 0, 0, 0, 0, 392) , new Date(0, 0, 0, 0, 0, 464), '#CD13A2' ],
+[ 'Machine 1' , '14' , new Date(0, 0, 0, 0, 0, 378) , new Date(0, 0, 0, 0, 0, 392), '#111557' ],
+[ 'Machine 0' , '42' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 42), '#80C3A5' ],
+[ 'Machine 0' , '54' , new Date(0, 0, 0, 0, 0, 118) , new Date(0, 0, 0, 0, 0, 172), '#AADCF8' ],
+[ 'Machine 0' , '33' , new Date(0, 0, 0, 0, 0, 85) , new Date(0, 0, 0, 0, 0, 118), '#111557' ],
+[ 'Machine 0' , '82' , new Date(0, 0, 0, 0, 0, 198) , new Date(0, 0, 0, 0, 0, 280), '#CF42A0' ],
+[ 'Machine 0' , '26' , new Date(0, 0, 0, 0, 0, 172) , new Date(0, 0, 0, 0, 0, 198), '#111557' ],
+[ 'Machine 0' , '77' , new Date(0, 0, 0, 0, 0, 292) , new Date(0, 0, 0, 0, 0, 369), '#091B11' ],
+[ 'Machine 0' , '12' , new Date(0, 0, 0, 0, 0, 280) , new Date(0, 0, 0, 0, 0, 292), '#111557' ],
+[ 'Machine 0' , '12' , new Date(0, 0, 0, 0, 0, 380) , new Date(0, 0, 0, 0, 0, 392), '#A1F78F' ],
+[ 'Machine 0' , '11' , new Date(0, 0, 0, 0, 0, 369) , new Date(0, 0, 0, 0, 0, 380), '#111557' ],
+]);
+
+chart.draw(dataTable);
+}
+</script >
+
+<div id = "example3.1" style = "height: 1000px;" ></ div >

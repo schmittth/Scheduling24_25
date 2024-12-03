@@ -1,0 +1,16 @@
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\Projektseminar.exe
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\Projektseminar.dll
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\Projektseminar.deps.json
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\Projektseminar.runtimeconfig.json
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\Projektseminar.pdb
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\Google.OrTools.dll
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\Google.Protobuf.dll
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\runtimes\linux-arm64\native\google-ortools-native.so
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\runtimes\linux-arm64\native\libortools.so.9
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\runtimes\linux-x64\native\google-ortools-native.so
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\runtimes\linux-x64\native\libortools.so.9
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\runtimes\osx-arm64\native\google-ortools-native.dylib
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\runtimes\osx-arm64\native\libortools.9.dylib
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\runtimes\osx-x64\native\google-ortools-native.dylib
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\runtimes\osx-x64\native\libortools.9.dylib
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\bin\Release\net8.0\publish\runtimes\win-x64\native\google-ortools-native.dll

@@ -1,0 +1,5 @@
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\obj\Fast\net8.0\Projektseminar.csproj.AssemblyReference.cache
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\obj\Fast\net8.0\Projektseminar.GeneratedMSBuildEditorConfig.editorconfig
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\obj\Fast\net8.0\Projektseminar.AssemblyInfoInputs.cache
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\obj\Fast\net8.0\Projektseminar.AssemblyInfo.cs
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\obj\Fast\net8.0\Projektseminar.csproj.CoreCompileInputs.cache
