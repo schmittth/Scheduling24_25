@@ -118,7 +118,7 @@ namespace Projektseminar.ORToolsSolver
                     instance.SetRelatedTasks(false);
                     instance.CalculateSetups(false);
 
-                    instance.ProblemAsDiagramm(@"G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\Or.html");
+                    instance.ProblemAsDiagramm(@"..\Or.html");
 
             }
         }
