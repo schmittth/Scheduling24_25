@@ -157,11 +157,11 @@ namespace Projektseminar.Instance
                         var random = new Random();
                         var color = String.Format("#{0:X6}", random.Next(0x1000000));
 
-                        sw.WriteLine($"[ 'Machine {machine.Id}' , '{task.Duration}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End}), '{color}' ],");
+                        sw.WriteLine($"[ 'Machine {machine.Id}' , '{task.Job.Id} {task.Id}', '{task.Duration}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End}), '{color}' ],");
 
                         if (task.Setup != 0)
                         {
-                            sw.WriteLine($"[ 'Machine {machine.Id}' , '{task.Setup}' , new Date(0, 0, 0, 0, 0, {task.Start - task.Setup}) , new Date(0, 0, 0, 0, 0, {task.Start}), '#111557' ],");
+                            sw.WriteLine($"[ 'Machine {machine.Id}' , 'Setup',  '{task.Setup}' , new Date(0, 0, 0, 0, 0, {task.Start - task.Setup}) , new Date(0, 0, 0, 0, 0, {task.Start}), '#111557' ],");
                         }
                     }
                 }

@@ -8,35 +8,36 @@
     var container = document.getElementById('example3.1');
     var chart = new google.visualization.Timeline(container);
     var dataTable = new google.visualization.DataTable();
-	dataTable.addColumn({ type: 'string', id: 'MachineNumber' });
+	  dataTable.addColumn({ type: 'string', id: 'MachineNumber' });
     dataTable.addColumn({ type: 'string', id: 'JobTask' });
+    dataTable.addColumn({ type: 'string', role: 'tooltip' });
     dataTable.addColumn({ type: 'date', id: 'Start' });
     dataTable.addColumn({ type: 'date', id: 'End' });
-	dataTable.addColumn({ type: 'string', id: 'style', role: 'style' });
-	dataTable.addRows([
-[ 'Machine 2' , '42' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 42), '#F0CF37' ],
-[ 'Machine 2' , '54' , new Date(0, 0, 0, 0, 0, 118) , new Date(0, 0, 0, 0, 0, 172), '#F9568F' ],
-[ 'Machine 2' , '33' , new Date(0, 0, 0, 0, 0, 85) , new Date(0, 0, 0, 0, 0, 118), '#111557' ],
-[ 'Machine 2' , '12' , new Date(0, 0, 0, 0, 0, 192) , new Date(0, 0, 0, 0, 0, 204), '#ADE593' ],
-[ 'Machine 2' , '20' , new Date(0, 0, 0, 0, 0, 172) , new Date(0, 0, 0, 0, 0, 192), '#111557' ],
-[ 'Machine 2' , '77' , new Date(0, 0, 0, 0, 0, 242) , new Date(0, 0, 0, 0, 0, 319), '#7DCDAE' ],
-[ 'Machine 2' , '38' , new Date(0, 0, 0, 0, 0, 204) , new Date(0, 0, 0, 0, 0, 242), '#111557' ],
-[ 'Machine 2' , '82' , new Date(0, 0, 0, 0, 0, 340) , new Date(0, 0, 0, 0, 0, 422), '#20DC3D' ],
-[ 'Machine 2' , '21' , new Date(0, 0, 0, 0, 0, 319) , new Date(0, 0, 0, 0, 0, 340), '#111557' ],
-[ 'Machine 1' , '94' , new Date(0, 0, 0, 0, 0, 27) , new Date(0, 0, 0, 0, 0, 121), '#78C67F' ],
-[ 'Machine 1' , '91' , new Date(0, 0, 0, 0, 0, 161) , new Date(0, 0, 0, 0, 0, 252), '#731DF8' ],
-[ 'Machine 1' , '38' , new Date(0, 0, 0, 0, 0, 123) , new Date(0, 0, 0, 0, 0, 161), '#111557' ],
-[ 'Machine 1' , '72' , new Date(0, 0, 0, 0, 0, 266) , new Date(0, 0, 0, 0, 0, 338), '#02549B' ],
-[ 'Machine 1' , '14' , new Date(0, 0, 0, 0, 0, 252) , new Date(0, 0, 0, 0, 0, 266), '#111557' ],
-[ 'Machine 1' , '56' , new Date(0, 0, 0, 0, 0, 367) , new Date(0, 0, 0, 0, 0, 423), '#DD1D5F' ],
-[ 'Machine 1' , '29' , new Date(0, 0, 0, 0, 0, 338) , new Date(0, 0, 0, 0, 0, 367), '#111557' ],
-[ 'Machine 0' , '27' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 27), '#9D0EA8' ],
-[ 'Machine 0' , '76' , new Date(0, 0, 0, 0, 0, 42) , new Date(0, 0, 0, 0, 0, 118), '#0AA783' ],
-[ 'Machine 0' , '15' , new Date(0, 0, 0, 0, 0, 27) , new Date(0, 0, 0, 0, 0, 42), '#111557' ],
-[ 'Machine 0' , '25' , new Date(0, 0, 0, 0, 0, 136) , new Date(0, 0, 0, 0, 0, 161), '#DA4D68' ],
-[ 'Machine 0' , '18' , new Date(0, 0, 0, 0, 0, 118) , new Date(0, 0, 0, 0, 0, 136), '#111557' ],
-[ 'Machine 0' , '41' , new Date(0, 0, 0, 0, 0, 319) , new Date(0, 0, 0, 0, 0, 360), '#83DC7F' ],
-[ 'Machine 0' , '10' , new Date(0, 0, 0, 0, 0, 309) , new Date(0, 0, 0, 0, 0, 319), '#111557' ],
+	  dataTable.addColumn({ type: 'string', id: 'style', role: 'style' });
+	  dataTable.addRows([
+[ 'Machine 2' , '4 0', '42' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 42), '#C266FA' ],
+[ 'Machine 2' , '1 1', '54' , new Date(0, 0, 0, 0, 0, 118) , new Date(0, 0, 0, 0, 0, 172), '#39D34F' ],
+[ 'Machine 2' , 'Setup',  '33' , new Date(0, 0, 0, 0, 0, 85) , new Date(0, 0, 0, 0, 0, 118), '#111557' ],
+[ 'Machine 2' , '0 0', '12' , new Date(0, 0, 0, 0, 0, 192) , new Date(0, 0, 0, 0, 0, 204), '#32201D' ],
+[ 'Machine 2' , 'Setup',  '20' , new Date(0, 0, 0, 0, 0, 172) , new Date(0, 0, 0, 0, 0, 192), '#111557' ],
+[ 'Machine 2' , '3 0', '77' , new Date(0, 0, 0, 0, 0, 242) , new Date(0, 0, 0, 0, 0, 319), '#BE96EE' ],
+[ 'Machine 2' , 'Setup',  '38' , new Date(0, 0, 0, 0, 0, 204) , new Date(0, 0, 0, 0, 0, 242), '#111557' ],
+[ 'Machine 2' , '2 2', '82' , new Date(0, 0, 0, 0, 0, 340) , new Date(0, 0, 0, 0, 0, 422), '#F253EA' ],
+[ 'Machine 2' , 'Setup',  '21' , new Date(0, 0, 0, 0, 0, 319) , new Date(0, 0, 0, 0, 0, 340), '#111557' ],
+[ 'Machine 1' , '2 1', '94' , new Date(0, 0, 0, 0, 0, 27) , new Date(0, 0, 0, 0, 0, 121), '#0E66AC' ],
+[ 'Machine 1' , '1 2', '56' , new Date(0, 0, 0, 0, 0, 172) , new Date(0, 0, 0, 0, 0, 228), '#6CC3F8' ],
+[ 'Machine 1' , 'Setup',  '15' , new Date(0, 0, 0, 0, 0, 157) , new Date(0, 0, 0, 0, 0, 172), '#111557' ],
+[ 'Machine 1' , '4 2', '91' , new Date(0, 0, 0, 0, 0, 246) , new Date(0, 0, 0, 0, 0, 337), '#58B05E' ],
+[ 'Machine 1' , 'Setup',  '18' , new Date(0, 0, 0, 0, 0, 228) , new Date(0, 0, 0, 0, 0, 246), '#111557' ],
+[ 'Machine 1' , '0 1', '72' , new Date(0, 0, 0, 0, 0, 351) , new Date(0, 0, 0, 0, 0, 423), '#1E0331' ],
+[ 'Machine 1' , 'Setup',  '14' , new Date(0, 0, 0, 0, 0, 337) , new Date(0, 0, 0, 0, 0, 351), '#111557' ],
+[ 'Machine 0' , '2 0', '27' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 27), '#F913C8' ],
+[ 'Machine 0' , '1 0', '76' , new Date(0, 0, 0, 0, 0, 42) , new Date(0, 0, 0, 0, 0, 118), '#AFBD5F' ],
+[ 'Machine 0' , 'Setup',  '15' , new Date(0, 0, 0, 0, 0, 27) , new Date(0, 0, 0, 0, 0, 42), '#111557' ],
+[ 'Machine 0' , '4 1', '25' , new Date(0, 0, 0, 0, 0, 136) , new Date(0, 0, 0, 0, 0, 161), '#ECA846' ],
+[ 'Machine 0' , 'Setup',  '18' , new Date(0, 0, 0, 0, 0, 118) , new Date(0, 0, 0, 0, 0, 136), '#111557' ],
+[ 'Machine 0' , '3 1', '41' , new Date(0, 0, 0, 0, 0, 319) , new Date(0, 0, 0, 0, 0, 360), '#A687D3' ],
+[ 'Machine 0' , 'Setup',  '10' , new Date(0, 0, 0, 0, 0, 309) , new Date(0, 0, 0, 0, 0, 319), '#111557' ],
 ]);
 
 chart.draw(dataTable);
