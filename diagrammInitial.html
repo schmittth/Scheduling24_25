@@ -8,12 +8,12 @@
     var container = document.getElementById('example3.1');
     var chart = new google.visualization.Timeline(container);
     var dataTable = new google.visualization.DataTable();
-	dataTable.addColumn({ type: 'string', id: 'MachineNumber' });
+	  dataTable.addColumn({ type: 'string', id: 'MachineNumber' });
     dataTable.addColumn({ type: 'string', id: 'JobTask' });
     dataTable.addColumn({ type: 'date', id: 'Start' });
     dataTable.addColumn({ type: 'date', id: 'End' });
-	dataTable.addColumn({ type: 'string', id: 'style', role: 'style' });
-	dataTable.addRows([
+	  dataTable.addColumn({ type: 'string', id: 'style', role: 'style' });
+	  dataTable.addRows([
 [ 'Machine 0' , '51' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 51), '#BE546F' ],
 [ 'Machine 0' , '52' , new Date(0, 0, 0, 0, 0, 101) , new Date(0, 0, 0, 0, 0, 153), '#05D9A0' ],
 [ 'Machine 0' , '50' , new Date(0, 0, 0, 0, 0, 51) , new Date(0, 0, 0, 0, 0, 101), '#111557' ],
