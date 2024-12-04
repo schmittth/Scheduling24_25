@@ -1,0 +1,31 @@
+N3 ohne ConcurrentDictionary
+
+Run 1: 35.333
+Run 2: 35.667
+Run 3: 35.159
+
+N3 mit ConcurrentDictionary und ParallelMode = true
+
+Run 1: 38.288
+Run 2: 38.262
+Run 3: 37.860
+
+N3 mit ConcurrentDictionary und ParallelMode = false --> besser
+
+Run 1: 35.817
+Run 2: 35.123
+Run 3: 36.516
+
+N3 mit ParallelMode = false & Swap Tasks = false
+
+Run 1: 35.817
+Run 2: 35.123
+Run 3: 36.516
+
+N3 mit ParallelMode = false & Swap Tasks = true
+
+Run 1: 60.000 +
+
+N3 mit ParallelMode = false & Related + Setups = false & Release + Tail = true
+
+Run 1: 35.781
