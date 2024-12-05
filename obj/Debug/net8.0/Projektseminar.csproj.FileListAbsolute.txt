@@ -86,3 +86,4 @@ C:\Users\tommi\Documents\GitHub\Scheduling24_25\obj\Debug\net8.0\refint\Projekts
 C:\Users\tommi\Documents\GitHub\Scheduling24_25\obj\Debug\net8.0\Projektseminar.pdb
 C:\Users\tommi\Documents\GitHub\Scheduling24_25\obj\Debug\net8.0\Projektseminar.genruntimeconfig.cache
 C:\Users\tommi\Documents\GitHub\Scheduling24_25\obj\Debug\net8.0\ref\Projektseminar.dll
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\obj\Debug\net8.0\Projektseminar.sourcelink.json

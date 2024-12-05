@@ -43,6 +43,11 @@ namespace Projektseminar
                     allLines.Add(id, line);
                 }
 
+                for (int m = 0; m < allLines[0][1]; m++)
+                {
+                    machines.Add(m);
+                }
+
                 for (int i = 0; i < allLines[0][0]; i++)
                 {
                     jobs[i] = new List<Tuple<int, int>>();
@@ -51,11 +56,6 @@ namespace Projektseminar
                     {
                         tasks[Tuple.Create(jobs[i].Count, i)] = Tuple.Create(allLines[i + 1][j + 1], (allLines[i + 1][j] - 1));
                         jobs[i].Add(Tuple.Create(jobs[i].Count, i));
-
-                        if (!machines.Contains(allLines[i + 1][j] - 1))
-                        {
-                            machines.Add(allLines[i + 1][j] - 1);
-                        }
                     }
 
                     for (int k = 0; k < allLines[0][0]; k++)

@@ -1,6 +1,6 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Projektseminar.Instance
 {
@@ -92,7 +92,7 @@ namespace Projektseminar.Instance
 
             Setups = existingProblem.Setups;
 
-            SetRelatedTasks(false);
+            SetRelatedTasks();
 
             /*Performance*/
             //copyWatch.Stop();
@@ -166,7 +166,7 @@ namespace Projektseminar.Instance
                     }
                 }
                 sw.WriteLine("]);");
-                sw.WriteLine("");               
+                sw.WriteLine("");
                 sw.WriteLine("chart.draw(dataTable);");
                 sw.WriteLine("}");
                 sw.WriteLine("</script >");
@@ -194,7 +194,7 @@ namespace Projektseminar.Instance
         }
 
         //Tausche zwei Tasks auf einer Maschine
-        public void SwapTasks(Task task1, Task task2, Machine machine, bool parallelMode)
+        public void SwapTasks(Task task1, Task task2, Machine machine)
         {
             int index1 = Jobs[task1.Job.Id].Tasks[task1.Id].Position;
             int index2 = Jobs[task2.Job.Id].Tasks[task2.Id].Position;
@@ -209,44 +209,37 @@ namespace Projektseminar.Instance
                 this.SetRelatedTasks, this.CalculateSetups
             );*/
 
-            SetRelatedTasks(parallelMode);
-            CalculateSetups(parallelMode);
-
-            if (parallelMode)
-            {
-                Parallel.Invoke(
-                  CalculateReleases, CalculateTail
-                );
-            }
-            else
-            {
+            SetRelatedTasks();
+            CalculateSetups();
                 CalculateReleases();
                 CalculateTail();
-            }
+            
         }
 
         //Gebe eine Liste von allen kritischen Tasks in einem Problem zurück
-        public List<Task> GetCriticalTasks()
+        public Dictionary<Machine, List<Task>> GetCriticalTasks()
         {
             /*Performance*/
             //Stopwatch critWatch = new Stopwatch();
             //critWatch.Start();
 
-            List<Task> critPath = new List<Task>();
+            Dictionary<Machine,List<Task>> critTasks = new Dictionary<Machine, List<Task>>();
             int makespan = CalculateMakespan();
 
-            foreach (Machine machine in machines)
+            for (int j = 0; j < machines.Count(); j++)
             {
-                foreach (Task task in machine.Schedule)
+                critTasks.Add(machines[j],new List<Task>());
+                for (int i = 0; i < machines[j].Schedule.Count; i++ )
                 {
+                    Task task = machines[j].Schedule[i];
                     if (task.Release + task.Tail == makespan)
                     {
-                        critPath.Add(task);
+                        critTasks[machines[j]].Add(task);
                         //Console.WriteLine($"INFORMATION:Task {task.Id} in Job {task.Job.Id} is critical");
                     }
                 }
             }
-            return critPath;
+            return critTasks;
 
             /*Performance*/
             //critWatch.Stop();
@@ -254,135 +247,67 @@ namespace Projektseminar.Instance
         }
 
         //Setze alle Vorgänger und Nachfolger in einem Problem neu
-        public void SetRelatedTasks(bool parallelMode)
+        public void SetRelatedTasks()
         {
             /*Performance*/
             //Stopwatch relatedWatch = new Stopwatch();
             //relatedWatch.Start();
 
-            switch (parallelMode)
+            foreach (Job job in jobs)
             {
-                case true:
-                    Parallel.ForEach(Jobs, job =>
+                foreach (Task task in job.Tasks)
+                {
+                    if (task.Id - 1 >= 0)
                     {
-                        Parallel.ForEach(job.Tasks, task =>
-                        {
-                            if (task.Id - 1 >= 0)
-                            {
-                                task.preJobTask = job.Tasks[task.Id - 1];
-                                //Console.WriteLine($"RESULT:Job{job.Id}_Task{task.Id} assigned preJobTask Job{job.Id}_Task{task.preJobTask.Id}");
-                            }
-                            else
-                            {
-                                //Console.WriteLine($"INFORMATION:Couldn't assign preJobTask to Job_{job.Id} Task_{task.Id} Task has no Predecessor in his Job");
-                                task.preJobTask = null;
-                            }
-
-                            if (task.Id + 1 < job.Tasks.Count)
-                            {
-                                task.sucJobTask = job.Tasks[task.Id + 1];
-                                //Console.WriteLine($"RESULT:Job{job.Id}_Task{task.Id} assigned sucJobTask Job{job.Id}_Task{task.sucJobTask.Id}");
-                            }
-                            else
-                            {
-                                //Console.WriteLine($"INFORMATION:Couldn't assign sucJobTask to Job{job.Id}_Task{task.Id} has no Successor in his Job");
-                                task.sucJobTask = null;
-                            }
-                        });
-                    });
-
-                    Parallel.ForEach(Machines, machine =>
+                        task.preJobTask = job.Tasks[task.Id - 1];
+                        //Console.WriteLine($"RESULT:Job{job.Id}_Task{task.Id} assigned preJobTask Job{job.Id}_Task{task.preJobTask.Id}");
+                    }
+                    else
                     {
-                        Parallel.For(0, machine.Schedule.Count, i =>
-                        {
-                            if (i - 1 >= 0)
-                            {
-                                machine.Schedule[i].preMachineTask = machine.Schedule[i - 1];
-                                //Console.WriteLine($"RESULT:Job{machine.Schedule[i].Job.Id}_Task{machine.Schedule[i].Id} has preMachineTask Job{machine.Schedule[i].preMachineTask.Job.Id}_Task{machine.Schedule[i].preMachineTask.Id}");
-                            }
-                            else
-                            {
-                                //Console.WriteLine($"INFORMATION:Couldn't assign preMachineTask to Job{machine.Schedule[i].Job.Id}_Task {machine.Schedule[i].Id} Task has no Predecessor in his Machine");
-                                machine.Schedule[i].preMachineTask = null;
-                            }
-
-                            if (i + 1 < machine.Schedule.Count)
-                            {
-                                machine.Schedule[i].sucMachineTask = machine.Schedule[i + 1];
-                                //Console.WriteLine($"RESULT:Job{machine.Schedule[i].Job.Id}_Task{machine.Schedule[i].Id} has sucMachineTask Job{machine.Schedule[i].sucMachineTask.Job.Id}_Task{machine.Schedule[i].sucMachineTask.Id}");
-                            }
-                            else
-                            {
-                                //Console.WriteLine($"INFORMATION:Couldn't assign sucMachineTask to Job{machine.Schedule[i].Job.Id}_Task{machine.Schedule[i].Id} Task has no Successor in his Machine");
-                                machine.Schedule[i].sucMachineTask = null;
-                            }
-                            machine.Schedule[i].Position = i;
-                        });
-                    });
-                    break;
-
-                case false:
-                    foreach (Job job in jobs)
-                    {
-                        foreach (Task task in job.Tasks)
-                        {
-                            if (task.Id - 1 >= 0)
-                            {
-                                task.preJobTask = job.Tasks[task.Id - 1];
-                                //Console.WriteLine($"RESULT:Job{job.Id}_Task{task.Id} assigned preJobTask Job{job.Id}_Task{task.preJobTask.Id}");
-                            }
-                            else
-                            {
-                                //Console.WriteLine($"INFORMATION:Couldn't assign preJobTask to Job_{job.Id} Task_{task.Id} Task has no Predecessor in his Job");
-                                task.preJobTask = null;
-                            }
-
-                            if (task.Id + 1 < job.Tasks.Count)
-                            {
-                                task.sucJobTask = job.Tasks[task.Id + 1];
-                                //Console.WriteLine($"RESULT:Job{job.Id}_Task{task.Id} assigned sucJobTask Job{job.Id}_Task{task.sucJobTask.Id}");
-                            }
-                            else
-                            {
-                                //Console.WriteLine($"INFORMATION:Couldn't assign sucJobTask to Job{job.Id}_Task{task.Id} has no Successor in his Job");
-                                task.sucJobTask = null;
-                            }
-                        }
+                        //Console.WriteLine($"INFORMATION:Couldn't assign preJobTask to Job_{job.Id} Task_{task.Id} Task has no Predecessor in his Job");
+                        task.preJobTask = null;
                     }
 
-                    foreach (Machine machine in machines)
+                    if (task.Id + 1 < job.Tasks.Count)
                     {
-                        for (int i = 0; i < machine.Schedule.Count; i++)
-                        {
-                            if (i - 1 >= 0)
-                            {
-                                machine.Schedule[i].preMachineTask = machine.Schedule[i - 1];
-                                //Console.WriteLine($"RESULT:Job{machine.Schedule[i].Job.Id}_Task{machine.Schedule[i].Id} has preMachineTask Job{machine.Schedule[i].preMachineTask.Job.Id}_Task{machine.Schedule[i].preMachineTask.Id}");
-                            }
-                            else
-                            {
-                                //Console.WriteLine($"INFORMATION:Couldn't assign preMachineTask to Job{machine.Schedule[i].Job.Id}_Task {machine.Schedule[i].Id} Task has no Predecessor in his Machine");
-                                machine.Schedule[i].preMachineTask = null;
-                            }
-
-                            if (i + 1 < machine.Schedule.Count)
-                            {
-                                machine.Schedule[i].sucMachineTask = machine.Schedule[i + 1];
-                                //Console.WriteLine($"RESULT:Job{machine.Schedule[i].Job.Id}_Task{machine.Schedule[i].Id} has sucMachineTask Job{machine.Schedule[i].sucMachineTask.Job.Id}_Task{machine.Schedule[i].sucMachineTask.Id}");
-                            }
-                            else
-                            {
-                               // Console.WriteLine($"INFORMATION:Couldn't assign sucMachineTask to Job{machine.Schedule[i].Job.Id}_Task{machine.Schedule[i].Id} Task has no Successor in his Machine");
-                                machine.Schedule[i].sucMachineTask = null;
-                            }
-                            machine.Schedule[i].Position = i;
-                        }
+                        task.sucJobTask = job.Tasks[task.Id + 1];
+                        //Console.WriteLine($"RESULT:Job{job.Id}_Task{task.Id} assigned sucJobTask Job{job.Id}_Task{task.sucJobTask.Id}");
                     }
-                    break;
+                    else
+                    {
+                        //Console.WriteLine($"INFORMATION:Couldn't assign sucJobTask to Job{job.Id}_Task{task.Id} has no Successor in his Job");
+                        task.sucJobTask = null;
+                    }
+                }
+            }
 
-                default:
-                    break;
+            foreach (Machine machine in machines)
+            {
+                for (int i = 0; i < machine.Schedule.Count; i++)
+                {
+                    if (i - 1 >= 0)
+                    {
+                        machine.Schedule[i].preMachineTask = machine.Schedule[i - 1];
+                        //Console.WriteLine($"RESULT:Job{machine.Schedule[i].Job.Id}_Task{machine.Schedule[i].Id} has preMachineTask Job{machine.Schedule[i].preMachineTask.Job.Id}_Task{machine.Schedule[i].preMachineTask.Id}");
+                    }
+                    else
+                    {
+                        //Console.WriteLine($"INFORMATION:Couldn't assign preMachineTask to Job{machine.Schedule[i].Job.Id}_Task {machine.Schedule[i].Id} Task has no Predecessor in his Machine");
+                        machine.Schedule[i].preMachineTask = null;
+                    }
 
+                    if (i + 1 < machine.Schedule.Count)
+                    {
+                        machine.Schedule[i].sucMachineTask = machine.Schedule[i + 1];
+                        //Console.WriteLine($"RESULT:Job{machine.Schedule[i].Job.Id}_Task{machine.Schedule[i].Id} has sucMachineTask Job{machine.Schedule[i].sucMachineTask.Job.Id}_Task{machine.Schedule[i].sucMachineTask.Id}");
+                    }
+                    else
+                    {
+                        // Console.WriteLine($"INFORMATION:Couldn't assign sucMachineTask to Job{machine.Schedule[i].Job.Id}_Task{machine.Schedule[i].Id} Task has no Successor in his Machine");
+                        machine.Schedule[i].sucMachineTask = null;
+                    }
+                    machine.Schedule[i].Position = i;
+                }
             }
 
             /*Performance*/
@@ -390,50 +315,25 @@ namespace Projektseminar.Instance
             //Console.WriteLine($"Related Watch ran {relatedWatch.Elapsed.Minutes} Minutes {relatedWatch.Elapsed.Seconds} Seconds {relatedWatch.Elapsed.Milliseconds} Milliseconds {relatedWatch.Elapsed.Nanoseconds} Nanoseconds");
         }
 
-        public void CalculateSetups(bool parallelMode)
+        public void CalculateSetups()
         {
             /*Performance*/
             //Stopwatch setupWatch = new Stopwatch();
             //setupWatch.Start();
 
-            switch (parallelMode)
+            foreach (Machine machine in Machines)
             {
-                case true:
-                    Parallel.ForEach(Machines, machine =>
+                foreach (Task task in machine.Schedule)
+                {
+                    if (task.preMachineTask is not null)
                     {
-                        Parallel.ForEach(machine.Schedule, task =>
-                        {
-                            if (task.preMachineTask is not null)
-                            {
-                                task.Setup = Setups[Tuple.Create(task.preMachineTask.Job.Id, task.Job.Id)];
-                            }
-                            else
-                            {
-                                task.Setup = 0;
-                            }
-                        });
-                    });
-                    break;
-
-                case false:
-                    foreach (Machine machine in Machines)
-                    {
-                        foreach (Task task in machine.Schedule)
-                        {
-                            if (task.preMachineTask is not null)
-                            {
-                                task.Setup = Setups[Tuple.Create(task.preMachineTask.Job.Id, task.Job.Id)];
-                            }
-                            else
-                            {
-                                task.Setup = 0;
-                            }
-                        }
+                        task.Setup = Setups[Tuple.Create(task.preMachineTask.Job.Id, task.Job.Id)];
                     }
-                    break;
-
-                default:
-                    break;
+                    else
+                    {
+                        task.Setup = 0;
+                    }
+                }
             }
 
             /*Performance*/
@@ -595,14 +495,14 @@ namespace Projektseminar.Instance
             return true;
         }
 
-        public ConcurrentDictionary<int, Tuple<Problem, int>> GenerateNeighboorhood (string searchMethod)
+        public Dictionary<int, Tuple<Problem, int>> GenerateNeighboorhood(string searchMethod)
         {
             /*Performance*/
             Stopwatch neighborWatch = new Stopwatch();
             neighborWatch.Start();
 
-            ConcurrentDictionary<int, List<Tuple<Task, Task, Machine>>> allOperations = GetNeighboorhood(searchMethod);
-            ConcurrentDictionary<int, Tuple<Problem,int>> fullNeighboorhood = new ConcurrentDictionary<int, Tuple<Problem, int>>();
+            Dictionary<int, List<Tuple<Task, Task, Machine>>> allOperations = GetNeighboorhood(searchMethod);
+            Dictionary<int, Tuple<Problem, int>> fullNeighboorhood = new Dictionary<int, Tuple<Problem, int>>();
 
             //Parallel.ForEach(allOperations, operationPair =>
             foreach (KeyValuePair<int, List<Tuple<Task, Task, Machine>>> operationPair in allOperations)
@@ -611,7 +511,7 @@ namespace Projektseminar.Instance
 
                 foreach (Tuple<Instance.Task, Instance.Task, Machine> tuple in operationPair.Value)
                 {
-                    newProblem.SwapTasks(tuple.Item1, tuple.Item2, tuple.Item3, false);
+                    newProblem.SwapTasks(tuple.Item1, tuple.Item2, tuple.Item3);
                 }
 
                 if (newProblem.ConfirmFeasability())
@@ -624,13 +524,11 @@ namespace Projektseminar.Instance
             Console.WriteLine($"Release Watch ran {neighborWatch.Elapsed.Minutes} Minutes {neighborWatch.Elapsed.Seconds} Seconds {neighborWatch.Elapsed.Milliseconds} Milliseconds {neighborWatch.Elapsed.Nanoseconds} Nanoseconds");
             return fullNeighboorhood;
         }
-        
+
         //Switch-Case Anweisung zur Auswahl der Nachbarschaft
-        public ConcurrentDictionary<int, List<Tuple<Task, Task, Machine>>> GetNeighboorhood(string searchMethod)
-        //public Dictionary<int, List<Tuple<Task, Task, Machine>>> GetNeighboorhood(string searchMethod)
+        public Dictionary<int, List<Tuple<Task, Task, Machine>>> GetNeighboorhood(string searchMethod)
         {
-            ConcurrentDictionary<int, List<Tuple<Task, Task, Machine>>> newDict = new ConcurrentDictionary<int, List<Tuple<Task, Task, Machine>>>();
-            //Dictionary<int, List<Tuple<Task, Task, Machine>>> newDict = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
+            Dictionary<int, List<Tuple<Task, Task, Machine>>> newDict = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
 
             switch (searchMethod)
             {
@@ -638,7 +536,10 @@ namespace Projektseminar.Instance
                     newDict = N1();
                     break;
                 case "N3":
-                    newDict = N3(false);
+                    newDict = N3();
+                    break;
+                case "N5":
+                    newDict = N5();
                     break;
                 default:
                     break;
@@ -647,93 +548,128 @@ namespace Projektseminar.Instance
 
         }
 
-        public ConcurrentDictionary<int, List<Tuple<Task, Task, Machine>>> N1()
+        public Dictionary<int, List<Tuple<Task, Task, Machine>>> N1()
         {
-            List<Task> critTasks = GetCriticalTasks();
-            ConcurrentDictionary<int, List<Tuple<Task, Task, Machine>>> dict = new ConcurrentDictionary<int, List<Tuple<Task, Task, Machine>>>();
+            Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
+            Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
 
             //Problem returnProblem = problem;
 
             int makespan = CalculateMakespan();
 
-            foreach (Task task in critTasks)
+            foreach (KeyValuePair<Machine,List<Task>> critPair in critTasks)
             {
-                if (task.sucMachineTask != null && critTasks.Contains(task.sucMachineTask))
+                foreach (Task task in critPair.Value)
                 {
-                    dict.TryAdd(dict.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
+                    if (task.sucMachineTask != null && critTasks[task.Machine].Contains(task.sucMachineTask))
+                    {
+                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
+                    }
                 }
             }
-            return dict;
+            return swapOperations;
         }
 
-        public ConcurrentDictionary<int, List<Tuple<Task, Task, Machine>>> N3(bool parallelMode)
-        //public Dictionary<int, List<Tuple<Task, Task, Machine>>> N3(bool parallelMode)
+        public Dictionary<int, List<Tuple<Task, Task, Machine>>> N3()
         {
-            switch (parallelMode)
+
+            Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
+            Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
+
+            foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
             {
-                case true:
-                    List<Task> critTasksParallel = GetCriticalTasks();
-                    ConcurrentDictionary<int, List<Tuple<Task, Task, Machine>>> dict = new ConcurrentDictionary<int, List<Tuple<Task, Task, Machine>>>();
-
-                    Parallel.ForEach(critTasksParallel, task =>
+                foreach (Task task in critPair.Value)
+                {
+                    if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.sucMachineTask))
                     {
-                        if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasksParallel.Contains(task.sucMachineTask))
-                        {
-                            //Erster Fall
-                            dict.TryAdd(dict.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
+                        //Erster Fall
+                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
 
-                            //ZweiterFall -- geht noch nicht
-                            dict.TryAdd(dict.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine), Tuple.Create(task, task.sucMachineTask, task.Machine) });
+                        //ZweiterFall -- geht noch nicht
+                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine), Tuple.Create(task, task.sucMachineTask, task.Machine) });
 
-                            //Dritter Fall
-                            dict.TryAdd(dict.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
-                        }
-                        else if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasksParallel.Contains(task.preMachineTask))
-                        {
-                            //Erster Fall
-                            dict.TryAdd(dict.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine) });
-
-                            //ZweiterFall
-                            dict.TryAdd(dict.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine), Tuple.Create(task.preMachineTask, task, task.Machine) });
-
-                            //Dritter Fall
-                            dict.TryAdd(dict.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
-                        }
-                    });
-                    return dict;
-
-                case false:
-                    List<Task> critTasksSequential = GetCriticalTasks();
-                    ConcurrentDictionary<int, List<Tuple<Task, Task, Machine>>> dictSequential = new ConcurrentDictionary<int, List<Tuple<Task, Task, Machine>>>();
-
-                    foreach (Task task in critTasksSequential)
-                    {
-                        if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasksSequential.Contains(task.sucMachineTask))
-                        {
-                            //Erster Fall
-                            dictSequential.TryAdd(dictSequential.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
-
-                            //ZweiterFall -- geht noch nicht
-                            dictSequential.TryAdd(dictSequential.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine), Tuple.Create(task, task.sucMachineTask, task.Machine) });
-
-                            //Dritter Fall
-                            dictSequential.TryAdd(dictSequential.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
-                        }
-                        else if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasksSequential.Contains(task.preMachineTask))
-                        {
-                            //Erster Fall
-                            dictSequential.TryAdd(dictSequential.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine) });
-
-                            //ZweiterFall
-                            dictSequential.TryAdd(dictSequential.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine), Tuple.Create(task.preMachineTask, task, task.Machine) });
-
-                            //Dritter Fall
-                            dictSequential.TryAdd(dictSequential.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
-                        }
+                        //Dritter Fall
+                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
                     }
-                    return dictSequential;
+                    else if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.preMachineTask))
+                    {
+                        //Erster Fall
+                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine) });
 
+                        //ZweiterFall
+                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine), Tuple.Create(task.preMachineTask, task, task.Machine) });
+
+                        //Dritter Fall
+                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
+                    }
+                }
             }
+            return swapOperations;
+
+        }
+
+
+        public Dictionary<int, List<Tuple<Task, Task, Machine>>> N5()
+        {
+            Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
+            Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
+
+            Dictionary<Tuple<Machine, int>, List<Task>> critBlocks = new Dictionary<Tuple<Machine, int>, List<Task>>();
+
+            foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
+            {
+                int currentBlock = 0;
+
+                if (critPair.Value.Count > 1)
+                {
+                    //critBlocks.Add(Tuple.Create(critPair.Key, currentBlock), new List<Task> { critPair.Value[0] });
+                    
+                    for (int i = 0; i < critPair.Value.Count - 1; i++)
+                    {
+                        if ((!critBlocks.ContainsKey(Tuple.Create(critPair.Key, currentBlock)) && critPair.Value[i].sucMachineTask is not null))
+                        {
+                            critBlocks.Add(Tuple.Create(critPair.Key, currentBlock), new List<Task> { critPair.Value[i] });
+                        }
+
+                        if (critPair.Value[i + 1] == critPair.Value[i].sucMachineTask)
+                        {
+                            critBlocks[Tuple.Create(critPair.Key, currentBlock)].Add(critPair.Value[i + 1]);
+                        }
+                        else if (critBlocks[Tuple.Create(critPair.Key, currentBlock)].Count == 1)
+                        {
+                            critBlocks.Remove(Tuple.Create(critPair.Key, currentBlock));
+                        }
+                        else
+                        {
+                            currentBlock++;
+                        }
+
+                    }
+                }
+            }
+
+            int k = 0;
+            foreach (KeyValuePair<Tuple<Machine, int>, List<Task>> blockPair in critBlocks)
+            {
+                if (k == 0)
+                {
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
+                    k++;
+                }
+                else if (k == critBlocks.Count - 1)
+                {
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
+                    k++;
+                }
+                else
+                {                  
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
+                    k++;
+                }
+            }
+
+            return swapOperations;
         }
     }
 }

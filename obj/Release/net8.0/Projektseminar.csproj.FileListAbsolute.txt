@@ -56,3 +56,4 @@ G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar_v0.1\obj\Re
 G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar_v0.1\obj\Release\net8.0\Projektseminar.pdb
 G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar_v0.1\obj\Release\net8.0\Projektseminar.genruntimeconfig.cache
 G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar_v0.1\obj\Release\net8.0\ref\Projektseminar.dll
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\obj\Release\net8.0\Projektseminar.sourcelink.json
