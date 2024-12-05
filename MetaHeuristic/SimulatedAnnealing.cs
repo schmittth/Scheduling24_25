@@ -44,7 +44,7 @@ namespace Projektseminar.MetaHeuristic
                     Random random = new Random(seedValue);
                     Problem newProblem;
 
-                    ConcurrentDictionary<int, List<Tuple<Instance.Task, Instance.Task, Machine>>> dict = CurrentProblem.GetNeighboorhood("N3");
+                    Dictionary<int, List<Tuple<Instance.Task, Instance.Task, Machine>>> dict = CurrentProblem.GetNeighboorhood(Neighboorhood);
 
                     List<int> invalidNumber = new List<int>();
 
@@ -75,7 +75,7 @@ namespace Projektseminar.MetaHeuristic
 
                         foreach (Tuple<Instance.Task, Instance.Task, Machine> tuple in randomNeighbor)
                         {
-                            newProblem.SwapTasks(tuple.Item1, tuple.Item2, tuple.Item3, false);
+                            newProblem.SwapTasks(tuple.Item1, tuple.Item2, tuple.Item3);
                         }
                     }
                     while (!newProblem.ConfirmFeasability());

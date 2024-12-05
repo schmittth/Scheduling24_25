@@ -115,8 +115,8 @@ namespace Projektseminar.ORToolsSolver
                         machine.Schedule.Sort();
                     }
 
-                    instance.SetRelatedTasks(false);
-                    instance.CalculateSetups(false);
+                    instance.SetRelatedTasks();
+                    instance.CalculateSetups();
 
                     instance.ProblemAsDiagramm(@"..\Or.html");
 

@@ -88,7 +88,7 @@ namespace Projektseminar
         public static string ChooseNeighboorhood()
         {
             Console.WriteLine("Please choose a neighboorhood:");
-            string[] availableNeighboorhoods = { "N1", "N3" };
+            string[] availableNeighboorhoods = { "N1", "N3", "N5" };
             Console.Write("Currently supported neighboorhoods: ");
 
             int i = 1;

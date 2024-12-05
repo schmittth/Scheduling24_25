@@ -34,8 +34,8 @@ namespace Projektseminar.OpeningHeuristic
                 //Wenn keine Task mehr verplant werden können beende den Algorithmus.
                 if (plannableTasks.Count == 0)
                 {
-                    problem.SetRelatedTasks(false);
-                    problem.CalculateSetups(false);
+                    problem.SetRelatedTasks();
+                    problem.CalculateSetups();
                     problem.CalculateReleases();
                     problem.CalculateTail();
 
