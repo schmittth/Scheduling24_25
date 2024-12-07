@@ -150,18 +150,18 @@ namespace Projektseminar.Instance
 
             using (StreamWriter sw = File.AppendText(filepath))
             {
-                foreach (Machine machine in machines)
+                foreach (Job job in Jobs)
                 {
-                    foreach (Task task in machine.Schedule)
-                    {
-                        var random = new Random();
-                        var color = String.Format("#{0:X6}", random.Next(0x1000000));
+                    var random = new Random();
+                    var color = String.Format("#{0:X6}", random.Next(0x1000000));
 
-                        sw.WriteLine($"[ 'Machine {machine.Id}' , '{task.Job.Id} {task.Id}', '{task.Duration}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End}), '{color}' ],");
+                    foreach (Task task in job.Tasks)
+                    {
+                        sw.WriteLine($"[ 'Machine {task.Machine.Id}' , '{task.Job.Id} {task.Id}', '{task.Duration}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End}), '{color}' ],");
 
                         if (task.Setup != 0)
                         {
-                            sw.WriteLine($"[ 'Machine {machine.Id}' , 'Setup',  '{task.Setup}' , new Date(0, 0, 0, 0, 0, {task.Start - task.Setup}) , new Date(0, 0, 0, 0, 0, {task.Start}), '#111557' ],");
+                            sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Setup',  '{task.Setup}' , new Date(0, 0, 0, 0, 0, {task.Start - task.Setup}) , new Date(0, 0, 0, 0, 0, {task.Start}), '#111557' ],");
                         }
                     }
                 }
@@ -580,27 +580,37 @@ namespace Projektseminar.Instance
             {
                 foreach (Task task in critPair.Value)
                 {
+                    bool firstNeighbor = false;
+
                     if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.sucMachineTask))
                     {
-                        //Erster Fall
+                        //p(i), i, j --> task = i
+
+                        //p(i), j, i
                         swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
 
-                        //ZweiterFall -- geht noch nicht
+                        //j, p(i), i
                         swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine), Tuple.Create(task, task.sucMachineTask, task.Machine) });
 
-                        //Dritter Fall
-                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
+                        //j, i, p(i) --> Wenn diese Nachbarschaft abgespeichert ist, muss s(j), j, i nicht gespeichert werden.
+                        firstNeighbor = swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
                     }
-                    else if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.preMachineTask))
+                    
+                    if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.preMachineTask))
                     {
-                        //Erster Fall
+                        //i, j, s(j) --> task = j 
+
+                        //j, i, s(j)
                         swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine) });
 
-                        //ZweiterFall
+                        //j, s(j), i
                         swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine), Tuple.Create(task.preMachineTask, task, task.Machine) });
 
-                        //Dritter Fall
-                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
+                        //s(j), j, i
+                        if (!firstNeighbor)
+                        {
+                            swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
+                        }
                     }
                 }
             }

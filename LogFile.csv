@@ -1,0 +1,4 @@
+"Instance"; "JobAmount"; "MachineAmount"; "MinTaskAmount"; "MinTaskTime"; "MaxTaskTime"; "Solver"; "CoolingFactor"; "Iterations"; "Neighborhood"; "SeedValue"
+
+../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,99;100;N3;1297856797
+../../../ExampleInstanceMedium.txt;10;5;0;0;100;GoogleOR;;;;817691212

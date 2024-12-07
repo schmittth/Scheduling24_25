@@ -16,21 +16,28 @@ namespace Projektseminar.MetaHeuristic
         //Variablen
 
         //Konstruktoren
-        public SimulatedAnnealing(Problem problem, int temperature, double coolingFactor, int iterations, string neighboorhood)
+        public SimulatedAnnealing(Problem problem, double coolingFactor, int iterations, string neighboorhood)
         {
-            this.CurrentProblem = problem;
-            this.BestProblem = problem;
-            this.Temperature = temperature;
-            this.CoolingFactor = coolingFactor;
-            this.Iterations = iterations;
-            this.Neighboorhood = neighboorhood;
+            this.CurrentProblem = problem; //Übergebenes Problem wird als aktuelles Problem gesetzt
+            this.BestProblem = problem; //Bei Instanzierung ist bestes Problem = aktuelles Problem
+            this.Temperature = 100; //Temperatur hardcoded auf 100
+            this.CoolingFactor = coolingFactor; //Abkühlungfaktor wird von Konsole übergeben.
+            this.Iterations = iterations; //Anzahl an Iterationen wird von Konsole übergeben.
+            this.Neighboorhood = neighboorhood; //Nachbarschaft wird von Konsole übergeben.
         }
 
         //Methoden
-        public Problem DoSimulatedAnnealing()
+        public Problem DoSimulatedAnnealing(int seedValue)
         {
+
+            Random random = new Random(seedValue);
+            Problem newProblem;
+
             while (Temperature > 1)
             {
+                /*Debug*/              
+                //CurrentProblem.ProblemAsDiagramm(@$"G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\diagrammAnnealingTemp{Temperature}.html");
+
                 Console.WriteLine($"Current Temperature Simulated Annealing {Temperature}");
 
                 for (int i = 0; i < Iterations; i++)
@@ -38,11 +45,6 @@ namespace Projektseminar.MetaHeuristic
                     /*Debug*/
                     //Console.WriteLine($"Current Iteration Simulated Annealing {i}");                  
                     //CurrentProblem.ProblemAsDiagramm(@$"G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\diagrammAnnealingTemp{Temperature}Iteration{i}.html");
-                    Random randSeed = new Random();
-                    int seedValue = randSeed.Next(0, Int32.MaxValue);
-
-                    Random random = new Random(seedValue);
-                    Problem newProblem;
 
                     Dictionary<int, List<Tuple<Instance.Task, Instance.Task, Machine>>> dict = CurrentProblem.GetNeighboorhood(Neighboorhood);
 
@@ -80,13 +82,20 @@ namespace Projektseminar.MetaHeuristic
                     }
                     while (!newProblem.ConfirmFeasability());
 
-                    if (CurrentProblem.CalculateMakespan() > newProblem.CalculateMakespan())
+                    /*Debug*/
+
+                    int curMakespan = CurrentProblem.CalculateMakespan();
+                    int newMakespan = newProblem.CalculateMakespan();
+
+                    //Console.WriteLine($"New Makespan: {newMakespan}, Old Makespan {curMakespan}");
+
+                    if (curMakespan > newMakespan)
                     {
                         /*Debug*/
                         //Console.WriteLine($"Iteration{i} Solution accepted - better than current");
                         
                         CurrentProblem = newProblem;
-                        if (BestProblem.CalculateMakespan() > newProblem.CalculateMakespan())
+                        if (BestProblem.CalculateMakespan() > newMakespan)
                         {
                             
                             BestProblem = newProblem;
@@ -96,7 +105,7 @@ namespace Projektseminar.MetaHeuristic
                     }
                     else
                     {
-                        int delta = newProblem.CalculateMakespan() - CurrentProblem.CalculateMakespan();
+                        int delta = newMakespan - curMakespan;
                         double exponent = -delta / Temperature;
                         double probability = Math.Pow(Math.E, exponent);
                         if (random.NextDouble() < probability)
@@ -110,6 +119,40 @@ namespace Projektseminar.MetaHeuristic
                 Temperature = Temperature * CoolingFactor;
             }
             return BestProblem;
+        }
+
+        public void Log(string instanceName, int seedValue)
+        {
+
+            int minTaskAmount = BestProblem.Machines.Count;
+            int minTaskTime = BestProblem.Horizon;
+            int maxTaskTime = 0;
+
+            foreach (Job job in BestProblem.Jobs)
+            {
+                if (minTaskAmount > job.Tasks.Count)
+                {
+                    minTaskAmount = job.Tasks.Count;
+                }
+
+                foreach (Instance.Task task in job.Tasks)
+                {
+                    if (task.Duration < minTaskTime)
+                    {
+                        minTaskTime = task.Duration;
+                    }
+                    if (task.Duration > maxTaskTime)
+                    {
+                        maxTaskTime = task.Duration;
+                    }
+
+                }
+            }
+
+            using (StreamWriter sw = File.AppendText((@$"..\..\..\LogFile.csv")))
+            {
+                sw.WriteLine($"{instanceName};{BestProblem.Jobs.Count};{BestProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};SimulatedAnnealing;{CoolingFactor};{Iterations};{Neighboorhood};{seedValue}");
+            }
         }
     }
 }

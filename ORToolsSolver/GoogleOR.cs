@@ -5,12 +5,19 @@ namespace Projektseminar.ORToolsSolver
 {
     internal class GoogleOR
     {
-        public void SolveProblem(Problem instance)
+        public Problem CurrentProblem { get; set; }
+
+        public GoogleOR(Problem currentProblem)
+        {
+            CurrentProblem = currentProblem;
+        }
+
+        public void DoORSolver()
         {
             int numMachines = 0;
             int horizon = 0;
 
-            foreach (Job job in instance.Jobs)
+            foreach (Job job in CurrentProblem.Jobs)
             {
                 foreach (Instance.Task task in job.Tasks)
                 {
@@ -28,7 +35,7 @@ namespace Projektseminar.ORToolsSolver
             Dictionary<int, List<Tuple<int, IntVar, IntVar, IntervalVar>>> machineToIntervals = new Dictionary<int, List<Tuple<int, IntVar, IntVar, IntervalVar>>>();
 
 
-            foreach (Job job in instance.Jobs)
+            foreach (Job job in CurrentProblem.Jobs)
             {
                 foreach (Instance.Task task in job.Tasks)
                 {
@@ -55,16 +62,16 @@ namespace Projektseminar.ORToolsSolver
                         if (job_j != job_u)
                         {
                             BoolVar logic_var = model.NewBoolVar("");
-                            model.Add(job_u.Item2 >= job_j.Item3 + instance.Setups[Tuple.Create(job_j.Item1, job_u.Item1)]).OnlyEnforceIf(logic_var);
-                            model.Add(job_j.Item2 >= job_u.Item3 + instance.Setups[Tuple.Create(job_u.Item1, job_j.Item1)]).OnlyEnforceIf(logic_var.Not());
+                            model.Add(job_u.Item2 >= job_j.Item3 + CurrentProblem.Setups[Tuple.Create(job_j.Item1, job_u.Item1)]).OnlyEnforceIf(logic_var);
+                            model.Add(job_j.Item2 >= job_u.Item3 + CurrentProblem.Setups[Tuple.Create(job_u.Item1, job_j.Item1)]).OnlyEnforceIf(logic_var.Not());
                         }
 
 
 
             // Precedences inside a job.
-            for (int jobID = 0; jobID < instance.Jobs.Count; ++jobID)
+            for (int jobID = 0; jobID < CurrentProblem.Jobs.Count; ++jobID)
             {
-                var job = instance.Jobs[jobID];
+                var job = CurrentProblem.Jobs[jobID];
                 for (int taskID = 0; taskID < job.Tasks.Count - 1; ++taskID)
                 {
                     var key = Tuple.Create(jobID, taskID);
@@ -77,9 +84,9 @@ namespace Projektseminar.ORToolsSolver
             IntVar objVar = model.NewIntVar(0, horizon, "makespan");
 
             List<IntVar> ends = new List<IntVar>();
-            for (int jobID = 0; jobID < instance.Jobs.Count; ++jobID)
+            for (int jobID = 0; jobID < CurrentProblem.Jobs.Count; ++jobID)
             {
-                var job = instance.Jobs[jobID];
+                var job = CurrentProblem.Jobs[jobID];
                 var key = Tuple.Create(jobID, job.Tasks.Count - 1);
                 ends.Add(allTasks[key].Item3);
             }
@@ -96,7 +103,7 @@ namespace Projektseminar.ORToolsSolver
                 Console.WriteLine("Solution:");
                 
                 Dictionary<int, List<Instance.Task>> assignedJobs = new Dictionary<int, List<Instance.Task>>();
-                foreach (Job job in instance.Jobs)
+                foreach (Job job in CurrentProblem.Jobs)
                 {
                     foreach (Instance.Task task in job.Tasks)
                     {      
@@ -106,21 +113,55 @@ namespace Projektseminar.ORToolsSolver
                         task.Start = start;
                         task.End = task.Start + task.Duration;
 
-                        instance.Machines[task.Machine.Id].Schedule.Add(task);
+                        CurrentProblem.Machines[task.Machine.Id].Schedule.Add(task);
                     }
                 }
-                    foreach (Machine machine in instance.Machines)
+                    foreach (Machine machine in CurrentProblem.Machines)
                     {
                         // Sort by starting time.
                         machine.Schedule.Sort();
                     }
 
-                    instance.SetRelatedTasks();
-                    instance.CalculateSetups();
+                    CurrentProblem.SetRelatedTasks();
+                    CurrentProblem.CalculateSetups();
 
-                    instance.ProblemAsDiagramm(@"..\Or.html");
+                    CurrentProblem.ProblemAsDiagramm(@"..\Or.html");
 
             }
+        }
+
+        public void Log(string instanceName, int seedValue)
+        {
+
+            int minTaskAmount = 0;
+            int minTaskTime = 0;
+            int maxTaskTime = 0;
+
+            foreach (Job job in CurrentProblem.Jobs)
+            {
+                if (minTaskAmount > job.Tasks.Count)
+                {
+                    minTaskAmount = job.Tasks.Count;
+                }
+
+                foreach (Instance.Task task in job.Tasks)
+                {
+                    if (task.Duration < minTaskTime)
+                    {
+                        minTaskTime = task.Duration;
+                    }
+                    if (task.Duration > maxTaskTime)
+                    {
+                        maxTaskTime = task.Duration;
+                    }
+
+                }
+            }
+
+            using (StreamWriter sw = File.AppendText((@$"..\..\..\LogFile.csv")))
+            {
+                sw.WriteLine($"{instanceName};{CurrentProblem.Jobs.Count};{CurrentProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};GoogleOR;;;;{seedValue}"); 
+            }            
         }
     }
 }
