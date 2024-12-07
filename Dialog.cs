@@ -11,7 +11,6 @@ namespace Projektseminar
     {
         public static string ChooseInstance()
         {
-            //string[] allInstances = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.txt");
             string[] allInstances = Directory.GetFiles("../../../", "*.txt");
 
             Console.WriteLine("Choose an instance to load by writing the number:");
@@ -24,13 +23,17 @@ namespace Projektseminar
             string instanceChoice = Console.ReadLine();
             if (Int32.Parse(instanceChoice) > 0 && Int32.Parse(instanceChoice) <= allInstances.Length)
             {
-                return allInstances[Int32.Parse(instanceChoice) - 1];
+                instanceChoice = allInstances[Int32.Parse(instanceChoice) - 1];
             }
             else if (Int32.Parse(instanceChoice) == allInstances.Length + 1)
             {
-                return "Random";
+                instanceChoice = "Random";
             }
-            return "NaN";
+            else
+            {
+                instanceChoice = "NaN";
+            }
+            return instanceChoice;
         }
 
         public static int ChooseSolver()
@@ -42,8 +45,8 @@ namespace Projektseminar
             {
                 Console.WriteLine(solver);
             }
-            string solverChoice = Console.ReadLine();
-            return Int32.Parse(solverChoice);
+            int solverChoice = Int32.Parse(Console.ReadLine());
+            return solverChoice;
         }
 
         public static string ChoosePriorityRule()
@@ -67,22 +70,18 @@ namespace Projektseminar
                 }
             }
 
-            string solverChoice = Console.ReadLine();
-            return solverChoice;
+            string ruleChoice = Console.ReadLine();
+            return ruleChoice;
         }
 
-        public static Tuple<int, double, int> ChooseSimAnnealParameters()
+        public static Tuple<double, int> ChooseSimAnnealParameters()
         {
-            Console.WriteLine("Please provide a starting temperature:");
-            int temperature = Int32.Parse(Console.ReadLine());
-
             Console.WriteLine("Please provide a cooling factor (Please use , for decimal values) :");
             double coolingFactor = Double.Parse(Console.ReadLine());
 
             Console.WriteLine("How many iterations should be ran for each temperature:");
             int iterations = Int32.Parse(Console.ReadLine());
-
-            return Tuple.Create(temperature, coolingFactor, iterations);
+            return Tuple.Create(coolingFactor, iterations);
         }
 
         public static string ChooseNeighboorhood()
@@ -139,6 +138,12 @@ namespace Projektseminar
                 Console.WriteLine("Choose default value: \"Random\"");
             }
 
+            if (seedChoiceInt == 0)
+            {
+                Random randSeed = new Random();
+                seedChoiceInt = randSeed.Next(0, Int32.MaxValue);
+            }
+
             Console.WriteLine("Please type the minimal amount of task each job should have for random Instance: (Default value: \"1\")");
             int minTaskPerJobInt = 1;
             string minTaskPerJobString = Console.ReadLine();
@@ -169,7 +174,7 @@ namespace Projektseminar
             {
                 maxTaskTimeInt += 1;
             }
-
+           
             return Tuple.Create(jobsChoiceInt, machineChoiceInt, seedChoiceInt, minTaskPerJobInt, minTaskTimeInt, maxTaskTimeInt);
         }
     }

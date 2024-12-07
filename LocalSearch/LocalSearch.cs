@@ -1,5 +1,6 @@
 ﻿using Projektseminar.Instance;
 using System.Collections.Concurrent;
+using System.Numerics;
 
 namespace Projektseminar.LocalSearch
 {
@@ -8,17 +9,20 @@ namespace Projektseminar.LocalSearch
 
         public Problem BestProblem { get; set; }
 
-        public LocalSearch(Problem problem)
+        public string Neighborhood { get; set; }
+
+        public LocalSearch(Problem problem, string neighborhood)
         {
             BestProblem = problem;
+            Neighborhood = neighborhood;
         }
 
 
-        public Problem DoLocalSearch(string searchMethod)
+        public Problem DoLocalSearch()
         {
             for (int i = 0; i < 200; i++)
             {
-                Dictionary<int, List<Tuple<Instance.Task, Instance.Task, Machine>>> dict = BestProblem.GetNeighboorhood(searchMethod);
+                Dictionary<int, List<Tuple<Instance.Task, Instance.Task, Machine>>> dict = BestProblem.GetNeighboorhood(Neighborhood);
 
                 int makespan = BestProblem.CalculateMakespan();
 
@@ -43,6 +47,39 @@ namespace Projektseminar.LocalSearch
                 }
             
             return BestProblem;
+        }
+
+        public void Log(string instanceName, int seedValue)
+        {       
+
+            int minTaskAmount = 0;
+            int minTaskTime = 0;
+            int maxTaskTime = 0;
+
+            foreach (Job job in BestProblem.Jobs)
+            {
+                if (minTaskAmount > job.Tasks.Count)
+                {
+                    minTaskAmount = job.Tasks.Count;
+                }
+
+                foreach (Instance.Task task in job.Tasks)
+                {
+                    if (task.Duration < minTaskTime)
+                    {
+                        minTaskTime = task.Duration;
+                    }
+                    if (task.Duration > maxTaskTime)
+                    {
+                        maxTaskTime = task.Duration;
+                    }
+
+                }
+            }
+            using (StreamWriter sw = File.AppendText((@$"..\..\..\LogFile.csv")))
+            {
+                sw.WriteLine($"{instanceName};{BestProblem.Jobs.Count};{BestProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};LocalSearch;;;{Neighborhood};{seedValue}");
+            }
         }
     }
 }

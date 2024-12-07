@@ -11,7 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="AssignedTask.cs" />
     <Compile Include="Dialog.cs" />
     <Compile Include="Importer.cs" />
     <Compile Include="LocalSearch\LocalSearch.cs" />
