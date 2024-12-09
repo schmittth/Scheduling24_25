@@ -2,3 +2,5 @@
 
 ../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,99;100;N3;1297856797
 ../../../ExampleInstanceMedium.txt;10;5;0;0;100;GoogleOR;;;;817691212
+../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,5;10;N1;1627747007
+../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,5;10;N1;639120499

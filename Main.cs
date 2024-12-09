@@ -49,9 +49,8 @@ namespace Projektseminar
 
                     break;
                 case 2:
-                    stopwatch.Start();
-
                     Giffler_Thompson giffler_Thompson = new Giffler_Thompson(problem,Dialog.ChoosePriorityRule());
+                    stopwatch.Start();
                     problem = giffler_Thompson.InitialSolution();
 
                     stopwatch.Stop();
@@ -60,9 +59,8 @@ namespace Projektseminar
 
                     Tuple<double, int> simAnnealParams = Dialog.ChooseSimAnnealParameters();
 
-                    stopwatch.Start();
-
                     SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, simAnnealParams.Item1, simAnnealParams.Item2, Dialog.ChooseNeighboorhood());
+                    stopwatch.Start();
                     problem = simAnneal.DoSimulatedAnnealing(seedValue);
                     simAnneal.Log(instanceChoice, seedValue);
                     problem.ProblemAsDiagramm(@$"..\..\..\diagramm.html");
