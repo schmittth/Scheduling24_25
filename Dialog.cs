@@ -12,41 +12,54 @@ namespace Projektseminar
         public static string ChooseInstance()
         {
             string[] allInstances = Directory.GetFiles("../../../", "*.txt");
+            int instanceChoiceInt;
+            string instanceChoiceString;
 
-            Console.WriteLine("Choose an instance to load by writing the number:");
-            for (int i = 1; i <= allInstances.Length; i++)
+            do
             {
-                Console.WriteLine($"{i}. {allInstances[i - 1]}");
-            }
-            Console.WriteLine($"{allInstances.Length + 1}. Random Instance");
+                Console.WriteLine("Choose an instance to load by writing the number:");
+                Console.WriteLine($"{0}. Random Instance");
 
-            string instanceChoice = Console.ReadLine();
-            if (Int32.Parse(instanceChoice) > 0 && Int32.Parse(instanceChoice) <= allInstances.Length)
+                //Gebe alle .txt-files in der Projektmappe aus
+                for (int i = 1; i <= allInstances.Length; i++)
+                {
+                    Console.WriteLine($"{i}. {allInstances[i - 1]}");
+                }
+
+                instanceChoiceString = Console.ReadLine(); //Lese Instanzauswahl ein
+
+            } while (!(int.TryParse(instanceChoiceString, out instanceChoiceInt) && instanceChoiceInt >= 0 && instanceChoiceInt <= allInstances.Length)); //Erzwinge Auswahl erneut wenn nicht innerhalb der Grenzen
+
+            //Gebe Dateipfad oder "Random" zurück
+            if (instanceChoiceInt == 0) 
             {
-                instanceChoice = allInstances[Int32.Parse(instanceChoice) - 1];
-            }
-            else if (Int32.Parse(instanceChoice) == allInstances.Length + 1)
-            {
-                instanceChoice = "Random";
+                instanceChoiceString = "Random";
             }
             else
             {
-                instanceChoice = "NaN";
+                instanceChoiceString = allInstances[instanceChoiceInt - 1];
             }
-            return instanceChoice;
+            return instanceChoiceString;
         }
 
         public static int ChooseSolver()
         {
-            Console.WriteLine("Loading Successful. Please choose your Solver:");
             string[] availableSolvers = { "1. Google OR-Tools", "2. Simulated Annealing (Preferred)", "3. Local Search" };
+            int solverChoiceInt;
+            string solverChoiceString;
 
-            foreach (string solver in availableSolvers)
-            {
-                Console.WriteLine(solver);
+            do {
+                Console.WriteLine("Loading Successful. Please choose your Solver:");
+
+                foreach (string solver in availableSolvers)
+                {
+                    Console.WriteLine(solver);
+                }
+                solverChoiceString = Console.ReadLine();
             }
-            int solverChoice = Int32.Parse(Console.ReadLine());
-            return solverChoice;
+            while (!(int.TryParse(solverChoiceString, out solverChoiceInt) && solverChoiceInt > 0 && solverChoiceInt <= availableSolvers.Length));
+
+            return solverChoiceInt;
         }
 
         public static string ChoosePriorityRule()
@@ -84,6 +97,25 @@ namespace Projektseminar
             return Tuple.Create(coolingFactor, iterations);
         }
 
+        public static int SeedAlgorithm()
+        {
+            Console.WriteLine("Please type your seed value for random Instance: (Default value: \"Random\")");
+            int seedChoiceInt = 0;
+            string seedChoiceString = Console.ReadLine();
+
+            if (!(int.TryParse(seedChoiceString, out seedChoiceInt)))
+            {
+                Console.WriteLine("Choose default value: \"Random\"");
+            }
+
+            if (seedChoiceInt == 0)
+            {
+                Random randSeed = new Random();
+                seedChoiceInt = randSeed.Next(0, Int32.MaxValue);
+            }
+            return seedChoiceInt;
+        }
+
         public static string ChooseNeighboorhood()
         {
             Console.WriteLine("Please choose a neighboorhood:");
@@ -109,7 +141,7 @@ namespace Projektseminar
             return neighboorhoodChoice;
         }
 
-        public static Tuple<int,int,int,int,int,int> ChooseRandomInstanceSize()
+        public static Tuple<int,int,int,int,int> ChooseRandomInstanceSize()
         {
             int jobsChoiceInt;
             string jobsChoiceString;
@@ -128,22 +160,7 @@ namespace Projektseminar
                 machineChoiceString = Console.ReadLine();
 
             } while (!(int.TryParse(machineChoiceString, out machineChoiceInt)));
-
-            Console.WriteLine("Please type your seed value for random Instance: (Default value: \"Random\")");
-            int seedChoiceInt = 0;
-            string seedChoiceString = Console.ReadLine(); 
-            
-            if (!(int.TryParse(seedChoiceString, out seedChoiceInt)))
-            {
-                Console.WriteLine("Choose default value: \"Random\"");
-            }
-
-            if (seedChoiceInt == 0)
-            {
-                Random randSeed = new Random();
-                seedChoiceInt = randSeed.Next(0, Int32.MaxValue);
-            }
-
+        
             Console.WriteLine("Please type the minimal amount of task each job should have for random Instance: (Default value: \"1\")");
             int minTaskPerJobInt = 1;
             string minTaskPerJobString = Console.ReadLine();
@@ -166,7 +183,7 @@ namespace Projektseminar
             int maxTaskTimeInt = 100;
             string maxTaskTimeString = Console.ReadLine();
 
-            if (!(int.TryParse(seedChoiceString, out seedChoiceInt)))
+            if (!(int.TryParse(maxTaskTimeString, out maxTaskTimeInt)))
             {
                 Console.WriteLine("Choose default value: \"99\"");
             }
@@ -175,7 +192,7 @@ namespace Projektseminar
                 maxTaskTimeInt += 1;
             }
            
-            return Tuple.Create(jobsChoiceInt, machineChoiceInt, seedChoiceInt, minTaskPerJobInt, minTaskTimeInt, maxTaskTimeInt);
+            return Tuple.Create(jobsChoiceInt, machineChoiceInt, minTaskPerJobInt, minTaskTimeInt, maxTaskTimeInt);
         }
     }
 }

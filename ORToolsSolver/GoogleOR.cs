@@ -125,12 +125,12 @@ namespace Projektseminar.ORToolsSolver
                     CurrentProblem.SetRelatedTasks();
                     CurrentProblem.CalculateSetups();
 
-                    CurrentProblem.ProblemAsDiagramm(@"..\Or.html");
+                    CurrentProblem.ProblemAsDiagramm(@"..\Or.html",false);
 
             }
         }
 
-        public void Log(string instanceName, int seedValue)
+        public void Log(string instanceName, int seedValue, TimeSpan runtime, string priorityRule = "")
         {
 
             int minTaskAmount = 0;
@@ -160,7 +160,7 @@ namespace Projektseminar.ORToolsSolver
 
             using (StreamWriter sw = File.AppendText((@$"..\..\..\LogFile.csv")))
             {
-                sw.WriteLine($"{instanceName};{CurrentProblem.Jobs.Count};{CurrentProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};GoogleOR;;;;{seedValue}"); 
+                sw.WriteLine($"{instanceName};{CurrentProblem.Jobs.Count};{CurrentProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};GoogleOR;;;;;{runtime};{seedValue}"); 
             }            
         }
     }

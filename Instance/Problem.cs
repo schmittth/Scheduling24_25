@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Projektseminar.Instance
@@ -9,6 +11,7 @@ namespace Projektseminar.Instance
         // Eigenschaften
         public int Id { get; }
         public int Horizon { get => horizon; set => horizon = value; }
+        public int Makespan { get; set; }
 
         public List<Machine> Machines
         {
@@ -101,63 +104,28 @@ namespace Projektseminar.Instance
 
         //Methoden
 
-        //Problem in der Konsole ausgeben
-        public void PrintProblem()
-        {
-            string output = "";
-            foreach (Machine machine in machines)
-            {
-                // Sort by starting time.
-                machine.Schedule.Sort();
-                string solLineTasks = $"Machine {machine.Id}: ";
-                string solLine = "           ";
-
-                int previousJob = -1;
-
-                foreach (var task in machine.Schedule)
-                {
-                    /*if (previousJob != -1)
-                    {
-                        String setupTimeName = $"setup_{previousJob}_{assignedTask.jobID}";
-                        solLineTasks += $"{setupTimeName,-15}";
-
-                        String setupTime = $"[{assignedTask.start - setupTimes[previousJob, assignedTask.jobID]},{assignedTask.start}]";
-                        solLine += $"{setupTime,-15}";
-                    }*/
-
-                    string name = $"job__task_{task.Id}";
-                    // Add spaces to output to align columns.
-                    solLineTasks += $"{name,-15}";
-
-
-                    string solTmp = $"[{task.Start},{task.End}]";
-                    // Add spaces to output to align columns.
-                    solLine += $"{solTmp,-15}";
-
-
-                }
-                output += solLineTasks + "\n";
-                output += solLine + "\n";
-            }
-
-            Console.WriteLine($"\n{output}");
-        }
-
         //Problem als Diagramm in den angegebenen Pfad schreiben
-        public void ProblemAsDiagramm(string filepath)
+        public void ProblemAsDiagramm(string filepath, bool openOnWrite)
         {
-            File.Copy(@"..\..\..\template.html", filepath, true);
+            Directory.CreateDirectory(Path.GetDirectoryName(filepath));
+
+            File.Copy(@"..\..\..\Diagramms\template.html", filepath, true);
+
+            SortedDictionary<int, string> jobToColor = new SortedDictionary<int, string>();
+            var random = new Random();
+
+            foreach (Job job in Jobs)
+            {
+                jobToColor.Add(job.Id, String.Format("#{0:X6}", random.Next(0x1000000)));
+            }
 
             using (StreamWriter sw = File.AppendText(filepath))
             {
-                foreach (Job job in Jobs)
+                foreach (Machine machine in machines)
                 {
-                    var random = new Random();
-                    var color = String.Format("#{0:X6}", random.Next(0x1000000));
-
-                    foreach (Task task in job.Tasks)
+                    foreach (Task task in machine.Schedule)
                     {
-                        sw.WriteLine($"[ 'Machine {task.Machine.Id}' , '{task.Job.Id} {task.Id}', '{task.Duration}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End}), '{color}' ],");
+                        sw.WriteLine($"[ 'Machine {task.Machine.Id}' , '{task.Job.Id} {task.Id}', '{task.Duration}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End}), '{jobToColor[task.Job.Id]}' ],");
 
                         if (task.Setup != 0)
                         {
@@ -174,6 +142,24 @@ namespace Projektseminar.Instance
                 sw.WriteLine("<div id = \"example3.1\" style = \"height: 1000px;\" ></ div >");
             }
 
+            if (openOnWrite == true)
+            {
+                string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+                string sFile = System.IO.Path.Combine(sCurrentDirectory, filepath);
+                string sFilePath = Path.GetFullPath(sFile);
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                try
+                {
+                    process.StartInfo.UseShellExecute = true;
+                    process.StartInfo.FileName = sFilePath;
+                    process.Start();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
         }
 
         //Kalkuliere den Makespan und Update den Load
@@ -431,8 +417,6 @@ namespace Projektseminar.Instance
                 }
             }
 
-            //Initialisiere i mit 0 und iteriere solange Elemente in Liste
-            //for (int i = 0; tailUpdate.Count > 0; i++)
             while (tailQueue.Count != 0)
             {
                 //Entferne ersten Task aus der Queue
@@ -455,6 +439,10 @@ namespace Projektseminar.Instance
 
                 //Update Tail mit dem Job oder Maschinen Maximum
                 currentTask.Tail = Math.Max(tailSM, tailSJ);
+                if (currentTask.sucMachineTask == null && currentTask.sucJobTask == null)
+                {
+                    this.Makespan = currentTask.Release + currentTask.Tail;
+                }
                 //Console.WriteLine($"RESULT:Updated Tail of Job{currentTask.Job.Id}_Task{currentTask.Id}");
 
                 //Füge der Liste den Vorgänger im Job dieses Tasks hinzu
@@ -658,27 +646,27 @@ namespace Projektseminar.Instance
                 }
             }
 
-            int k = 0;
+            int makespan = this.CalculateMakespan();
             foreach (KeyValuePair<Tuple<Machine, int>, List<Task>> blockPair in critBlocks)
             {
-                if (k == 0)
+                if (blockPair.Value[0].Release == 0)
                 {
                     swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
-                    k++;
                 }
-                else if (k == critBlocks.Count - 1)
+                else if (blockPair.Value[0].Release + blockPair.Value[0].Duration == makespan)
                 {
                     swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
-                    k++;
+                }
+                else if (blockPair.Value.Count <= 2)
+                {                  
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
                 }
                 else
-                {                  
+                {
                     swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
                     swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
-                    k++;
                 }
             }
-
             return swapOperations;
         }
     }

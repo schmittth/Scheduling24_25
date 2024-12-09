@@ -58,16 +58,6 @@ namespace Projektseminar.MetaHeuristic
                         do
                         {
                             chooseNeighbor = random.Next(0, dict.Count);
-
-                            /*Debug*/
-                            //Console.WriteLine($"Choose Neigbor {chooseNeighbor}");
-                            
-                            /*if (invalidNumber.Count == dict.Count)
-                            {
-                                invalidNumber.Clear();
-                                dict = CurrentProblem.GetNeighboorhood("N1");
-                                chooseNeighbor = random.Next(0, dict.Count);                             
-                            }*/
                         }
                         while (invalidNumber.Contains(chooseNeighbor));
 
@@ -121,7 +111,7 @@ namespace Projektseminar.MetaHeuristic
             return BestProblem;
         }
 
-        public void Log(string instanceName, int seedValue)
+        public void Log(string instanceName, int seedValue, TimeSpan runtime, string priorityRule = "")
         {
 
             int minTaskAmount = BestProblem.Machines.Count;
@@ -151,7 +141,7 @@ namespace Projektseminar.MetaHeuristic
 
             using (StreamWriter sw = File.AppendText((@$"..\..\..\LogFile.csv")))
             {
-                sw.WriteLine($"{instanceName};{BestProblem.Jobs.Count};{BestProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};SimulatedAnnealing;{CoolingFactor};{Iterations};{Neighboorhood};{seedValue}");
+                sw.WriteLine($"{instanceName};{BestProblem.Jobs.Count};{BestProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};SimulatedAnnealing;{CoolingFactor};{Iterations};{Neighboorhood};{priorityRule};{runtime};{seedValue}");
             }
         }
     }
