@@ -55,7 +55,7 @@ namespace Projektseminar
 
                     stopwatch.Stop();
 
-                    problem.ProblemAsDiagramm( @"..\diagrammInitial.html");
+                    //problem.ProblemAsDiagramm( @"..\diagrammInitial.html"); -> Hier unnötig oder?
 
                     Tuple<double, int> simAnnealParams = Dialog.ChooseSimAnnealParameters();
 

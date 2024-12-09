@@ -154,9 +154,11 @@ namespace Projektseminar.Instance
                 Dictionary<int, string> jobColors = new Dictionary<int, string>();
                 var random = new Random();
 
+                int makeSpan = CalculateMakespan();
+
                 foreach (Job job in Jobs)
                 {
-                    //Assigne jedem Job eine Farbe
+                    //Delete
                     /*if (!jobColors.ContainsKey(job.Id))
                     {
                         jobColors[job.Id] = String.Format("#{0:X6}", random.Next(0x1000000));
@@ -166,11 +168,11 @@ namespace Projektseminar.Instance
 
                     foreach (Task task in job.Tasks)
                     {
-                        sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Task '+'{task.Job.Id}', 'Duration: ' + '{task.Duration}' , 'Job: ' + '{task.Job.Id}' + ', Task:' + '{task.Id}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End})],");
+                        sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Job '+'{task.Job.Id}', 'Duration: ' + '{task.Duration}'+ ', Job: ' + '{task.Job.Id}' + ', Task:' + '{task.Id}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End})],");
 
                         if (task.Setup != 0)
                         {
-                            sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Setup', ' ' ,  '{task.Setup}' , new Date(0, 0, 0, 0, 0, {task.Start - task.Setup}) , new Date(0, 0, 0, 0, 0, {task.Start})],");
+                            sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Setup',  '{task.Setup}' , new Date(0, 0, 0, 0, 0, {task.Start - task.Setup}) , new Date(0, 0, 0, 0, 0, {task.Start})],");
                         }
                     }
                 }
@@ -181,6 +183,7 @@ namespace Projektseminar.Instance
                 sw.WriteLine("}");
                 sw.WriteLine("</script>");
                 sw.WriteLine("");
+                sw.WriteLine($"<div><p>Makespan: {makeSpan} Seconds</p></div>");
                 sw.WriteLine("<div id=\"example3.1\" style=\"height: 1000px;\"></div>");
             }
         }
