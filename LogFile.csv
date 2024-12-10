@@ -1,6 +1,27 @@
+<<<<<<< HEAD
 "Instance"; "JobAmount"; "MachineAmount"; "MinTaskAmount"; "MinTaskTime"; "MaxTaskTime"; "Solver"; "CoolingFactor"; "Iterations"; "Neighborhood"; "SeedValue"
 
 ../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,99;100;N3;1297856797
 ../../../ExampleInstanceMedium.txt;10;5;0;0;100;GoogleOR;;;;817691212
 ../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,5;10;N1;1627747007
 ../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,5;10;N1;639120499
+=======
+"Instance"; "JobAmount"; "MachineAmount"; "MinTaskAmount"; "MinTaskTime"; "MaxTaskTime"; "Solver"; "CoolingFactor"; "Iterations"; "Neighborhood"; "PriorityRule"; "RunTime"; "SeedValue"
+../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,99;200;N3;LPT;00:00:05.4195438;1773395278
+../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,99;200;N3;LPT;00:00:05.9713238;1245249913
+../../../ExampleInstanceMedium.txt;10;5;0;0;100;LocalSearch;;;N3;LTT;00:00:11.8642861;732031170
+../../../ExampleInstanceMedium.txt;10;5;0;0;100;LocalSearch;;;N3;LPT;00:00:07.9896555;665595958
+../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,99;250;N3;LPT;00:00:11.4445673;1579866922
+../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,99;250;N3;LTT;00:00:11.7064630;1597251631
+../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,99;200;N3;LTT;00:00:20.6290273;2045576101
+Random;10;10;6;50;99;SimulatedAnnealing;0,95;500;N3;LPT;00:00:09.4120695;20
+../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,99;250;N5;LPT;00:00:09.0074068;886814767
+../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,99;100;N5;LPT;00:00:05.8285965;810206341
+Random;30;30;26;50;200;SimulatedAnnealing;0,99;250;N5;LPT;00:01:05.0127195;2081255777
+../../../ExampleInstanceMedium.txt;10;5;0;0;100;GoogleOR;;;;;00:00:04.3226720;0
+../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,995;100;N5;LPT;00:00:09.4632361;1825672781
+../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,995;250;N5;LPT;00:00:08.1134870;657054314
+../../../ExampleInstanceMedium.txt;10;5;5;11;100;SimulatedAnnealing;0,995;500;N5;LPT;00:00:12.2285036;80434928
+../../../ExampleInstanceMedium.txt;10;5;0;0;100;GoogleOR;;;;;00:00:04.2375810;0
+../../../ExampleInstanceMedium.txt;10;5;0;0;100;GoogleOR;;;;;00:00:04.1949886;0
+>>>>>>> Basti

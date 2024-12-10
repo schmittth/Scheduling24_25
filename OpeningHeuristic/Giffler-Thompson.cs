@@ -5,6 +5,12 @@ namespace Projektseminar.OpeningHeuristic
     internal class Giffler_Thompson
     {
         //Eigenschaften
+        public string PriorityRule
+        {
+            get => priorityRule; 
+            set => priorityRule = value;
+        }
+
 
         //Variablen
         private Problem problem;
