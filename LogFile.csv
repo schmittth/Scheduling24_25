@@ -25,3 +25,5 @@ Random;30;30;26;50;200;SimulatedAnnealing;0,99;250;N5;LPT;00:01:05.0127195;20812
 ../../../ExampleInstanceMedium.txt;10;5;0;0;100;GoogleOR;;;;;00:00:04.2375810;0
 ../../../ExampleInstanceMedium.txt;10;5;0;0;100;GoogleOR;;;;;00:00:04.1949886;0
 >>>>>>> Basti
+../../../ExampleInstanceSmall.txt;5;3;2;12;94;SimulatedAnnealing;0,5;5;N1;LPT;00:00:00.0033160;1464362909
+../../../ExampleInstanceSmall.txt;5;3;2;12;94;SimulatedAnnealing;0,5;5;N1;LPT;00:00:00.0025277;451132578
