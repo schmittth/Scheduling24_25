@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -111,35 +111,34 @@ namespace Projektseminar.Instance
 
             File.Copy(@"..\..\..\Diagramms\template.html", filepath, true);
 
-            SortedDictionary<int, string> jobToColor = new SortedDictionary<int, string>();
-            var random = new Random();
-
-            foreach (Job job in Jobs)
-            {
-                jobToColor.Add(job.Id, String.Format("#{0:X6}", random.Next(0x1000000)));
-            }
-
             using (StreamWriter sw = File.AppendText(filepath))
             {
-                foreach (Machine machine in machines)
+                Dictionary<int, string> jobColors = new Dictionary<int, string>();
+                var random = new Random();
+
+                int makeSpan = CalculateMakespan();
+
+                foreach (Job job in Jobs)
                 {
-                    foreach (Task task in machine.Schedule)
+                    foreach (Task task in job.Tasks)
                     {
-                        sw.WriteLine($"[ 'Machine {task.Machine.Id}' , '{task.Job.Id} {task.Id}', '{task.Duration}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End}), '{jobToColor[task.Job.Id]}' ],");
+                        sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Job '+'{task.Job.Id}', 'Duration: ' + '{task.Duration}'+ ', Job: ' + '{task.Job.Id}' + ', Task:' + '{task.Id}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End})],");
 
                         if (task.Setup != 0)
                         {
-                            sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Setup',  '{task.Setup}' , new Date(0, 0, 0, 0, 0, {task.Start - task.Setup}) , new Date(0, 0, 0, 0, 0, {task.Start}), '#111557' ],");
+                            sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Setup',  '{task.Setup}' , new Date(0, 0, 0, 0, 0, {task.Start - task.Setup}) , new Date(0, 0, 0, 0, 0, {task.Start})],");
                         }
                     }
                 }
+
                 sw.WriteLine("]);");
                 sw.WriteLine("");
                 sw.WriteLine("chart.draw(dataTable);");
                 sw.WriteLine("}");
-                sw.WriteLine("</script >");
+                sw.WriteLine("</script>");
                 sw.WriteLine("");
-                sw.WriteLine("<div id = \"example3.1\" style = \"height: 1000px;\" ></ div >");
+                sw.WriteLine($"<div><p>Makespan: {makeSpan} Seconds</p></div>");
+                sw.WriteLine("<div id=\"example3.1\" style=\"height: 1000px;\"></div>");
             }
 
             if (openOnWrite == true)
@@ -197,9 +196,9 @@ namespace Projektseminar.Instance
 
             SetRelatedTasks();
             CalculateSetups();
-                CalculateReleases();
-                CalculateTail();
-            
+            CalculateReleases();
+            CalculateTail();
+
         }
 
         //Gebe eine Liste von allen kritischen Tasks in einem Problem zurück
@@ -209,13 +208,13 @@ namespace Projektseminar.Instance
             //Stopwatch critWatch = new Stopwatch();
             //critWatch.Start();
 
-            Dictionary<Machine,List<Task>> critTasks = new Dictionary<Machine, List<Task>>();
+            Dictionary<Machine, List<Task>> critTasks = new Dictionary<Machine, List<Task>>();
             int makespan = CalculateMakespan();
 
             for (int j = 0; j < machines.Count(); j++)
             {
-                critTasks.Add(machines[j],new List<Task>());
-                for (int i = 0; i < machines[j].Schedule.Count; i++ )
+                critTasks.Add(machines[j], new List<Task>());
+                for (int i = 0; i < machines[j].Schedule.Count; i++)
                 {
                     Task task = machines[j].Schedule[i];
                     if (task.Release + task.Tail == makespan)
@@ -545,7 +544,7 @@ namespace Projektseminar.Instance
 
             int makespan = CalculateMakespan();
 
-            foreach (KeyValuePair<Machine,List<Task>> critPair in critTasks)
+            foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
             {
                 foreach (Task task in critPair.Value)
                 {
@@ -583,7 +582,7 @@ namespace Projektseminar.Instance
                         //j, i, p(i) --> Wenn diese Nachbarschaft abgespeichert ist, muss s(j), j, i nicht gespeichert werden.
                         firstNeighbor = swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
                     }
-                    
+
                     if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.preMachineTask))
                     {
                         //i, j, s(j) --> task = j 
@@ -621,7 +620,7 @@ namespace Projektseminar.Instance
                 if (critPair.Value.Count > 1)
                 {
                     //critBlocks.Add(Tuple.Create(critPair.Key, currentBlock), new List<Task> { critPair.Value[0] });
-                    
+
                     for (int i = 0; i < critPair.Value.Count - 1; i++)
                     {
                         if ((!critBlocks.ContainsKey(Tuple.Create(critPair.Key, currentBlock)) && critPair.Value[i].sucMachineTask is not null))
@@ -658,7 +657,7 @@ namespace Projektseminar.Instance
                     swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
                 }
                 else if (blockPair.Value.Count <= 2)
-                {                  
+                {
                     swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
                 }
                 else
