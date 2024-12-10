@@ -23,7 +23,7 @@ namespace Projektseminar
             string instanceChoice = Dialog.ChooseInstance();
             if (instanceChoice == "Random")
             {
-                Tuple <int,int,int,int,int> randomSize = Dialog.ChooseRandomInstanceSize();
+                Tuple<int, int, int, int, int> randomSize = Dialog.ChooseRandomInstanceSize();
                 seedValue = Dialog.SeedAlgorithm();
                 importer.ImportRandomInstance(randomSize.Item1, randomSize.Item2, seedValue, randomSize.Item3, randomSize.Item4, randomSize.Item5);
             }
@@ -33,7 +33,7 @@ namespace Projektseminar
             }
 
             Problem problem = importer.GenerateProblem(); //Erstelle aus importierter Instanz ein Problem.
-            
+
             switch (Dialog.ChooseSolver()) //Switch-Case Anweisungen basierend auf der Solver-Auswahl.
             {
                 //Solver: Google OR-Tools
@@ -46,12 +46,12 @@ namespace Projektseminar
 
                     stopwatch.Stop();
 
-                    newSolver.Log(instanceChoice, seedValue,stopwatch.Elapsed); //Logge die Ausführung
+                    newSolver.Log(instanceChoice, seedValue, stopwatch.Elapsed); //Logge die Ausführung
 
                     break;
                 //Solver: Simulated Annealing
                 case 2:
-                    Giffler_Thompson giffler_Thompson = new Giffler_Thompson(problem,Dialog.ChoosePriorityRule());
+                    Giffler_Thompson giffler_Thompson = new Giffler_Thompson(problem, Dialog.ChoosePriorityRule());
                     stopwatch.Start();
                     problem = giffler_Thompson.InitialSolution();
 
@@ -62,12 +62,6 @@ namespace Projektseminar
                     Tuple<double, int> simAnnealParams = Dialog.ChooseSimAnnealParameters();
 
                     SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, simAnnealParams.Item1, simAnnealParams.Item2, Dialog.ChooseNeighboorhood());
-<<<<<<< HEAD
-                    stopwatch.Start();
-                    problem = simAnneal.DoSimulatedAnnealing(seedValue);
-                    simAnneal.Log(instanceChoice, seedValue);
-                    problem.ProblemAsDiagramm(@$"..\..\..\diagramm.html");
-=======
                     if (seedValue != 0)
                     {
                         problem = simAnneal.DoSimulatedAnnealing(seedValue);
@@ -77,21 +71,20 @@ namespace Projektseminar
                         seedValue = Dialog.SeedAlgorithm();
                         problem = simAnneal.DoSimulatedAnnealing(seedValue);
                     }
->>>>>>> Basti
 
                     stopwatch.Stop();
 
                     simAnneal.Log(instanceChoice, seedValue, stopwatch.Elapsed, giffler_Thompson.PriorityRule);
 
-                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\diagramm.html",true);
-                    
+                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\diagramm.html", true);
+
                     break;
                 case 3:
                     stopwatch.Start();
 
                     Giffler_Thompson localgiffler_Thompson = new Giffler_Thompson(problem, Dialog.ChoosePriorityRule());
                     problem = localgiffler_Thompson.InitialSolution();
-                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\diagrammInitial.html",false);
+                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\diagrammInitial.html", false);
 
                     LocalSearch.LocalSearch localSearch = new LocalSearch.LocalSearch(problem, Dialog.ChooseNeighboorhood());
                     problem = localSearch.DoLocalSearch();

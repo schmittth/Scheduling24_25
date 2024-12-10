@@ -13,11 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Projektseminar")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< HEAD
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+330a4dc328e332af2693f0e1ae607d5db9bfb65e")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+40c3fa6ebb76238078aeecb22de5994b91dd6e10")]
->>>>>>> Basti
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f02986ac3e1ae5f77b40e904a52c921028e15b34")]
 [assembly: System.Reflection.AssemblyProductAttribute("Projektseminar")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Projektseminar")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
