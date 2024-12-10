@@ -25,3 +25,7 @@
 ../../../ExampleInstanceSmall.txt;5;3;2;12;94;SimulatedAnnealing;0,5;5;N1;2057772575
 ../../../ExampleInstanceSmall.txt;5;3;2;12;94;SimulatedAnnealing;0,5;5;N1;1225806298
 ../../../ExampleInstanceSmall.txt;5;3;2;12;94;SimulatedAnnealing;0,5;5;N1;1166145561
+../../../ExampleInstanceSmall.txt;5;3;2;12;94;SimulatedAnnealing;0,5;5;N1;204279618
+Random;30;20;2;0;99;SimulatedAnnealing;0,5;100;N1;0
+Random;30;20;2;0;100;SimulatedAnnealing;0,5;5000;N1;1470281128
+../../../ExampleInstanceSmall.txt;5;3;2;12;94;SimulatedAnnealing;0,5;5;N1;528258987
