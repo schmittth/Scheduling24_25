@@ -1,16 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "hFTWpBSwbGc=",
+  "dgSpecHash": "t6Oq8EkivlU=",
   "success": true,
   "projectFilePath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Projektseminar\\Projektseminar.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\haeus\\.nuget\\packages\\google.ortools\\9.10.4067\\google.ortools.9.10.4067.nupkg.sha512",
-    "C:\\Users\\haeus\\.nuget\\packages\\google.ortools.runtime.linux-arm64\\9.10.4067\\google.ortools.runtime.linux-arm64.9.10.4067.nupkg.sha512",
-    "C:\\Users\\haeus\\.nuget\\packages\\google.ortools.runtime.linux-x64\\9.10.4067\\google.ortools.runtime.linux-x64.9.10.4067.nupkg.sha512",
-    "C:\\Users\\haeus\\.nuget\\packages\\google.ortools.runtime.osx-arm64\\9.10.4067\\google.ortools.runtime.osx-arm64.9.10.4067.nupkg.sha512",
-    "C:\\Users\\haeus\\.nuget\\packages\\google.ortools.runtime.osx-x64\\9.10.4067\\google.ortools.runtime.osx-x64.9.10.4067.nupkg.sha512",
-    "C:\\Users\\haeus\\.nuget\\packages\\google.ortools.runtime.win-x64\\9.10.4067\\google.ortools.runtime.win-x64.9.10.4067.nupkg.sha512",
-    "C:\\Users\\haeus\\.nuget\\packages\\google.protobuf\\3.26.1\\google.protobuf.3.26.1.nupkg.sha512"
+    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools\\9.10.4067\\google.ortools.9.10.4067.nupkg.sha512",
+    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools.runtime.linux-arm64\\9.10.4067\\google.ortools.runtime.linux-arm64.9.10.4067.nupkg.sha512",
+    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools.runtime.linux-x64\\9.10.4067\\google.ortools.runtime.linux-x64.9.10.4067.nupkg.sha512",
+    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools.runtime.osx-arm64\\9.10.4067\\google.ortools.runtime.osx-arm64.9.10.4067.nupkg.sha512",
+    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools.runtime.osx-x64\\9.10.4067\\google.ortools.runtime.osx-x64.9.10.4067.nupkg.sha512",
+    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools.runtime.win-x64\\9.10.4067\\google.ortools.runtime.win-x64.9.10.4067.nupkg.sha512",
+    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.protobuf\\3.26.1\\google.protobuf.3.26.1.nupkg.sha512"
   ],
   "logs": []
 }

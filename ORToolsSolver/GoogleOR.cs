@@ -6,10 +6,12 @@ namespace Projektseminar.ORToolsSolver
     internal class GoogleOR
     {
         public Problem CurrentProblem { get; set; }
+        public Problem BestProblem { get; set; }
 
         public GoogleOR(Problem currentProblem)
         {
             CurrentProblem = currentProblem;
+            BestProblem = currentProblem;
         }
 
         public void DoORSolver()

@@ -17,88 +17,113 @@ namespace Projektseminar
             Stopwatch stopwatch = new Stopwatch(); //Initialisiere eine Stopwatch um die Laufzeit zu messen.
             int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds; //Generiere sog. Unix-Timestamp.
             int seedValue = 0; //Initialisiere eine Int der den Random-Seed für diese Ausführung entält. Setze auf 0
+            int seedChoice = 0; 
 
-            //Initialisiere neues Importer-Objekt, dass über den Dialog die zu importierende Instanz erhält.
-            Importer importer = new Importer();
-            string instanceChoice = Dialog.ChooseInstance();
+            int instanceAmount = Dialog.ChooseInstanceAmount(); //Bestimme wie oft Instanzen generiert werden sollen
+            string instanceChoice = Dialog.ChooseInstance(); //Bestimme ob randomisierte oder feste Instanz
+
+            //Wenn Anzahl an Instanzen gleich 1 lasse Seed auswählen
+            if (instanceAmount == 1)
+            {
+                seedChoice = Dialog.SeedAlgorithm();
+            }
+
+            //Wenn randomisierte Instanz lasse Instanzgröße auswählen
+            Tuple<int, int, int, int, int> randomInstanceSize = null;
             if (instanceChoice == "Random")
             {
-                Tuple<int, int, int, int, int> randomSize = Dialog.ChooseRandomInstanceSize();
-                seedValue = Dialog.SeedAlgorithm();
-                importer.ImportRandomInstance(randomSize.Item1, randomSize.Item2, seedValue, randomSize.Item3, randomSize.Item4, randomSize.Item5);
+                randomInstanceSize = Dialog.ChooseRandomInstanceSize();
+  
             }
-            else
+
+            int solverChoice = Dialog.ChooseSolver(); //Lasse Lösungsansatz auswählen
+            string priorityRule= ""; //Initialisiere PriortityRule String
+            string neighboorhood = ""; //Initialisiere Nachbarschafts String
+
+            
+            if (solverChoice == 2 || solverChoice == 3)
             {
-                importer.ImportInstanceFromFile(instanceChoice);
+                priorityRule = Dialog.ChoosePriorityRule();
+                neighboorhood = Dialog.ChooseNeighboorhood();
             }
 
-            Problem problem = importer.GenerateProblem(); //Erstelle aus importierter Instanz ein Problem.
-
-            switch (Dialog.ChooseSolver()) //Switch-Case Anweisungen basierend auf der Solver-Auswahl.
+            Tuple<double, int> simAnnealParams = null;
+            if (solverChoice == 2)
             {
-                //Solver: Google OR-Tools
-                case 1:
-                    stopwatch.Start();
-
-                    //Erstelle neues OR-Solver Objekt und löse das Problem.
-                    ORToolsSolver.GoogleOR newSolver = new ORToolsSolver.GoogleOR(problem);
-                    newSolver.DoORSolver();
-
-                    stopwatch.Stop();
-
-                    newSolver.Log(instanceChoice, seedValue, stopwatch.Elapsed); //Logge die Ausführung
-
-                    break;
-                //Solver: Simulated Annealing
-                case 2:
-                    Giffler_Thompson giffler_Thompson = new Giffler_Thompson(problem, Dialog.ChoosePriorityRule());
-                    stopwatch.Start();
-                    problem = giffler_Thompson.InitialSolution();
-
-                    stopwatch.Stop();
-
-                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\diagrammInitial.html", false);
-
-                    Tuple<double, int> simAnnealParams = Dialog.ChooseSimAnnealParameters();
-
-                    SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, simAnnealParams.Item1, simAnnealParams.Item2, Dialog.ChooseNeighboorhood());
-                    
-                    if (seedValue != 0)
-                    {
-                        stopwatch.Start();
-                        problem = simAnneal.DoSimulatedAnnealing(seedValue);
-                    }
-                    else
-                    {
-                        seedValue = Dialog.SeedAlgorithm();
-                        stopwatch.Start();
-                        problem = simAnneal.DoSimulatedAnnealing(seedValue);
-                    }
-
-                    stopwatch.Stop();
-
-                    simAnneal.Log(instanceChoice, seedValue, stopwatch.Elapsed, giffler_Thompson.PriorityRule);
-
-                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\diagramm.html", true);
-
-                    break;
-                case 3:
-                    stopwatch.Start();
-
-                    Giffler_Thompson localgiffler_Thompson = new Giffler_Thompson(problem, Dialog.ChoosePriorityRule());
-                    problem = localgiffler_Thompson.InitialSolution();
-                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\diagrammInitial.html", false);
-
-                    LocalSearch.LocalSearch localSearch = new LocalSearch.LocalSearch(problem, Dialog.ChooseNeighboorhood());
-                    problem = localSearch.DoLocalSearch();
-
-                    stopwatch.Stop();
-
-                    localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, localgiffler_Thompson.PriorityRule);
-
-                    break;
+                simAnnealParams = Dialog.ChooseSimAnnealParameters();
             }
 
+            for (int instanceCounter = 0; instanceCounter < instanceAmount; instanceCounter++)
+            {
+
+                if (seedChoice == 0)
+                {
+                    Random randSeed = new Random();
+                    seedValue = randSeed.Next(0, Int32.MaxValue);
+                }
+                else
+                {
+                    seedValue = seedChoice;
+                }
+
+                Importer importer = new Importer();
+                if (instanceChoice == "Random")
+                {
+                    importer.ImportRandomInstance(randomInstanceSize.Item1, randomInstanceSize.Item2, seedValue, randomInstanceSize.Item3, randomInstanceSize.Item4, randomInstanceSize.Item5);
+                }
+                else
+                {
+                    importer.ImportInstanceFromFile(instanceChoice);
+                }
+                Problem problem = importer.GenerateProblem();
+
+                GifflerThompson gifflerThompson = new GifflerThompson(problem, priorityRule);
+                if (solverChoice == 2 || solverChoice == 3)
+                {
+                    gifflerThompson.InitialSolution();
+                }
+
+                switch (solverChoice) //Switch-Case Anweisungen basierend auf der Solver-Auswahl.
+                {
+                    //Solver: Google OR-Tools
+                    case 1:
+
+                        stopwatch.Start();
+
+                        //Erstelle neues OR-Solver Objekt und löse das Problem.
+                        ORToolsSolver.GoogleOR newSolver = new ORToolsSolver.GoogleOR(problem);
+                        newSolver.DoORSolver();
+
+                        stopwatch.Stop();
+
+                        newSolver.Log(instanceChoice, seedValue, stopwatch.Elapsed); //Logge die Ausführung
+
+                        break;
+                    //Solver: Simulated Annealing
+                    case 2:
+
+                        SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, simAnnealParams.Item1, simAnnealParams.Item2, neighboorhood);
+
+                        problem = simAnneal.DoSimulatedAnnealing(seedValue);
+
+                        stopwatch.Stop();
+
+                        simAnneal.Log(instanceChoice, seedValue, stopwatch.Elapsed, gifflerThompson.PriorityRule);
+
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\diagramm.html", true);
+
+                        break;
+                    case 3:
+                        LocalSearch.LocalSearch localSearch = new LocalSearch.LocalSearch(problem, neighboorhood);
+                        problem = localSearch.DoLocalSearch();
+
+                        stopwatch.Stop();
+
+                        localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, gifflerThompson.PriorityRule);
+
+                        break;
+                }
+            }
             stopwatch.Stop();
         }
     }

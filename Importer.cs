@@ -69,13 +69,6 @@ namespace Projektseminar
         //Generiere eine zufällige Instanz der größe 5,3 
         public void ImportRandomInstance(int jobCount, int machineCount, int seedValue, int minTaskPerJob, int minTaskTime, int maxTaskTime)
         {
-            if (seedValue == 0)
-            {
-                Random randSeed = new Random();
-                seedValue = randSeed.Next(0, Int32.MaxValue);
-            }
-
-            Console.WriteLine($"Random was seeded with {seedValue}");
             Random rand = new Random(seedValue);
 
             for (int i = 0; i < jobCount; i++)

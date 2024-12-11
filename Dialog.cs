@@ -9,6 +9,25 @@ namespace Projektseminar
 {
     internal class Dialog
     {
+        public static int ChooseInstanceAmount()
+        {
+            int instanceAmountChoiceInt;
+            string instanceAmountChoiceString;
+
+            do
+            {
+                Console.WriteLine("Choose how many instances you want to test:");
+                instanceAmountChoiceString = Console.ReadLine(); //Lese Instanzauswahl ein
+                if (instanceAmountChoiceString == "")
+                {
+                    instanceAmountChoiceInt = 1;
+                    break;
+                }
+
+            } while (!(int.TryParse(instanceAmountChoiceString, out instanceAmountChoiceInt) && instanceAmountChoiceInt != 0));
+
+            return instanceAmountChoiceInt;
+        }
         public static string ChooseInstance()
         {
             string[] allInstances = Directory.GetFiles("../../../", "*.txt");
@@ -108,11 +127,6 @@ namespace Projektseminar
                 Console.WriteLine("Choose default value: \"Random\"");
             }
 
-            if (seedChoiceInt == 0)
-            {
-                Random randSeed = new Random();
-                seedChoiceInt = randSeed.Next(0, Int32.MaxValue);
-            }
             return seedChoiceInt;
         }
 
@@ -145,12 +159,13 @@ namespace Projektseminar
         {
             int jobsChoiceInt;
             string jobsChoiceString;
+
             do
             {
                 Console.WriteLine("Please provide an amount of jobs:");
                 jobsChoiceString = Console.ReadLine();
-
-            } while (!(int.TryParse(jobsChoiceString, out jobsChoiceInt)));
+            }
+            while (!(int.TryParse(jobsChoiceString, out jobsChoiceInt) && jobsChoiceInt != 0));
 
             int machineChoiceInt;
             string machineChoiceString;
@@ -159,16 +174,16 @@ namespace Projektseminar
                 Console.WriteLine("Please provide a number of machines:");
                 machineChoiceString = Console.ReadLine();
 
-            } while (!(int.TryParse(machineChoiceString, out machineChoiceInt)));
+            } while (!(int.TryParse(machineChoiceString, out machineChoiceInt) && machineChoiceInt != 0));
         
-            Console.WriteLine("Please type the minimal amount of task each job should have for random Instance: (Default value: \"1\")");
             int minTaskPerJobInt = 1;
-            string minTaskPerJobString = Console.ReadLine();
-
-            if (!(int.TryParse(minTaskPerJobString, out minTaskPerJobInt)))
+            string minTaskPerJobString;
+            do
             {
-                Console.WriteLine("Choose default value: \"1\"");
-            }
+                Console.WriteLine("Please type the minimal amount of task each job should have for random Instance: (Default value: \"1\")");
+                minTaskPerJobString = Console.ReadLine();
+
+            } while (!(int.TryParse(minTaskPerJobString, out minTaskPerJobInt) && minTaskPerJobInt != 0));
 
             Console.WriteLine("Please type the minimal task and setup time for random Instance: (Default value: \"10\")");
             int minTaskTimeInt = 10;

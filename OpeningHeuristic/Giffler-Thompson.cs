@@ -2,7 +2,7 @@
 
 namespace Projektseminar.OpeningHeuristic
 {
-    internal class Giffler_Thompson
+    internal class GifflerThompson
     {
         //Eigenschaften
         public string PriorityRule
@@ -18,7 +18,7 @@ namespace Projektseminar.OpeningHeuristic
         private string priorityRule;
         
         //Konstruktoren
-        public Giffler_Thompson(Problem problem, string priorityRule)
+        public GifflerThompson(Problem problem, string priorityRule)
         {
             this.problem = problem;
             this.priorityRule = priorityRule;
