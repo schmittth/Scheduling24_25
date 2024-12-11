@@ -122,7 +122,7 @@ namespace Projektseminar.ORToolsSolver
                 }
 
                 BestProblem.SetRelatedTasks();
-                BestProblem.CalculateSetups();
+                BestProblem.Recalculate();
                 BestProblem.ProblemAsDiagramm(@"..\Or.html", false);
 
             }

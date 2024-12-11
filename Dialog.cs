@@ -1,11 +1,4 @@
-﻿using Google.OrTools.ConstraintSolver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Projektseminar
+﻿namespace Projektseminar
 {
     internal class Dialog
     {
@@ -50,7 +43,7 @@ namespace Projektseminar
             } while (!(int.TryParse(instanceChoiceString, out instanceChoiceInt) && instanceChoiceInt >= 0 && instanceChoiceInt <= allInstances.Length)); //Erzwinge Auswahl erneut wenn nicht innerhalb der Grenzen
 
             //Gebe Dateipfad oder "Random" zurück
-            if (instanceChoiceInt == 0) 
+            if (instanceChoiceInt == 0)
             {
                 instanceChoiceString = "Random";
             }
@@ -67,7 +60,8 @@ namespace Projektseminar
             int solverChoiceInt;
             string solverChoiceString;
 
-            do {
+            do
+            {
                 Console.WriteLine("Loading Successful. Please choose your Solver:");
 
                 foreach (string solver in availableSolvers)
@@ -86,23 +80,28 @@ namespace Projektseminar
             Console.WriteLine("Please choose a Priority rule: ");
             string[] availableRules = { "LPT", "SPT", "LTT", "STT" };
             Console.Write("Currently supported rules: ");
+            string ruleChoice;
 
-            int i = 1;
-            foreach (string rule in availableRules)
+            do
             {
-                Console.Write(rule);
-                if (i < availableRules.Length)
+                int i = 1;
+                foreach (string rule in availableRules)
                 {
-                    Console.Write(",");
-                    i++;
+                    Console.Write(rule);
+                    if (i < availableRules.Length)
+                    {
+                        Console.Write(",");
+                        i++;
+                    }
+                    else
+                    {
+                        Console.WriteLine("");
+                    }
                 }
-                else
-                {
-                    Console.WriteLine("");
-                }
+                ruleChoice = Console.ReadLine();
             }
+            while (!availableRules.Contains(ruleChoice));
 
-            string ruleChoice = Console.ReadLine();
             return ruleChoice;
         }
 
@@ -155,7 +154,7 @@ namespace Projektseminar
             return neighboorhoodChoice;
         }
 
-        public static Tuple<int,int,int,int,int> ChooseRandomInstanceSize()
+        public static Tuple<int, int, int, int, int> ChooseRandomInstanceSize()
         {
             int jobsChoiceInt;
             string jobsChoiceString;
@@ -175,7 +174,7 @@ namespace Projektseminar
                 machineChoiceString = Console.ReadLine();
 
             } while (!(int.TryParse(machineChoiceString, out machineChoiceInt) && machineChoiceInt != 0));
-        
+
             int minTaskPerJobInt = 1;
             string minTaskPerJobString;
             do
@@ -206,7 +205,7 @@ namespace Projektseminar
             {
                 maxTaskTimeInt += 1;
             }
-           
+
             return Tuple.Create(jobsChoiceInt, machineChoiceInt, minTaskPerJobInt, minTaskTimeInt, maxTaskTimeInt);
         }
     }

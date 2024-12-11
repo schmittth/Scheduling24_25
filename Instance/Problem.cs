@@ -1,9 +1,3 @@
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
-
 namespace Projektseminar.Instance
 {
     internal class Problem
@@ -195,9 +189,7 @@ namespace Projektseminar.Instance
             );*/
 
             SetRelatedTasks();
-            CalculateSetups();
-            CalculateReleases();
-            CalculateTail();
+            Recalculate();
 
         }
 
@@ -300,11 +292,10 @@ namespace Projektseminar.Instance
             //Console.WriteLine($"Related Watch ran {relatedWatch.Elapsed.Minutes} Minutes {relatedWatch.Elapsed.Seconds} Seconds {relatedWatch.Elapsed.Milliseconds} Milliseconds {relatedWatch.Elapsed.Nanoseconds} Nanoseconds");
         }
 
-        public void CalculateSetups()
+        public void Recalculate()
         {
-            /*Performance*/
-            //Stopwatch setupWatch = new Stopwatch();
-            //setupWatch.Start();
+            Queue<Task> releaseQueue = new Queue<Task>();
+            Queue<Task> tailQueue = new Queue<Task>();
 
             foreach (Machine machine in Machines)
             {
@@ -318,36 +309,20 @@ namespace Projektseminar.Instance
                     {
                         task.Setup = 0;
                     }
-                }
-            }
 
-            /*Performance*/
-            //setupWatch.Stop();
-            //Console.WriteLine($"Setup Watch ran {setupWatch.Elapsed.Minutes} Minutes {setupWatch.Elapsed.Seconds} Seconds {setupWatch.Elapsed.Milliseconds} Milliseconds {setupWatch.Elapsed.Nanoseconds} Nanoseconds");
-        }
-
-        //Kalkuliere die Releaselzeiten für alle Tasks
-
-        public void CalculateReleases()
-        {
-            /*Performance*/
-            //Stopwatch releaseWatch = new Stopwatch();
-            //releaseWatch.Start();
-
-            Queue<Task> releaseQueue = new Queue<Task>();
-
-            foreach (Machine machine in machines)
-            {
-                foreach (Task task in machine.Schedule)
-                {
                     if (task.preMachineTask == null && task.preJobTask == null)
                     {
                         releaseQueue.Enqueue(task);
                     }
                     task.Release = -1;
+
+                    if (task.sucMachineTask == null && task.sucJobTask == null)
+                    {
+                        tailQueue.Enqueue(task);
+                    }
+                    task.Tail = -1;
                 }
             }
-
 
             while (releaseQueue.Count != 0)
             {
@@ -390,281 +365,219 @@ namespace Projektseminar.Instance
                     }
                 }
             }
-            /*Performance*/
-            //releaseWatch.Stop();
-            //Console.WriteLine($"Release Watch ran {releaseWatch.Elapsed.Minutes} Minutes {releaseWatch.Elapsed.Seconds} Seconds {releaseWatch.Elapsed.Milliseconds} Milliseconds {releaseWatch.Elapsed.Nanoseconds} Nanoseconds");
-        }
 
-        //Kalkuliere die Tailzeiten für alle Tasks
-        public void CalculateTail()
-        {
-            /*Performance*/
-            //Stopwatch tailWatch = new Stopwatch();
-            //tailWatch.Start();
-
-            Queue<Task> tailQueue = new Queue<Task>();
-
-            foreach (Machine machine in Machines)
-            {
-                foreach (Task task in machine.Schedule)
-                {
-                    if (task.sucMachineTask == null && task.sucJobTask == null)
-                    {
-                        tailQueue.Enqueue(task);
-                    }
-                    task.Tail = -1;
-                }
-            }
-
-            while (tailQueue.Count != 0)
+            while (releaseQueue.Count != 0)
             {
                 //Entferne ersten Task aus der Queue
-                tailQueue.TryDequeue(out Task currentTask);
+                releaseQueue.TryDequeue(out Task currentTask);
 
-                //Setze die Tailzeiten initial
-                int tailSM = currentTask.Duration, tailSJ = currentTask.Duration;
+                int releasePM = 0, releasePJ = 0;
 
-                //Identifiziere Tail des nachfolgenden Tasks auf dieser Maschine
-                if (currentTask.sucMachineTask is not null)
-                {
-                    tailSM = currentTask.sucMachineTask.Tail + currentTask.Duration + currentTask.sucMachineTask.Setup;
-                }
-
-                //Identifiziere Tail des nachfolgenden Tasks im Job dieses Tasks
-                if (currentTask.sucJobTask is not null)
-                {
-                    tailSJ = currentTask.sucJobTask.Tail + currentTask.Duration;
-                }
-
-                //Update Tail mit dem Job oder Maschinen Maximum
-                currentTask.Tail = Math.Max(tailSM, tailSJ);
-                if (currentTask.sucMachineTask == null && currentTask.sucJobTask == null)
-                {
-                    this.Makespan = currentTask.Release + currentTask.Tail;
-                }
-                //Console.WriteLine($"RESULT:Updated Tail of Job{currentTask.Job.Id}_Task{currentTask.Id}");
-
-                //Füge der Liste den Vorgänger im Job dieses Tasks hinzu
-                if (currentTask.preJobTask is not null)
-                {
-                    if (currentTask.preJobTask.sucMachineTask == null || currentTask.preJobTask.sucMachineTask.Tail != -1)
-                    {
-                        tailQueue.Enqueue(currentTask.preJobTask);
-                    }
-                }
-
-                //Füge der Liste den Vorgänger auf der Maschine dieses Tasks hinzu
                 if (currentTask.preMachineTask is not null)
                 {
-                    if (currentTask.preMachineTask.sucJobTask == null || currentTask.preMachineTask.sucJobTask.Tail != -1)
+                    releasePM = currentTask.preMachineTask.Release + currentTask.preMachineTask.Duration + currentTask.Setup;
+                }
+
+                if (currentTask.preJobTask is not null)
+                {
+                    releasePJ = currentTask.preJobTask.Release + currentTask.preJobTask.Duration;
+                }
+
+                currentTask.Release = Math.Max(releasePM, releasePJ);
+                currentTask.Start = currentTask.Release;
+                currentTask.End = currentTask.Start + currentTask.Duration;
+                //Console.WriteLine($"INFORMATION:Updated Release of Task {currentTask.Id} in Job {currentTask.Job.Id} ");      
+
+
+                if (currentTask.sucJobTask is not null)
+                {
+                    if (currentTask.sucJobTask.preMachineTask is null || currentTask.sucJobTask.preMachineTask.Release != -1)
                     {
-                        tailQueue.Enqueue(currentTask.preMachineTask);
+                        releaseQueue.Enqueue(currentTask.sucJobTask);
+                        //Console.WriteLine($"INFORMATION:Adding JobSuccessor Job{currentTask.sucJobTask.Job.Id}_Task{currentTask.sucJobTask.Id} of Job{currentTask.Job.Id}_Task{currentTask.Id} to release queue");
+                    }
+                }
+
+                if (currentTask.sucMachineTask is not null)
+                {
+                    if (currentTask.sucMachineTask.preJobTask == null || currentTask.sucMachineTask.preJobTask.Release != -1)
+                    {
+                        releaseQueue.Enqueue(currentTask.sucMachineTask);
+                        //Console.WriteLine($"INFORMATION:Adding MachineSuccessor Job{currentTask.sucMachineTask.Job.Id}_Task{currentTask.sucMachineTask.Id} of Job{currentTask.Job.Id}_Task{currentTask.Id} to release queue");
                     }
                 }
             }
-            /*Performance*/
-            //tailWatch.Stop();
-            //Console.WriteLine($"Tail Watch ran {tailWatch.Elapsed.Minutes} Minutes {tailWatch.Elapsed.Seconds} Seconds {tailWatch.Elapsed.Milliseconds} Milliseconds {tailWatch.Elapsed.Nanoseconds} Nanoseconds");
+        
         }
+    
 
-        public bool ConfirmFeasability()
+    public bool ConfirmFeasability()
+    {
+        foreach (Machine machine in Machines)
         {
-            foreach (Machine machine in Machines)
+            foreach (Task task in machine.Schedule)
             {
-                foreach (Task task in machine.Schedule)
+                if (task.Tail == -1 || task.Release == -1)
                 {
-                    if (task.Tail == -1 || task.Release == -1)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
-            return true;
         }
-
-        public Dictionary<int, Tuple<Problem, int>> GenerateNeighboorhood(string searchMethod)
-        {
-            /*Performance*/
-            Stopwatch neighborWatch = new Stopwatch();
-            neighborWatch.Start();
-
-            Dictionary<int, List<Tuple<Task, Task, Machine>>> allOperations = GetNeighboorhood(searchMethod);
-            Dictionary<int, Tuple<Problem, int>> fullNeighboorhood = new Dictionary<int, Tuple<Problem, int>>();
-
-            //Parallel.ForEach(allOperations, operationPair =>
-            foreach (KeyValuePair<int, List<Tuple<Task, Task, Machine>>> operationPair in allOperations)
-            {
-                Problem newProblem = new Problem(this);
-
-                foreach (Tuple<Instance.Task, Instance.Task, Machine> tuple in operationPair.Value)
-                {
-                    newProblem.SwapTasks(tuple.Item1, tuple.Item2, tuple.Item3);
-                }
-
-                if (newProblem.ConfirmFeasability())
-                {
-                    fullNeighboorhood.TryAdd(fullNeighboorhood.Count, Tuple.Create(newProblem, newProblem.CalculateMakespan()));
-                }
-            }//);
-            /*Performance*/
-            neighborWatch.Stop();
-            Console.WriteLine($"Release Watch ran {neighborWatch.Elapsed.Minutes} Minutes {neighborWatch.Elapsed.Seconds} Seconds {neighborWatch.Elapsed.Milliseconds} Milliseconds {neighborWatch.Elapsed.Nanoseconds} Nanoseconds");
-            return fullNeighboorhood;
-        }
-
-        //Switch-Case Anweisung zur Auswahl der Nachbarschaft
-        public Dictionary<int, List<Tuple<Task, Task, Machine>>> GetNeighboorhood(string searchMethod)
-        {
-            Dictionary<int, List<Tuple<Task, Task, Machine>>> newDict = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
-
-            switch (searchMethod)
-            {
-                case "N1":
-                    newDict = N1();
-                    break;
-                case "N3":
-                    newDict = N3();
-                    break;
-                case "N5":
-                    newDict = N5();
-                    break;
-                default:
-                    break;
-            }
-            return newDict;
-
-        }
-
-        public Dictionary<int, List<Tuple<Task, Task, Machine>>> N1()
-        {
-            Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
-            Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
-
-            //Problem returnProblem = problem;
-
-            int makespan = CalculateMakespan();
-
-            foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
-            {
-                foreach (Task task in critPair.Value)
-                {
-                    if (task.sucMachineTask != null && critTasks[task.Machine].Contains(task.sucMachineTask))
-                    {
-                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
-                    }
-                }
-            }
-            return swapOperations;
-        }
-
-        public Dictionary<int, List<Tuple<Task, Task, Machine>>> N3()
-        {
-
-            Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
-            Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
-
-            foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
-            {
-                foreach (Task task in critPair.Value)
-                {
-                    bool firstNeighbor = false;
-
-                    if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.sucMachineTask))
-                    {
-                        //p(i), i, j --> task = i
-
-                        //p(i), j, i
-                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
-
-                        //j, p(i), i
-                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine), Tuple.Create(task, task.sucMachineTask, task.Machine) });
-
-                        //j, i, p(i) --> Wenn diese Nachbarschaft abgespeichert ist, muss s(j), j, i nicht gespeichert werden.
-                        firstNeighbor = swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
-                    }
-
-                    if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.preMachineTask))
-                    {
-                        //i, j, s(j) --> task = j 
-
-                        //j, i, s(j)
-                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine) });
-
-                        //j, s(j), i
-                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine), Tuple.Create(task.preMachineTask, task, task.Machine) });
-
-                        //s(j), j, i
-                        if (!firstNeighbor)
-                        {
-                            swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
-                        }
-                    }
-                }
-            }
-            return swapOperations;
-        }
-
-        public Dictionary<int, List<Tuple<Task, Task, Machine>>> N5()
-        {
-            Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
-            Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
-
-            Dictionary<Tuple<Machine, int>, List<Task>> critBlocks = new Dictionary<Tuple<Machine, int>, List<Task>>();
-
-            foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
-            {
-                int currentBlock = 0;
-
-                if (critPair.Value.Count > 1)
-                {
-                    //critBlocks.Add(Tuple.Create(critPair.Key, currentBlock), new List<Task> { critPair.Value[0] });
-
-                    for (int i = 0; i < critPair.Value.Count - 1; i++)
-                    {
-                        if ((!critBlocks.ContainsKey(Tuple.Create(critPair.Key, currentBlock)) && critPair.Value[i].sucMachineTask is not null))
-                        {
-                            critBlocks.Add(Tuple.Create(critPair.Key, currentBlock), new List<Task> { critPair.Value[i] });
-                        }
-
-                        if (critPair.Value[i + 1] == critPair.Value[i].sucMachineTask)
-                        {
-                            critBlocks[Tuple.Create(critPair.Key, currentBlock)].Add(critPair.Value[i + 1]);
-                        }
-                        else if (critBlocks[Tuple.Create(critPair.Key, currentBlock)].Count == 1)
-                        {
-                            critBlocks.Remove(Tuple.Create(critPair.Key, currentBlock));
-                        }
-                        else
-                        {
-                            currentBlock++;
-                        }
-
-                    }
-                }
-            }
-
-            int makespan = this.CalculateMakespan();
-            foreach (KeyValuePair<Tuple<Machine, int>, List<Task>> blockPair in critBlocks)
-            {
-                if (blockPair.Value[0].Release == 0)
-                {
-                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
-                }
-                else if (blockPair.Value[0].Release + blockPair.Value[0].Duration == makespan)
-                {
-                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
-                }
-                else if (blockPair.Value.Count <= 2)
-                {
-                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
-                }
-                else
-                {
-                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
-                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
-                }
-            }
-            return swapOperations;
-        }
+        return true;
     }
+
+    //Switch-Case Anweisung zur Auswahl der Nachbarschaft
+    public Dictionary<int, List<Tuple<Task, Task, Machine>>> GetNeighboorhood(string searchMethod)
+    {
+        Dictionary<int, List<Tuple<Task, Task, Machine>>> newDict = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
+
+        switch (searchMethod)
+        {
+            case "N1":
+                newDict = N1();
+                break;
+            case "N3":
+                newDict = N3();
+                break;
+            case "N5":
+                newDict = N5();
+                break;
+            default:
+                break;
+        }
+        return newDict;
+    }
+
+    public Dictionary<int, List<Tuple<Task, Task, Machine>>> N1()
+    {
+        Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
+        Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
+
+        //Problem returnProblem = problem;
+
+        int makespan = CalculateMakespan();
+
+        foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
+        {
+            foreach (Task task in critPair.Value)
+            {
+                if (task.sucMachineTask != null && critTasks[task.Machine].Contains(task.sucMachineTask))
+                {
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
+                }
+            }
+        }
+        return swapOperations;
+    }
+
+    public Dictionary<int, List<Tuple<Task, Task, Machine>>> N3()
+    {
+
+        Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
+        Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
+
+        foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
+        {
+            foreach (Task task in critPair.Value)
+            {
+                bool firstNeighbor = false;
+
+                if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.sucMachineTask))
+                {
+                    //p(i), i, j --> task = i
+
+                    //p(i), j, i
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
+
+                    //j, p(i), i
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine), Tuple.Create(task, task.sucMachineTask, task.Machine) });
+
+                    //j, i, p(i) --> Wenn diese Nachbarschaft abgespeichert ist, muss s(j), j, i nicht gespeichert werden.
+                    firstNeighbor = swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
+                }
+
+                if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.preMachineTask))
+                {
+                    //i, j, s(j) --> task = j 
+
+                    //j, i, s(j)
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine) });
+
+                    //j, s(j), i
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine), Tuple.Create(task.preMachineTask, task, task.Machine) });
+
+                    //s(j), j, i
+                    if (!firstNeighbor)
+                    {
+                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
+                    }
+                }
+            }
+        }
+        return swapOperations;
+    }
+
+    public Dictionary<int, List<Tuple<Task, Task, Machine>>> N5()
+    {
+        Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
+        Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
+
+        Dictionary<Tuple<Machine, int>, List<Task>> critBlocks = new Dictionary<Tuple<Machine, int>, List<Task>>();
+
+        foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
+        {
+            int currentBlock = 0;
+
+            if (critPair.Value.Count > 1)
+            {
+                //critBlocks.Add(Tuple.Create(critPair.Key, currentBlock), new List<Task> { critPair.Value[0] });
+
+                for (int i = 0; i < critPair.Value.Count - 1; i++)
+                {
+                    if ((!critBlocks.ContainsKey(Tuple.Create(critPair.Key, currentBlock)) && critPair.Value[i].sucMachineTask is not null))
+                    {
+                        critBlocks.Add(Tuple.Create(critPair.Key, currentBlock), new List<Task> { critPair.Value[i] });
+                    }
+
+                    if (critPair.Value[i + 1] == critPair.Value[i].sucMachineTask)
+                    {
+                        critBlocks[Tuple.Create(critPair.Key, currentBlock)].Add(critPair.Value[i + 1]);
+                    }
+                    else if (critBlocks[Tuple.Create(critPair.Key, currentBlock)].Count == 1)
+                    {
+                        critBlocks.Remove(Tuple.Create(critPair.Key, currentBlock));
+                    }
+                    else
+                    {
+                        currentBlock++;
+                    }
+
+                }
+            }
+        }
+
+        int makespan = this.CalculateMakespan();
+        foreach (KeyValuePair<Tuple<Machine, int>, List<Task>> blockPair in critBlocks)
+        {
+            if (blockPair.Value[0].Release == 0)
+            {
+                swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
+            }
+            else if (blockPair.Value[0].Release + blockPair.Value[0].Duration == makespan)
+            {
+                swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
+            }
+            else if (blockPair.Value.Count <= 2)
+            {
+                swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
+            }
+            else
+            {
+                swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
+                swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
+            }
+        }
+        return swapOperations;
+    }
+}
 }

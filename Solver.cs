@@ -1,5 +1,4 @@
-﻿using Google.OrTools.PDLP;
-using Projektseminar.Instance;
+﻿using Projektseminar.Instance;
 
 namespace Projektseminar
 {
@@ -13,6 +12,7 @@ namespace Projektseminar
             int minTaskAmount = 0;
             int minTaskTime = 0;
             int maxTaskTime = 0;
+            int makespan = BestProblem.CalculateMakespan();
 
             foreach (Job job in BestProblem.Jobs)
             {
@@ -36,7 +36,7 @@ namespace Projektseminar
             }
             using (StreamWriter sw = File.AppendText((@$"..\..\..\LogFile.csv")))
             {
-                sw.WriteLine($"{instanceName};{BestProblem.Jobs.Count};{BestProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};{solverType};{coolingFactor};{iterations};{neighborhood};{priorityRule};{runtime};{seedValue};{BestProblem.CalculateMakespan}");
+                sw.WriteLine($"{instanceName};{BestProblem.Jobs.Count};{BestProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};{solverType};{coolingFactor};{iterations};{neighborhood};{priorityRule};{runtime};{seedValue};{makespan}");
             }
         }
     }

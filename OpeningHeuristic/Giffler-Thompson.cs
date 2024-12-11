@@ -39,12 +39,13 @@ namespace Projektseminar.OpeningHeuristic
                 if (plannableTasks.Count == 0)
                 {
                     BestProblem.SetRelatedTasks();
-                    BestProblem.CalculateSetups();
-                    BestProblem.CalculateReleases();
-                    BestProblem.CalculateTail();
+                    BestProblem.Recalculate();
 
                     return BestProblem;
                 }
+
+                //Initialisiere großen Integer
+                int minAllTask = BestProblem.Horizon;
 
                 //Bestimme Task der kleinsten Funktionswert hat.
                 Instance.Task scopeTask = null;
@@ -54,9 +55,9 @@ namespace Projektseminar.OpeningHeuristic
                     int maxOneTask = Math.Max(task.Machine.Load, task.End) + task.Duration;
 
                     //Iteriere durch Tasks und bestimme kleinsten Funktionswert.
-                    if (maxOneTask < BestProblem.Horizon)
+                    if (maxOneTask < minAllTask)
                     {
-                        BestProblem.Horizon = maxOneTask;
+                        minAllTask = maxOneTask;
                         scopeTask = task;
                     }
                 }

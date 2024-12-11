@@ -80,7 +80,7 @@ namespace Projektseminar
                 GifflerThompson gifflerThompson = new GifflerThompson(problem, priorityRule);
                 if (solverChoice == 2 || solverChoice == 3)
                 {
-                    gifflerThompson.InitialSolution();
+                    problem = gifflerThompson.InitialSolution();
                 }
 
                 switch (solverChoice) //Switch-Case Anweisungen basierend auf der Solver-Auswahl.

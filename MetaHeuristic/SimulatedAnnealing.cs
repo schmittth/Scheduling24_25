@@ -108,39 +108,5 @@ namespace Projektseminar.MetaHeuristic
             }
             return BestProblem;
         }
-
-        /*public void Log(string instanceName, int seedValue, TimeSpan runtime, string priorityRule = "")
-        {
-
-            int minTaskAmount = BestProblem.Machines.Count;
-            int minTaskTime = BestProblem.Horizon;
-            int maxTaskTime = 0;
-
-            foreach (Job job in BestProblem.Jobs)
-            {
-                if (minTaskAmount > job.Tasks.Count)
-                {
-                    minTaskAmount = job.Tasks.Count;
-                }
-
-                foreach (Instance.Task task in job.Tasks)
-                {
-                    if (task.Duration < minTaskTime)
-                    {
-                        minTaskTime = task.Duration;
-                    }
-                    if (task.Duration > maxTaskTime)
-                    {
-                        maxTaskTime = task.Duration;
-                    }
-
-                }
-            }
-
-            using (StreamWriter sw = File.AppendText((@$"..\..\..\LogFile.csv")))
-            {
-                sw.WriteLine($"{instanceName};{BestProblem.Jobs.Count};{BestProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};SimulatedAnnealing;{CoolingFactor};{Iterations};{Neighboorhood};{priorityRule};{runtime};{seedValue}");
-            }
-        }*/
     }
 }
