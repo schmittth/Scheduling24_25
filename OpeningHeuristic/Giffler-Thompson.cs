@@ -2,7 +2,7 @@
 
 namespace Projektseminar.OpeningHeuristic
 {
-    internal class GifflerThompson
+    internal class GifflerThompson : Solver
     {
         //Eigenschaften
         public string PriorityRule
@@ -13,14 +13,12 @@ namespace Projektseminar.OpeningHeuristic
 
 
         //Variablen
-        private Problem problem;
-
         private string priorityRule;
         
         //Konstruktoren
         public GifflerThompson(Problem problem, string priorityRule)
         {
-            this.problem = problem;
+            this.BestProblem = problem;
             this.priorityRule = priorityRule;
         }
 
@@ -28,27 +26,25 @@ namespace Projektseminar.OpeningHeuristic
         public Problem InitialSolution()
         {
             //Initialisierungfunktion für Load, Releasezeit, usw.
-            Init(problem);
+            Init();
 
             //While-Schleife die läuft solange plannbare Task vorhanden sind
             while (true)
             {
 
                 //Erstelle eine Liste mit Tasks die aktuell einplanbar sind
-                List<Instance.Task> plannableTasks = GetPlannableTasks(problem);
+                List<Instance.Task> plannableTasks = GetPlannableTasks();
 
                 //Wenn keine Task mehr verplant werden können beende den Algorithmus.
                 if (plannableTasks.Count == 0)
                 {
-                    problem.SetRelatedTasks();
-                    problem.CalculateSetups();
-                    problem.CalculateReleases();
-                    problem.CalculateTail();
+                    BestProblem.SetRelatedTasks();
+                    BestProblem.CalculateSetups();
+                    BestProblem.CalculateReleases();
+                    BestProblem.CalculateTail();
 
-                    return problem;
+                    return BestProblem;
                 }
-                //Initialisiere großen Integer
-                int minAllTask = problem.Horizon;
 
                 //Bestimme Task der kleinsten Funktionswert hat.
                 Instance.Task scopeTask = null;
@@ -58,9 +54,9 @@ namespace Projektseminar.OpeningHeuristic
                     int maxOneTask = Math.Max(task.Machine.Load, task.End) + task.Duration;
 
                     //Iteriere durch Tasks und bestimme kleinsten Funktionswert.
-                    if (maxOneTask < minAllTask)
+                    if (maxOneTask < BestProblem.Horizon)
                     {
-                        minAllTask = maxOneTask;
+                        BestProblem.Horizon = maxOneTask;
                         scopeTask = task;
                     }
                 }
@@ -76,14 +72,14 @@ namespace Projektseminar.OpeningHeuristic
                 }
 
                 //Bestimme mit Prioritätsregel den ersten Task der eingeplant werden soll.                
-                Instance.Task planTask = GetTaskByPriorityRule(priorityRule, sameMachineTasks, problem);
+                Instance.Task planTask = GetTaskByPriorityRule(priorityRule, sameMachineTasks);
                 Instance.Task prevTask = null;
 
                 if (planTask.Machine.Schedule.Count > 0)
                 {
                     prevTask = planTask.Machine.Schedule[planTask.Machine.Schedule.Count - 1];
 
-                    planTask.Setup = problem.Setups[Tuple.Create(prevTask.Job.Id, planTask.Job.Id)];
+                    planTask.Setup = BestProblem.Setups[Tuple.Create(prevTask.Job.Id, planTask.Job.Id)];
 
                     planTask.Start = Math.Max(planTask.Machine.Load + planTask.Setup, planTask.Release);
                 }
@@ -91,19 +87,7 @@ namespace Projektseminar.OpeningHeuristic
                 {
                     planTask.Start = Math.Max(planTask.Machine.Load, planTask.Release);
                 }
-
-                /*if (prevTask is not null)
-                {
-                    //problem.GetSetup(prevTask.Job, planTask.Job, planTask.Machine);
-                    planTask.Setup = problem.Setups[Tuple.Create(prevTask.Job.Id, planTask.Job.Id)];
-
-                    planTask.Start = Math.Max(planTask.Machine.Load + planTask.Setup, planTask.Release);
-                }
-                else
-                {
-                    planTask.Start = Math.Max(planTask.Machine.Load, planTask.Release);
-                }*/
-
+              
                 //Füge dem Schedule der Maschine den identifizierten Task hinzu.
                 planTask.Position = planTask.Machine.Schedule.Count();
                 planTask.Machine.Schedule.Add(planTask);
@@ -123,15 +107,15 @@ namespace Projektseminar.OpeningHeuristic
             }
         }
 
-        private List<Instance.Task> GetPlannableTasks(Problem problem)
+        private List<Instance.Task> GetPlannableTasks()
         {
             List<Instance.Task> plannableTasks = new List<Instance.Task>();
-            foreach (Job job in problem.Jobs)
+            foreach (Job job in BestProblem.Jobs)
             {
                 foreach (Instance.Task task in job.Tasks)
                 {
                     //Wenn die Startzeit kleiner als BigN ist und der Task noch nicht eingeplant, wird er der Liste hinzugefügt.
-                    if (task.Release < problem.Horizon && task.Start == 0 && task.End == 0)
+                    if (task.Release < BestProblem.Horizon && task.Start == 0 && task.End == 0)
                     {
                         plannableTasks.Add(task);
                         //Pro Job wird nur der erste Task eingeplant.
@@ -142,9 +126,9 @@ namespace Projektseminar.OpeningHeuristic
             return plannableTasks;
         }
 
-        private static void Init(Problem problem)
+        private void Init()
         {
-            foreach (Job job in problem.Jobs)
+            foreach (Job job in this.BestProblem.Jobs)
             {
                 foreach (Instance.Task task in job.Tasks)
                 {
@@ -160,20 +144,20 @@ namespace Projektseminar.OpeningHeuristic
                     //Setze den Release für alle NICHT einplanbaren Jobs auf näherungsweise unendlich
                     else
                     {
-                        task.Release = problem.Horizon;
+                        task.Release = BestProblem.Horizon;
                     }
                     task.Machine.Load = 0;
                 }
             }
         }
-        private static Instance.Task GetTaskByPriorityRule(string priorityRule, List<Instance.Task> sameMachineTasks, Problem problem)
+        private Instance.Task GetTaskByPriorityRule(string priorityRule, List<Instance.Task> sameMachineTasks)
         {
             int prio;
             Instance.Task planTask = null;
             switch (priorityRule)
             {
                 case "STT":
-                    prio = problem.Horizon;
+                    prio = BestProblem.Horizon;
                     foreach (Instance.Task task in sameMachineTasks)
                     {
                         if (task.Duration < prio)
@@ -206,7 +190,7 @@ namespace Projektseminar.OpeningHeuristic
                     }
                     break;
                 case "SPT":
-                    prio = problem.Horizon;
+                    prio = BestProblem.Horizon;
                     foreach (Instance.Task task in sameMachineTasks)
                     {
                         if (task.Job.TotalDuration < prio)

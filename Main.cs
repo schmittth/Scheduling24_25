@@ -96,7 +96,7 @@ namespace Projektseminar
 
                         stopwatch.Stop();
 
-                        newSolver.Log(instanceChoice, seedValue, stopwatch.Elapsed); //Logge die Ausführung
+                        newSolver.Log(instanceChoice, seedValue, stopwatch.Elapsed, "GoogleOR"); //Logge die Ausführung
 
                         break;
                     //Solver: Simulated Annealing
@@ -108,7 +108,7 @@ namespace Projektseminar
 
                         stopwatch.Stop();
 
-                        simAnneal.Log(instanceChoice, seedValue, stopwatch.Elapsed, gifflerThompson.PriorityRule);
+                        simAnneal.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighboorhood, gifflerThompson.PriorityRule);
 
                         problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\diagramm.html", true);
 
@@ -119,7 +119,7 @@ namespace Projektseminar
 
                         stopwatch.Stop();
 
-                        localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, gifflerThompson.PriorityRule);
+                        localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Local Search", iterations:0, priorityRule:gifflerThompson.PriorityRule);
 
                         break;
                 }

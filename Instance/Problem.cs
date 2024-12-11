@@ -602,9 +602,7 @@ namespace Projektseminar.Instance
                 }
             }
             return swapOperations;
-
         }
-
 
         public Dictionary<int, List<Tuple<Task, Task, Machine>>> N5()
         {

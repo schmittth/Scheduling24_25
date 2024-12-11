@@ -27,6 +27,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Solver.cs" />
   </ItemGroup>
 
   <ItemGroup>

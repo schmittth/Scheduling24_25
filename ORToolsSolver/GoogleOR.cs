@@ -3,11 +3,8 @@ using Projektseminar.Instance;
 
 namespace Projektseminar.ORToolsSolver
 {
-    internal class GoogleOR
+    internal class GoogleOR : Solver
     {
-        public Problem CurrentProblem { get; set; }
-        public Problem BestProblem { get; set; }
-
         public GoogleOR(Problem currentProblem)
         {
             CurrentProblem = currentProblem;
@@ -103,36 +100,35 @@ namespace Projektseminar.ORToolsSolver
             if (status == CpSolverStatus.Optimal || status == CpSolverStatus.Feasible)
             {
                 Console.WriteLine("Solution:");
-                
+
                 Dictionary<int, List<Instance.Task>> assignedJobs = new Dictionary<int, List<Instance.Task>>();
-                foreach (Job job in CurrentProblem.Jobs)
+                foreach (Job job in BestProblem.Jobs)
                 {
                     foreach (Instance.Task task in job.Tasks)
-                    {      
+                    {
                         var key = Tuple.Create(job.Id, task.Id);
                         int start = (int)solver.Value(allTasks[key].Item2);
 
                         task.Start = start;
                         task.End = task.Start + task.Duration;
 
-                        CurrentProblem.Machines[task.Machine.Id].Schedule.Add(task);
+                        BestProblem.Machines[task.Machine.Id].Schedule.Add(task);
                     }
                 }
-                    foreach (Machine machine in CurrentProblem.Machines)
-                    {
-                        // Sort by starting time.
-                        machine.Schedule.Sort();
-                    }
+                foreach (Machine machine in BestProblem.Machines)
+                {
+                    // Sort by starting time.
+                    machine.Schedule.Sort();
+                }
 
-                    CurrentProblem.SetRelatedTasks();
-                    CurrentProblem.CalculateSetups();
-
-                    CurrentProblem.ProblemAsDiagramm(@"..\Or.html",false);
+                BestProblem.SetRelatedTasks();
+                BestProblem.CalculateSetups();
+                BestProblem.ProblemAsDiagramm(@"..\Or.html", false);
 
             }
         }
 
-        public void Log(string instanceName, int seedValue, TimeSpan runtime, string priorityRule = "")
+        /*public void Log(string instanceName, int seedValue, TimeSpan runtime, string priorityRule = "")
         {
 
             int minTaskAmount = 0;
@@ -164,6 +160,6 @@ namespace Projektseminar.ORToolsSolver
             {
                 sw.WriteLine($"{instanceName};{CurrentProblem.Jobs.Count};{CurrentProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};GoogleOR;;;;;{runtime};{seedValue}"); 
             }            
-        }
+        }*/
     }
 }

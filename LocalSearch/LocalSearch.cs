@@ -2,11 +2,8 @@
 
 namespace Projektseminar.LocalSearch
 {
-    internal class LocalSearch
+    internal class LocalSearch : Solver
     {
-
-        public Problem BestProblem { get; set; }
-
         public string Neighborhood { get; set; }
 
         public LocalSearch(Problem problem, string neighborhood)
@@ -42,43 +39,11 @@ namespace Projektseminar.LocalSearch
                         makespan = newMakespan;
                     }
                 }
-            } 
+            }
             while (makespan > BestProblem.CalculateMakespan());
 
             return BestProblem;
-            }
-
-        public void Log(string instanceName, int seedValue, TimeSpan runtime, string priorityRule = "")
-            {
-
-                int minTaskAmount = 0;
-                int minTaskTime = 0;
-                int maxTaskTime = 0;
-
-                foreach (Job job in BestProblem.Jobs)
-                {
-                    if (minTaskAmount > job.Tasks.Count)
-                    {
-                        minTaskAmount = job.Tasks.Count;
-                    }
-
-                    foreach (Instance.Task task in job.Tasks)
-                    {
-                        if (task.Duration < minTaskTime)
-                        {
-                            minTaskTime = task.Duration;
-                        }
-                        if (task.Duration > maxTaskTime)
-                        {
-                            maxTaskTime = task.Duration;
-                        }
-
-                    }
-                }
-                using (StreamWriter sw = File.AppendText((@$"..\..\..\LogFile.csv")))
-                {
-                    sw.WriteLine($"{instanceName};{BestProblem.Jobs.Count};{BestProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};LocalSearch;;;{Neighborhood};{priorityRule};{runtime};{seedValue}");
-                }
-            }
         }
+
     }
+}

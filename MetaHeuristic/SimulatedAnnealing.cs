@@ -3,11 +3,9 @@ using System.Collections.Concurrent;
 
 namespace Projektseminar.MetaHeuristic
 {
-    internal class SimulatedAnnealing
+    internal class SimulatedAnnealing : Solver
     {
         //Eigenschaften
-        public Problem CurrentProblem { get; set; }
-        public Problem BestProblem { get; set; }
         public double Temperature { get; set; }
         public double CoolingFactor { get; set; }
         public int Iterations { get; set; }
@@ -111,7 +109,7 @@ namespace Projektseminar.MetaHeuristic
             return BestProblem;
         }
 
-        public void Log(string instanceName, int seedValue, TimeSpan runtime, string priorityRule = "")
+        /*public void Log(string instanceName, int seedValue, TimeSpan runtime, string priorityRule = "")
         {
 
             int minTaskAmount = BestProblem.Machines.Count;
@@ -143,6 +141,6 @@ namespace Projektseminar.MetaHeuristic
             {
                 sw.WriteLine($"{instanceName};{BestProblem.Jobs.Count};{BestProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};SimulatedAnnealing;{CoolingFactor};{Iterations};{Neighboorhood};{priorityRule};{runtime};{seedValue}");
             }
-        }
+        }*/
     }
 }
