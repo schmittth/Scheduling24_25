@@ -62,13 +62,16 @@ namespace Projektseminar
                     Tuple<double, int> simAnnealParams = Dialog.ChooseSimAnnealParameters();
 
                     SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, simAnnealParams.Item1, simAnnealParams.Item2, Dialog.ChooseNeighboorhood());
+                    
                     if (seedValue != 0)
                     {
+                        stopwatch.Start();
                         problem = simAnneal.DoSimulatedAnnealing(seedValue);
                     }
                     else
                     {
                         seedValue = Dialog.SeedAlgorithm();
+                        stopwatch.Start();
                         problem = simAnneal.DoSimulatedAnnealing(seedValue);
                     }
 
