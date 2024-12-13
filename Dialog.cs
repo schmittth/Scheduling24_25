@@ -177,7 +177,7 @@
             {
                 Console.WriteLine("Please provide a number of machines:");
                 machineChoiceString = Console.ReadLine();
-            } 
+            }
             while (!(int.TryParse(machineChoiceString, out machineChoiceInt) && machineChoiceInt != 0));
 
             int minTaskPerJobInt = 1;
@@ -192,9 +192,9 @@
                     minTaskPerJobInt = 1;
                     break;
                 }
-            } 
-            while (!(int.TryParse(minTaskPerJobString, out minTaskPerJobInt) && minTaskPerJobInt != 0 && minTaskPerJobInt <=  machineChoiceInt));
-            
+            }
+            while (!(int.TryParse(minTaskPerJobString, out minTaskPerJobInt) && minTaskPerJobInt != 0 && minTaskPerJobInt <= machineChoiceInt));
+
             int minTaskTimeInt = 10;
             string minTaskTimeString;
             do
@@ -207,9 +207,9 @@
                     minTaskTimeInt = 10;
                     break;
                 }
-            } 
-            while (!(int.TryParse(minTaskTimeString, out minTaskTimeInt) && minTaskTimeInt != 0)) ;
-          
+            }
+            while (!(int.TryParse(minTaskTimeString, out minTaskTimeInt) && minTaskTimeInt != 0));
+
             int maxTaskTimeInt = 100;
             string maxTaskTimeString;
             do

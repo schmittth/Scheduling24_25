@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Projektseminar")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+857b75c9942fbffbd06204990d7964f5d0176873")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a38a73ddf32b917e4954fe04f968a495535f677b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Projektseminar")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Projektseminar")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

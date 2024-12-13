@@ -75,13 +75,15 @@ namespace Projektseminar
                     importer.ImportInstanceFromFile(instanceChoice);
                 }
                 Problem problem = importer.GenerateProblem();
-
+                stopwatch.Start();
                 GifflerThompson gifflerThompson = new GifflerThompson(problem, priorityRule);
+                stopwatch.Stop();
                 if (solverChoice == 2 || solverChoice == 3)
                 {
                     problem = gifflerThompson.InitialSolution();
-                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}{instanceCounter}\diagrammInitial.html", false);
+                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}{instanceCounter}\diagrammInitial.html", false, seedValue, stopwatch.Elapsed);
                 }
+                stopwatch.Reset();
 
                 switch (solverChoice) //Switch-Case Anweisungen basierend auf der Solver-Auswahl.
                 {
@@ -102,6 +104,7 @@ namespace Projektseminar
                     //Solver: Simulated Annealing
                     case 2:
 
+                        stopwatch.Start();
                         SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, simAnnealParams.Item1, simAnnealParams.Item2, neighboorhood);
 
                         problem = simAnneal.DoSimulatedAnnealing(seedValue);
@@ -110,7 +113,7 @@ namespace Projektseminar
 
                         simAnneal.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighboorhood, gifflerThompson.PriorityRule);
 
-                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}{instanceCounter}\diagramm.html", false);
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}{instanceCounter}\diagramm.html", true, seedValue, stopwatch.Elapsed);
 
                         break;
                     case 3:

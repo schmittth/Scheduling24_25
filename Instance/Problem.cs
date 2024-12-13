@@ -1,3 +1,6 @@
+using Google.OrTools.LinearSolver;
+using Google.OrTools.ModelBuilder;
+
 namespace Projektseminar.Instance
 {
     internal class Problem
@@ -99,7 +102,7 @@ namespace Projektseminar.Instance
         //Methoden
 
         //Problem als Diagramm in den angegebenen Pfad schreiben
-        public void ProblemAsDiagramm(string filepath, bool openOnWrite)
+        public void ProblemAsDiagramm(string filepath, bool openOnWrite, int seedValue, TimeSpan watchTime)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(filepath));
 
@@ -133,7 +136,7 @@ namespace Projektseminar.Instance
                 sw.WriteLine("}");
                 sw.WriteLine("</script>");
                 sw.WriteLine("");
-                sw.WriteLine($"<div><p>Makespan: {makespan} Seconds</p></div>");
+                sw.WriteLine($"<div><p>Makespan: {makespan} Seconds. Seed Value: {seedValue} Processing Time: {watchTime}</p></div>");
                 sw.WriteLine("<div id=\"example3.1\" style=\"height: 1000px;\"></div>");
             }
 
