@@ -11,18 +11,13 @@ namespace Projektseminar
 
 
         //Variablen
+        Dictionary<int, List<Tuple<int, int>>> jobs = new Dictionary<int, List<Tuple<int, int>>>(); //Job wird identifiziert durch eine ID; Job enthält Tasks.
 
-        //Job wird identifiziert durch eine ID; Job enthält Tasks.
-        Dictionary<int, List<Tuple<int, int>>> jobs = new Dictionary<int, List<Tuple<int, int>>>();
+        Dictionary<Tuple<int, int>, Tuple<int, int>> tasks = new Dictionary<Tuple<int, int>, Tuple<int, int>>(); //Task wird identifiziert durch eine ID und seinen Job; Task enthält Laufzeit und Maschine 
 
-        //Task wird identifiziert durch eine ID und seinen Job; Task enthält Laufzeit und Maschine 
-        Dictionary<Tuple<int, int>, Tuple<int, int>> tasks = new Dictionary<Tuple<int, int>, Tuple<int, int>>();
+        Dictionary<Tuple<int, int>, int> setups = new Dictionary<Tuple<int, int>, int>(); //Setup wird identifiziert durch vorheriger und nachfolgender Job; Setup enthält Laufzeit
 
-        //Setup wird identifiziert durch vorheriger und nachfolgender Job; Setup enthält Laufzeit
-        Dictionary<Tuple<int, int>, int> setups = new Dictionary<Tuple<int, int>, int>();
-
-        //Maschine ist definiert durch Id
-        List<int> machines = new List<int>();
+        List<int> machines = new List<int>();//Maschine ist definiert durch Id
 
         //Methoden
 
@@ -86,6 +81,8 @@ namespace Projektseminar
                         taskMachine = rand.Next(machineCount);
                     } 
                     while (invalidMachine.Contains(taskMachine));
+
+                    invalidMachine.Add(taskMachine);
 
                     tasks[Tuple.Create(jobs[i].Count, i)] = Tuple.Create(rand.Next(minTaskTime, maxTaskTime), taskMachine);
                     jobs[i].Add(Tuple.Create(jobs[i].Count, i));

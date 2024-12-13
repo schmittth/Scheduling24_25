@@ -53,15 +53,12 @@ namespace Projektseminar.MetaHeuristic
                         newProblem = new Problem(CurrentProblem);
 
                         int chooseNeighbor;
-                        do
-                        {
+
                             chooseNeighbor = random.Next(0, dict.Count);
-                        }
-                        while (invalidNumber.Contains(chooseNeighbor));
+
 
 
                         List<Tuple<Instance.Task, Instance.Task, Machine>> randomNeighbor = dict[chooseNeighbor];
-                        invalidNumber.Add(chooseNeighbor);
 
                         foreach (Tuple<Instance.Task, Instance.Task, Machine> tuple in randomNeighbor)
                         {

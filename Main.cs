@@ -55,7 +55,6 @@ namespace Projektseminar
 
             for (int instanceCounter = 0; instanceCounter < instanceAmount; instanceCounter++)
             {
-
                 if (seedChoice == 0)
                 {
                     Random randSeed = new Random();
@@ -81,6 +80,7 @@ namespace Projektseminar
                 if (solverChoice == 2 || solverChoice == 3)
                 {
                     problem = gifflerThompson.InitialSolution();
+                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}{instanceCounter}\diagrammInitial.html", false);
                 }
 
                 switch (solverChoice) //Switch-Case Anweisungen basierend auf der Solver-Auswahl.
@@ -110,7 +110,7 @@ namespace Projektseminar
 
                         simAnneal.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighboorhood, gifflerThompson.PriorityRule);
 
-                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\diagramm.html", true);
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}{instanceCounter}\diagramm.html", false);
 
                         break;
                     case 3:

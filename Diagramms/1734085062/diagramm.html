@@ -1,0 +1,69 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+  google.charts.load("current", {packages:["timeline"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+
+    var container = document.getElementById('example3.1');
+    var chart = new google.visualization.Timeline(container);
+    var dataTable = new google.visualization.DataTable();
+	  dataTable.addColumn({ type: 'string', id: 'MachineNumber' });
+    dataTable.addColumn({ type: 'string', id: 'JobTask' });
+    dataTable.addColumn({ type: 'string', role: 'tooltip' });
+    dataTable.addColumn({ type: 'date', id: 'Start' });
+    dataTable.addColumn({ type: 'date', id: 'End' });
+	  dataTable.addRows([
+[ 'Machine 1' , 'Job '+'0', 'Duration: ' + '68'+ ', Job: ' + '0' + ', Task:' + '0' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 68)],
+[ 'Machine 4' , 'Job '+'0', 'Duration: ' + '79'+ ', Job: ' + '0' + ', Task:' + '1' , new Date(0, 0, 0, 0, 0, 124) , new Date(0, 0, 0, 0, 0, 203)],
+[ 'Machine 4' , 'Setup',  '73' , new Date(0, 0, 0, 0, 0, 51) , new Date(0, 0, 0, 0, 0, 124)],
+[ 'Machine 0' , 'Job '+'0', 'Duration: ' + '96'+ ', Job: ' + '0' + ', Task:' + '2' , new Date(0, 0, 0, 0, 0, 316) , new Date(0, 0, 0, 0, 0, 412)],
+[ 'Machine 0' , 'Setup',  '59' , new Date(0, 0, 0, 0, 0, 257) , new Date(0, 0, 0, 0, 0, 316)],
+[ 'Machine 4' , 'Job '+'0', 'Duration: ' + '83'+ ', Job: ' + '0' + ', Task:' + '3' , new Date(0, 0, 0, 0, 0, 731) , new Date(0, 0, 0, 0, 0, 814)],
+[ 'Machine 4' , 'Setup',  '73' , new Date(0, 0, 0, 0, 0, 658) , new Date(0, 0, 0, 0, 0, 731)],
+[ 'Machine 2' , 'Job '+'0', 'Duration: ' + '80'+ ', Job: ' + '0' + ', Task:' + '4' , new Date(0, 0, 0, 0, 0, 827) , new Date(0, 0, 0, 0, 0, 907)],
+[ 'Machine 2' , 'Setup',  '59' , new Date(0, 0, 0, 0, 0, 768) , new Date(0, 0, 0, 0, 0, 827)],
+[ 'Machine 0' , 'Job '+'1', 'Duration: ' + '51'+ ', Job: ' + '1' + ', Task:' + '0' , new Date(0, 0, 0, 0, 0, 206) , new Date(0, 0, 0, 0, 0, 257)],
+[ 'Machine 0' , 'Setup',  '76' , new Date(0, 0, 0, 0, 0, 130) , new Date(0, 0, 0, 0, 0, 206)],
+[ 'Machine 3' , 'Job '+'1', 'Duration: ' + '60'+ ', Job: ' + '1' + ', Task:' + '1' , new Date(0, 0, 0, 0, 0, 467) , new Date(0, 0, 0, 0, 0, 527)],
+[ 'Machine 3' , 'Setup',  '85' , new Date(0, 0, 0, 0, 0, 382) , new Date(0, 0, 0, 0, 0, 467)],
+[ 'Machine 3' , 'Job '+'1', 'Duration: ' + '60'+ ', Job: ' + '1' + ', Task:' + '2' , new Date(0, 0, 0, 0, 0, 619) , new Date(0, 0, 0, 0, 0, 679)],
+[ 'Machine 3' , 'Setup',  '92' , new Date(0, 0, 0, 0, 0, 527) , new Date(0, 0, 0, 0, 0, 619)],
+[ 'Machine 2' , 'Job '+'1', 'Duration: ' + '89'+ ', Job: ' + '1' + ', Task:' + '3' , new Date(0, 0, 0, 0, 0, 679) , new Date(0, 0, 0, 0, 0, 768)],
+[ 'Machine 2' , 'Setup',  '56' , new Date(0, 0, 0, 0, 0, 623) , new Date(0, 0, 0, 0, 0, 679)],
+[ 'Machine 1' , 'Job '+'1', 'Duration: ' + '93'+ ', Job: ' + '1' + ', Task:' + '4' , new Date(0, 0, 0, 0, 0, 768) , new Date(0, 0, 0, 0, 0, 861)],
+[ 'Machine 1' , 'Setup',  '56' , new Date(0, 0, 0, 0, 0, 712) , new Date(0, 0, 0, 0, 0, 768)],
+[ 'Machine 4' , 'Job '+'2', 'Duration: ' + '51'+ ', Job: ' + '2' + ', Task:' + '0' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 51)],
+[ 'Machine 3' , 'Job '+'2', 'Duration: ' + '95'+ ', Job: ' + '2' + ', Task:' + '1' , new Date(0, 0, 0, 0, 0, 287) , new Date(0, 0, 0, 0, 0, 382)],
+[ 'Machine 3' , 'Setup',  '54' , new Date(0, 0, 0, 0, 0, 233) , new Date(0, 0, 0, 0, 0, 287)],
+[ 'Machine 0' , 'Job '+'2', 'Duration: ' + '75'+ ', Job: ' + '2' + ', Task:' + '2' , new Date(0, 0, 0, 0, 0, 490) , new Date(0, 0, 0, 0, 0, 565)],
+[ 'Machine 0' , 'Setup',  '78' , new Date(0, 0, 0, 0, 0, 412) , new Date(0, 0, 0, 0, 0, 490)],
+[ 'Machine 4' , 'Job '+'2', 'Duration: ' + '93'+ ', Job: ' + '2' + ', Task:' + '3' , new Date(0, 0, 0, 0, 0, 565) , new Date(0, 0, 0, 0, 0, 658)],
+[ 'Machine 4' , 'Setup',  '54' , new Date(0, 0, 0, 0, 0, 511) , new Date(0, 0, 0, 0, 0, 565)],
+[ 'Machine 0' , 'Job '+'2', 'Duration: ' + '70'+ ', Job: ' + '2' + ', Task:' + '4' , new Date(0, 0, 0, 0, 0, 658) , new Date(0, 0, 0, 0, 0, 728)],
+[ 'Machine 0' , 'Setup',  '71' , new Date(0, 0, 0, 0, 0, 587) , new Date(0, 0, 0, 0, 0, 658)],
+[ 'Machine 2' , 'Job '+'3', 'Duration: ' + '51'+ ', Job: ' + '3' + ', Task:' + '0' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 51)],
+[ 'Machine 2' , 'Job '+'3', 'Duration: ' + '74'+ ', Job: ' + '3' + ', Task:' + '1' , new Date(0, 0, 0, 0, 0, 103) , new Date(0, 0, 0, 0, 0, 177)],
+[ 'Machine 2' , 'Setup',  '52' , new Date(0, 0, 0, 0, 0, 51) , new Date(0, 0, 0, 0, 0, 103)],
+[ 'Machine 4' , 'Job '+'3', 'Duration: ' + '68'+ ', Job: ' + '3' + ', Task:' + '2' , new Date(0, 0, 0, 0, 0, 295) , new Date(0, 0, 0, 0, 0, 363)],
+[ 'Machine 4' , 'Setup',  '92' , new Date(0, 0, 0, 0, 0, 203) , new Date(0, 0, 0, 0, 0, 295)],
+[ 'Machine 2' , 'Job '+'3', 'Duration: ' + '88'+ ', Job: ' + '3' + ', Task:' + '3' , new Date(0, 0, 0, 0, 0, 363) , new Date(0, 0, 0, 0, 0, 451)],
+[ 'Machine 2' , 'Setup',  '52' , new Date(0, 0, 0, 0, 0, 311) , new Date(0, 0, 0, 0, 0, 363)],
+[ 'Machine 1' , 'Job '+'3', 'Duration: ' + '50'+ ', Job: ' + '3' + ', Task:' + '4' , new Date(0, 0, 0, 0, 0, 661) , new Date(0, 0, 0, 0, 0, 711)],
+[ 'Machine 1' , 'Setup',  '67' , new Date(0, 0, 0, 0, 0, 594) , new Date(0, 0, 0, 0, 0, 661)],
+[ 'Machine 3' , 'Job '+'4', 'Duration: ' + '76'+ ', Job: ' + '4' + ', Task:' + '0' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 76)],
+[ 'Machine 0' , 'Job '+'4', 'Duration: ' + '54'+ ', Job: ' + '4' + ', Task:' + '1' , new Date(0, 0, 0, 0, 0, 76) , new Date(0, 0, 0, 0, 0, 130)],
+[ 'Machine 3' , 'Job '+'4', 'Duration: ' + '89'+ ', Job: ' + '4' + ', Task:' + '2' , new Date(0, 0, 0, 0, 0, 144) , new Date(0, 0, 0, 0, 0, 233)],
+[ 'Machine 3' , 'Setup',  '68' , new Date(0, 0, 0, 0, 0, 76) , new Date(0, 0, 0, 0, 0, 144)],
+[ 'Machine 4' , 'Job '+'4', 'Duration: ' + '78'+ ', Job: ' + '4' + ', Task:' + '3' , new Date(0, 0, 0, 0, 0, 429) , new Date(0, 0, 0, 0, 0, 507)],
+[ 'Machine 4' , 'Setup',  '66' , new Date(0, 0, 0, 0, 0, 363) , new Date(0, 0, 0, 0, 0, 429)],
+[ 'Machine 1' , 'Job '+'4', 'Duration: ' + '87'+ ', Job: ' + '4' + ', Task:' + '4' , new Date(0, 0, 0, 0, 0, 507) , new Date(0, 0, 0, 0, 0, 594)],
+[ 'Machine 1' , 'Setup',  '96' , new Date(0, 0, 0, 0, 0, 411) , new Date(0, 0, 0, 0, 0, 507)],
+]);
+
+chart.draw(dataTable);
+}
+</script>
+
+<div><p>Makespan: 907 Seconds</p></div>
+<div id="example3.1" style="height: 1000px;"></div>

@@ -110,7 +110,7 @@ namespace Projektseminar.Instance
                 Dictionary<int, string> jobColors = new Dictionary<int, string>();
                 var random = new Random();
 
-                int makeSpan = CalculateMakespan();
+                int makespan = CalculateMakespan();
 
                 foreach (Job job in Jobs)
                 {
@@ -124,14 +124,13 @@ namespace Projektseminar.Instance
                         }
                     }
                 }
-
                 sw.WriteLine("]);");
                 sw.WriteLine("");
                 sw.WriteLine("chart.draw(dataTable);");
                 sw.WriteLine("}");
                 sw.WriteLine("</script>");
                 sw.WriteLine("");
-                sw.WriteLine($"<div><p>Makespan: {makeSpan} Seconds</p></div>");
+                sw.WriteLine($"<div><p>Makespan: {makespan} Seconds</p></div>");
                 sw.WriteLine("<div id=\"example3.1\" style=\"height: 1000px;\"></div>");
             }
 
@@ -366,50 +365,53 @@ namespace Projektseminar.Instance
                 }
             }
 
-            while (releaseQueue.Count != 0)
+            while (tailQueue.Count != 0)
             {
                 //Entferne ersten Task aus der Queue
-                releaseQueue.TryDequeue(out Task currentTask);
+                tailQueue.TryDequeue(out Task currentTask);
 
-                int releasePM = 0, releasePJ = 0;
+                //Setze die Tailzeiten initial
+                int tailSM = currentTask.Duration, tailSJ = currentTask.Duration;
 
-                if (currentTask.preMachineTask is not null)
+                //Identifiziere Tail des nachfolgenden Tasks auf dieser Maschine
+                if (currentTask.sucMachineTask is not null)
                 {
-                    releasePM = currentTask.preMachineTask.Release + currentTask.preMachineTask.Duration + currentTask.Setup;
+                    tailSM = currentTask.sucMachineTask.Tail + currentTask.Duration + currentTask.sucMachineTask.Setup;
                 }
 
-                if (currentTask.preJobTask is not null)
-                {
-                    releasePJ = currentTask.preJobTask.Release + currentTask.preJobTask.Duration;
-                }
-
-                currentTask.Release = Math.Max(releasePM, releasePJ);
-                currentTask.Start = currentTask.Release;
-                currentTask.End = currentTask.Start + currentTask.Duration;
-                //Console.WriteLine($"INFORMATION:Updated Release of Task {currentTask.Id} in Job {currentTask.Job.Id} ");      
-
-
+                //Identifiziere Tail des nachfolgenden Tasks im Job dieses Tasks
                 if (currentTask.sucJobTask is not null)
                 {
-                    if (currentTask.sucJobTask.preMachineTask is null || currentTask.sucJobTask.preMachineTask.Release != -1)
+                    tailSJ = currentTask.sucJobTask.Tail + currentTask.Duration;
+                }
+
+                //Update Tail mit dem Job oder Maschinen Maximum
+                currentTask.Tail = Math.Max(tailSM, tailSJ);
+                if (currentTask.sucMachineTask == null && currentTask.sucJobTask == null)
+                {
+                    this.Makespan = currentTask.Release + currentTask.Tail;
+                }
+                //Console.WriteLine($"RESULT:Updated Tail of Job{currentTask.Job.Id}_Task{currentTask.Id}");
+
+                //Füge der Liste den Vorgänger im Job dieses Tasks hinzu
+                if (currentTask.preJobTask is not null)
+                {
+                    if (currentTask.preJobTask.sucMachineTask == null || currentTask.preJobTask.sucMachineTask.Tail != -1)
                     {
-                        releaseQueue.Enqueue(currentTask.sucJobTask);
-                        //Console.WriteLine($"INFORMATION:Adding JobSuccessor Job{currentTask.sucJobTask.Job.Id}_Task{currentTask.sucJobTask.Id} of Job{currentTask.Job.Id}_Task{currentTask.Id} to release queue");
+                        tailQueue.Enqueue(currentTask.preJobTask);
                     }
                 }
 
-                if (currentTask.sucMachineTask is not null)
+                //Füge der Liste den Vorgänger auf der Maschine dieses Tasks hinzu
+                if (currentTask.preMachineTask is not null)
                 {
-                    if (currentTask.sucMachineTask.preJobTask == null || currentTask.sucMachineTask.preJobTask.Release != -1)
+                    if (currentTask.preMachineTask.sucJobTask == null || currentTask.preMachineTask.sucJobTask.Tail != -1)
                     {
-                        releaseQueue.Enqueue(currentTask.sucMachineTask);
-                        //Console.WriteLine($"INFORMATION:Adding MachineSuccessor Job{currentTask.sucMachineTask.Job.Id}_Task{currentTask.sucMachineTask.Id} of Job{currentTask.Job.Id}_Task{currentTask.Id} to release queue");
+                        tailQueue.Enqueue(currentTask.preMachineTask);
                     }
                 }
             }
-        
-        }
-    
+        }  
 
     public bool ConfirmFeasability()
     {

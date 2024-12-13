@@ -37,7 +37,6 @@
                 {
                     Console.WriteLine($"{i}. {allInstances[i - 1]}");
                 }
-
                 instanceChoiceString = Console.ReadLine(); //Lese Instanzauswahl ein
 
             } while (!(int.TryParse(instanceChoiceString, out instanceChoiceInt) && instanceChoiceInt >= 0 && instanceChoiceInt <= allInstances.Length)); //Erzwinge Auswahl erneut wenn nicht innerhalb der Grenzen
@@ -134,23 +133,28 @@
             Console.WriteLine("Please choose a neighboorhood:");
             string[] availableNeighboorhoods = { "N1", "N3", "N5" };
             Console.Write("Currently supported neighboorhoods: ");
+            string neighboorhoodChoice;
 
-            int i = 1;
-            foreach (string neighboorhood in availableNeighboorhoods)
+            do
             {
-                Console.Write(neighboorhood);
-                if (i < availableNeighboorhoods.Length)
+                int i = 1;
+                foreach (string neighboorhood in availableNeighboorhoods)
                 {
-                    Console.Write(",");
-                    i++;
+                    Console.Write(neighboorhood);
+                    if (i < availableNeighboorhoods.Length)
+                    {
+                        Console.Write(",");
+                        i++;
+                    }
+                    else
+                    {
+                        Console.WriteLine("");
+                    }
                 }
-                else
-                {
-                    Console.WriteLine("");
-                }
+                neighboorhoodChoice = Console.ReadLine();
             }
+            while (!availableNeighboorhoods.Contains(neighboorhoodChoice));
 
-            string neighboorhoodChoice = Console.ReadLine();
             return neighboorhoodChoice;
         }
 
@@ -163,6 +167,7 @@
             {
                 Console.WriteLine("Please provide an amount of jobs:");
                 jobsChoiceString = Console.ReadLine();
+
             }
             while (!(int.TryParse(jobsChoiceString, out jobsChoiceInt) && jobsChoiceInt != 0));
 
@@ -172,8 +177,8 @@
             {
                 Console.WriteLine("Please provide a number of machines:");
                 machineChoiceString = Console.ReadLine();
-
-            } while (!(int.TryParse(machineChoiceString, out machineChoiceInt) && machineChoiceInt != 0));
+            } 
+            while (!(int.TryParse(machineChoiceString, out machineChoiceInt) && machineChoiceInt != 0));
 
             int minTaskPerJobInt = 1;
             string minTaskPerJobString;
@@ -181,30 +186,48 @@
             {
                 Console.WriteLine("Please type the minimal amount of task each job should have for random Instance: (Default value: \"1\")");
                 minTaskPerJobString = Console.ReadLine();
-
-            } while (!(int.TryParse(minTaskPerJobString, out minTaskPerJobInt) && minTaskPerJobInt != 0));
-
-            Console.WriteLine("Please type the minimal task and setup time for random Instance: (Default value: \"10\")");
+                if (minTaskPerJobString == "")
+                {
+                    Console.WriteLine("Choose default value: \"1\"");
+                    minTaskPerJobInt = 1;
+                    break;
+                }
+            } 
+            while (!(int.TryParse(minTaskPerJobString, out minTaskPerJobInt) && minTaskPerJobInt != 0 && minTaskPerJobInt <=  machineChoiceInt));
+            
             int minTaskTimeInt = 10;
-            string minTaskTimeString = Console.ReadLine();
-
-            if (!(int.TryParse(minTaskTimeString, out minTaskTimeInt)))
+            string minTaskTimeString;
+            do
             {
-                Console.WriteLine("Choose default value: \"10\"");
-            }
-
-            Console.WriteLine("Please type your maximal task and setup time for random Instance: (Default value: \"99\")");
+                Console.WriteLine("Please type the minimal task and setup time for random Instance: (Default value: \"10\")");
+                minTaskTimeString = Console.ReadLine();
+                if (minTaskTimeString == "")
+                {
+                    Console.WriteLine("Choose default value: \"10\"");
+                    minTaskTimeInt = 10;
+                    break;
+                }
+            } 
+            while (!(int.TryParse(minTaskTimeString, out minTaskTimeInt) && minTaskTimeInt != 0)) ;
+          
             int maxTaskTimeInt = 100;
-            string maxTaskTimeString = Console.ReadLine();
-
-            if (!(int.TryParse(maxTaskTimeString, out maxTaskTimeInt)))
+            string maxTaskTimeString;
+            do
             {
-                Console.WriteLine("Choose default value: \"99\"");
+                Console.WriteLine("Please type your maximal task and setup time for random Instance: (Default value: \"99\")");
+                maxTaskTimeString = Console.ReadLine();
+                if (maxTaskTimeString == "")
+                {
+                    Console.WriteLine("Choose default value: \"99\"");
+                    maxTaskTimeInt = 99;
+                    break;
+                }
+                else
+                {
+                    maxTaskTimeInt += 1;
+                }
             }
-            else
-            {
-                maxTaskTimeInt += 1;
-            }
+            while (!(int.TryParse(maxTaskTimeString, out maxTaskTimeInt) && maxTaskTimeInt > minTaskTimeInt));
 
             return Tuple.Create(jobsChoiceInt, machineChoiceInt, minTaskPerJobInt, minTaskTimeInt, maxTaskTimeInt);
         }
