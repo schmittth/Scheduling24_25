@@ -242,27 +242,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\": {}
+    "C:\\Users\\tommi\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Projektseminar\\Projektseminar.csproj",
+      "projectUniqueName": "C:\\Users\\tommi\\Documents\\GitHub\\Scheduling24_25\\Projektseminar.csproj",
       "projectName": "Projektseminar",
-      "projectPath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Projektseminar\\Projektseminar.csproj",
-      "packagesPath": "C:\\Users\\Bastian Häußler\\.nuget\\packages\\",
-      "outputPath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Projektseminar\\obj\\",
+      "projectPath": "C:\\Users\\tommi\\Documents\\GitHub\\Scheduling24_25\\Projektseminar.csproj",
+      "packagesPath": "C:\\Users\\tommi\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\tommi\\Documents\\GitHub\\Scheduling24_25\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Bastian Häußler\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\tommi\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -279,8 +276,9 @@
       "restoreAuditProperties": {
         "enableAudit": "true",
         "auditLevel": "low",
-        "auditMode": "direct"
-      }
+        "auditMode": "all"
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -302,12 +300,30 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[8.0.11, 8.0.11]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[8.0.11, 8.0.11]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.11, 8.0.11]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[8.0.11, 8.0.11]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -107,3 +107,5 @@ Random;5;5;0;0;95;Simulated Annealing;0,99;50;N3;LPT;00:00:00;2145309512;533
 Random;10;10;0;0;95;Simulated Annealing;0,2;100;N3;LPT;00:00:00;257210332;1089
 Random;10;10;0;0;98;Simulated Annealing;0,2;100;N3;LPT;00:00:00;232464537;824
 Random;10;10;0;0;96;Simulated Annealing;0,2;100;N3;LPT;00:00:00;788567321;870
+../../../ExampleInstanceSmall.txt;5;3;0;0;94;Simulated Annealing;0,8;5;N1;LPT;00:00:00;1043738113;421
+../../../ExampleInstanceMedium.txt;10;5;0;0;100;Simulated Annealing;0,8;10;N1;LPT;00:00:00;501034651;1126

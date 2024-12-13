@@ -17,7 +17,7 @@ namespace Projektseminar
             Stopwatch stopwatch = new Stopwatch(); //Initialisiere eine Stopwatch um die Laufzeit zu messen.
             int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds; //Generiere sog. Unix-Timestamp.
             int seedValue = 0; //Initialisiere eine Int der den Random-Seed für diese Ausführung entält. Setze auf 0
-            int seedChoice = 0; 
+            int seedChoice = 0;
 
             int instanceAmount = Dialog.ChooseInstanceAmount(); //Bestimme wie oft Instanzen generiert werden sollen
             string instanceChoice = Dialog.ChooseInstance(); //Bestimme ob randomisierte oder feste Instanz
@@ -33,14 +33,14 @@ namespace Projektseminar
             if (instanceChoice == "Random")
             {
                 randomInstanceSize = Dialog.ChooseRandomInstanceSize();
-  
+
             }
 
             int solverChoice = Dialog.ChooseSolver(); //Lasse Lösungsansatz auswählen
-            string priorityRule= ""; //Initialisiere PriortityRule String
+            string priorityRule = ""; //Initialisiere PriortityRule String
             string neighboorhood = ""; //Initialisiere Nachbarschafts String
 
-            
+
             if (solverChoice == 2 || solverChoice == 3)
             {
                 priorityRule = Dialog.ChoosePriorityRule();
@@ -119,7 +119,7 @@ namespace Projektseminar
 
                         stopwatch.Stop();
 
-                        localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Local Search", iterations:0, priorityRule:gifflerThompson.PriorityRule);
+                        localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Local Search", iterations: 0, priorityRule: gifflerThompson.PriorityRule);
 
                         break;
                 }
