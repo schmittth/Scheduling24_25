@@ -154,6 +154,38 @@ namespace Projektseminar.Instance
             }
         }
 
+        public void ProblemAsFile(string filepath)
+        {
+            using (StreamWriter instanceWriter = File.CreateText(filepath))
+            {
+                instanceWriter.WriteLine("#Meta infos");
+                instanceWriter.WriteLine($"{Jobs.Count},{Machines.Count}");
+                instanceWriter.WriteLine("#Processing times");
+
+                foreach (Job job in jobs)
+                {
+                    List<int> jobLine = new List<int>();
+                    jobLine.Add(job.Tasks.Count);
+                    foreach (Task task in job.Tasks)
+                    {
+                        jobLine.Add(task.Machine.Id + 1);
+                        jobLine.Add(task.Duration);
+                    }
+                    instanceWriter.WriteLine(String.Join(",", jobLine));
+                }
+                instanceWriter.WriteLine("#Setup times");
+                for (int rowJob = 0; rowJob < jobs.Count; rowJob++)
+                {
+                    List<int> setupLine = new List<int>();
+                    for (int colJob = 0; colJob < jobs.Count; colJob++)
+                    {
+                        setupLine.Add(setups[Tuple.Create(rowJob, colJob)]);
+                    }
+                    instanceWriter.WriteLine(String.Join(",", setupLine));
+                }
+            }
+        }
+
         //Kalkuliere den Makespan und Update den Load
         public int CalculateMakespan()
         {
