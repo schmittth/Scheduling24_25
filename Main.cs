@@ -141,9 +141,8 @@ namespace Projektseminar
 
                         simAnneal.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighboorhood, gifflerThompson.PriorityRule);
 
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\diagramm.html", true, seedValue, stopwatch.Elapsed);
                         problem.ProblemAsFile($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\file.txt");
-                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}{instanceCounter}\diagramm.html", true, seedValue, stopwatch.Elapsed);
-
                         break;
                     case 3:
                         LocalSearch.LocalSearch localSearch = new LocalSearch.LocalSearch(problem, neighboorhood);
