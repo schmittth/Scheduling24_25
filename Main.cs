@@ -29,15 +29,15 @@ namespace Projektseminar
                 instanceAmount = Dialog.ChooseInstanceAmount(); //Bestimme wie oft Instanzen generiert werden sollen   
                 randomInstanceSize = Dialog.ChooseRandomInstanceSize(); //Größe der randomisierten Instanz auswählen
             }
-            else if(instanceChoice.EndsWith(".txt")) //When ein .txt-File selektiert wird nur eine Instanz geladen
+            else if (instanceChoice.EndsWith(".txt")) //When ein .txt-File selektiert wird nur eine Instanz geladen
             {
                 instanceAmount = 1;
             }
-            else if(instanceChoice.EndsWith("\\"))
+            else if (instanceChoice.EndsWith("\\"))
             {
                 foreach (string subDir in Directory.GetDirectories(instanceChoice))
                 {
-                    foreach(string subFile in Directory.GetFiles(subDir, "*.txt", SearchOption.TopDirectoryOnly))
+                    foreach (string subFile in Directory.GetFiles(subDir, "*.txt", SearchOption.TopDirectoryOnly))
                     {
                         subFiles.Add(subFile);
                     }
@@ -53,13 +53,15 @@ namespace Projektseminar
             if (instanceAmount == 1) //Wenn Anzahl an Instanzen gleich 1 lasse Seed auswählen
             {
                 seedChoice = Dialog.SeedAlgorithm();
+                randomInstanceSize = Dialog.ChooseRandomInstanceSize();
+
             }
 
             int solverChoice = Dialog.ChooseSolver(); //Lasse Lösungsansatz auswählen
-            string priorityRule= ""; //Initialisiere PriortityRule String
+            string priorityRule = ""; //Initialisiere PriortityRule String
             string neighboorhood = ""; //Initialisiere Nachbarschafts String
 
-            
+
             if (solverChoice == 2 || solverChoice == 3)
             {
                 priorityRule = Dialog.ChoosePriorityRule();
@@ -101,13 +103,15 @@ namespace Projektseminar
 
 
                 Problem problem = importer.GenerateProblem();
-
+                stopwatch.Start();
                 GifflerThompson gifflerThompson = new GifflerThompson(problem, priorityRule);
+                stopwatch.Stop();
                 if (solverChoice == 2 || solverChoice == 3)
                 {
                     problem = gifflerThompson.InitialSolution();
-                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\diagrammInitial.html", false);
+                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}{instanceCounter}\diagrammInitial.html", false, seedValue, stopwatch.Elapsed);
                 }
+                stopwatch.Reset();
 
                 switch (solverChoice) //Switch-Case Anweisungen basierend auf der Solver-Auswahl.
                 {
@@ -128,6 +132,7 @@ namespace Projektseminar
                     //Solver: Simulated Annealing
                     case 2:
 
+                        stopwatch.Start();
                         SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, simAnnealParams.Item1, simAnnealParams.Item2, neighboorhood);
 
                         problem = simAnneal.DoSimulatedAnnealing(seedValue);
@@ -136,8 +141,8 @@ namespace Projektseminar
 
                         simAnneal.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighboorhood, gifflerThompson.PriorityRule);
 
-                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\diagramm.html", false);
                         problem.ProblemAsFile($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\file.txt");
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}{instanceCounter}\diagramm.html", true, seedValue, stopwatch.Elapsed);
 
                         break;
                     case 3:
@@ -146,7 +151,7 @@ namespace Projektseminar
 
                         stopwatch.Stop();
 
-                        localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Local Search", iterations:0, priorityRule:gifflerThompson.PriorityRule);
+                        localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Local Search", iterations: 0, priorityRule: gifflerThompson.PriorityRule);
 
                         break;
                 }

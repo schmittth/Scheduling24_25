@@ -1,3 +1,6 @@
+using Google.OrTools.LinearSolver;
+using Google.OrTools.ModelBuilder;
+
 namespace Projektseminar.Instance
 {
     internal class Problem
@@ -99,7 +102,7 @@ namespace Projektseminar.Instance
         //Methoden
 
         //Problem als Diagramm in den angegebenen Pfad schreiben
-        public void ProblemAsDiagramm(string filepath, bool openOnWrite)
+        public void ProblemAsDiagramm(string filepath, bool openOnWrite, int seedValue, TimeSpan watchTime)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(filepath));
 
@@ -112,10 +115,13 @@ namespace Projektseminar.Instance
 
                 int makespan = CalculateMakespan();
 
-                foreach (Job job in Jobs)
+                var sortedJobs = Jobs.SelectMany(job => job.Tasks.Select(task => new { Task = task, MachineId = task.Machine.Id })).OrderBy(entry => entry.MachineId).ThenBy(entry => entry.Task.Start).GroupBy(entry => entry.MachineId);
+
+                foreach (var machineGroup in sortedJobs)
                 {
-                    foreach (Task task in job.Tasks)
+                    foreach (var entry in machineGroup)
                     {
+                        var task = entry.Task;
                         sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Job '+'{task.Job.Id}', 'Duration: ' + '{task.Duration}'+ ', Job: ' + '{task.Job.Id}' + ', Task:' + '{task.Id}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End})],");
 
                         if (task.Setup != 0)
@@ -130,7 +136,7 @@ namespace Projektseminar.Instance
                 sw.WriteLine("}");
                 sw.WriteLine("</script>");
                 sw.WriteLine("");
-                sw.WriteLine($"<div><p>Makespan: {makespan} Seconds</p></div>");
+                sw.WriteLine($"<div><p>Makespan: {makespan} Seconds. Seed Value: {seedValue} Processing Time: {watchTime}</p></div>");
                 sw.WriteLine("<div id=\"example3.1\" style=\"height: 1000px;\"></div>");
             }
 
@@ -443,175 +449,175 @@ namespace Projektseminar.Instance
                     }
                 }
             }
-        }  
-
-    public bool ConfirmFeasability()
-    {
-        foreach (Machine machine in Machines)
-        {
-            foreach (Task task in machine.Schedule)
-            {
-                if (task.Tail == -1 || task.Release == -1)
-                {
-                    return false;
-                }
-            }
         }
-        return true;
-    }
 
-    //Switch-Case Anweisung zur Auswahl der Nachbarschaft
-    public Dictionary<int, List<Tuple<Task, Task, Machine>>> GetNeighboorhood(string searchMethod)
-    {
-        Dictionary<int, List<Tuple<Task, Task, Machine>>> newDict = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
-
-        switch (searchMethod)
+        public bool ConfirmFeasability()
         {
-            case "N1":
-                newDict = N1();
-                break;
-            case "N3":
-                newDict = N3();
-                break;
-            case "N5":
-                newDict = N5();
-                break;
-            default:
-                break;
-        }
-        return newDict;
-    }
-
-    public Dictionary<int, List<Tuple<Task, Task, Machine>>> N1()
-    {
-        Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
-        Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
-
-        //Problem returnProblem = problem;
-
-        int makespan = CalculateMakespan();
-
-        foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
-        {
-            foreach (Task task in critPair.Value)
+            foreach (Machine machine in Machines)
             {
-                if (task.sucMachineTask != null && critTasks[task.Machine].Contains(task.sucMachineTask))
+                foreach (Task task in machine.Schedule)
                 {
-                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
-                }
-            }
-        }
-        return swapOperations;
-    }
-
-    public Dictionary<int, List<Tuple<Task, Task, Machine>>> N3()
-    {
-
-        Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
-        Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
-
-        foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
-        {
-            foreach (Task task in critPair.Value)
-            {
-                bool firstNeighbor = false;
-
-                if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.sucMachineTask))
-                {
-                    //p(i), i, j --> task = i
-
-                    //p(i), j, i
-                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
-
-                    //j, p(i), i
-                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine), Tuple.Create(task, task.sucMachineTask, task.Machine) });
-
-                    //j, i, p(i) --> Wenn diese Nachbarschaft abgespeichert ist, muss s(j), j, i nicht gespeichert werden.
-                    firstNeighbor = swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
-                }
-
-                if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.preMachineTask))
-                {
-                    //i, j, s(j) --> task = j 
-
-                    //j, i, s(j)
-                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine) });
-
-                    //j, s(j), i
-                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine), Tuple.Create(task.preMachineTask, task, task.Machine) });
-
-                    //s(j), j, i
-                    if (!firstNeighbor)
+                    if (task.Tail == -1 || task.Release == -1)
                     {
-                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
+                        return false;
                     }
                 }
             }
+            return true;
         }
-        return swapOperations;
-    }
 
-    public Dictionary<int, List<Tuple<Task, Task, Machine>>> N5()
-    {
-        Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
-        Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
-
-        Dictionary<Tuple<Machine, int>, List<Task>> critBlocks = new Dictionary<Tuple<Machine, int>, List<Task>>();
-
-        foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
+        //Switch-Case Anweisung zur Auswahl der Nachbarschaft
+        public Dictionary<int, List<Tuple<Task, Task, Machine>>> GetNeighboorhood(string searchMethod)
         {
-            int currentBlock = 0;
+            Dictionary<int, List<Tuple<Task, Task, Machine>>> newDict = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
 
-            if (critPair.Value.Count > 1)
+            switch (searchMethod)
             {
-                //critBlocks.Add(Tuple.Create(critPair.Key, currentBlock), new List<Task> { critPair.Value[0] });
+                case "N1":
+                    newDict = N1();
+                    break;
+                case "N3":
+                    newDict = N3();
+                    break;
+                case "N5":
+                    newDict = N5();
+                    break;
+                default:
+                    break;
+            }
+            return newDict;
+        }
 
-                for (int i = 0; i < critPair.Value.Count - 1; i++)
+        public Dictionary<int, List<Tuple<Task, Task, Machine>>> N1()
+        {
+            Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
+            Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
+
+            //Problem returnProblem = problem;
+
+            int makespan = CalculateMakespan();
+
+            foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
+            {
+                foreach (Task task in critPair.Value)
                 {
-                    if ((!critBlocks.ContainsKey(Tuple.Create(critPair.Key, currentBlock)) && critPair.Value[i].sucMachineTask is not null))
+                    if (task.sucMachineTask != null && critTasks[task.Machine].Contains(task.sucMachineTask))
                     {
-                        critBlocks.Add(Tuple.Create(critPair.Key, currentBlock), new List<Task> { critPair.Value[i] });
+                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
                     }
-
-                    if (critPair.Value[i + 1] == critPair.Value[i].sucMachineTask)
-                    {
-                        critBlocks[Tuple.Create(critPair.Key, currentBlock)].Add(critPair.Value[i + 1]);
-                    }
-                    else if (critBlocks[Tuple.Create(critPair.Key, currentBlock)].Count == 1)
-                    {
-                        critBlocks.Remove(Tuple.Create(critPair.Key, currentBlock));
-                    }
-                    else
-                    {
-                        currentBlock++;
-                    }
-
                 }
             }
+            return swapOperations;
         }
 
-        int makespan = this.CalculateMakespan();
-        foreach (KeyValuePair<Tuple<Machine, int>, List<Task>> blockPair in critBlocks)
+        public Dictionary<int, List<Tuple<Task, Task, Machine>>> N3()
         {
-            if (blockPair.Value[0].Release == 0)
+
+            Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
+            Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
+
+            foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
             {
-                swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
+                foreach (Task task in critPair.Value)
+                {
+                    bool firstNeighbor = false;
+
+                    if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.sucMachineTask))
+                    {
+                        //p(i), i, j --> task = i
+
+                        //p(i), j, i
+                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine) });
+
+                        //j, p(i), i
+                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine), Tuple.Create(task, task.sucMachineTask, task.Machine) });
+
+                        //j, i, p(i) --> Wenn diese Nachbarschaft abgespeichert ist, muss s(j), j, i nicht gespeichert werden.
+                        firstNeighbor = swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
+                    }
+
+                    if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.preMachineTask))
+                    {
+                        //i, j, s(j) --> task = j 
+
+                        //j, i, s(j)
+                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task, task.Machine) });
+
+                        //j, s(j), i
+                        swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task, task.sucMachineTask, task.Machine), Tuple.Create(task.preMachineTask, task, task.Machine) });
+
+                        //s(j), j, i
+                        if (!firstNeighbor)
+                        {
+                            swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(task.preMachineTask, task.sucMachineTask, task.Machine) });
+                        }
+                    }
+                }
             }
-            else if (blockPair.Value[0].Release + blockPair.Value[0].Duration == makespan)
-            {
-                swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
-            }
-            else if (blockPair.Value.Count <= 2)
-            {
-                swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
-            }
-            else
-            {
-                swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
-                swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
-            }
+            return swapOperations;
         }
-        return swapOperations;
+
+        public Dictionary<int, List<Tuple<Task, Task, Machine>>> N5()
+        {
+            Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
+            Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
+
+            Dictionary<Tuple<Machine, int>, List<Task>> critBlocks = new Dictionary<Tuple<Machine, int>, List<Task>>();
+
+            foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
+            {
+                int currentBlock = 0;
+
+                if (critPair.Value.Count > 1)
+                {
+                    //critBlocks.Add(Tuple.Create(critPair.Key, currentBlock), new List<Task> { critPair.Value[0] });
+
+                    for (int i = 0; i < critPair.Value.Count - 1; i++)
+                    {
+                        if ((!critBlocks.ContainsKey(Tuple.Create(critPair.Key, currentBlock)) && critPair.Value[i].sucMachineTask is not null))
+                        {
+                            critBlocks.Add(Tuple.Create(critPair.Key, currentBlock), new List<Task> { critPair.Value[i] });
+                        }
+
+                        if (critPair.Value[i + 1] == critPair.Value[i].sucMachineTask)
+                        {
+                            critBlocks[Tuple.Create(critPair.Key, currentBlock)].Add(critPair.Value[i + 1]);
+                        }
+                        else if (critBlocks[Tuple.Create(critPair.Key, currentBlock)].Count == 1)
+                        {
+                            critBlocks.Remove(Tuple.Create(critPair.Key, currentBlock));
+                        }
+                        else
+                        {
+                            currentBlock++;
+                        }
+
+                    }
+                }
+            }
+
+            int makespan = this.CalculateMakespan();
+            foreach (KeyValuePair<Tuple<Machine, int>, List<Task>> blockPair in critBlocks)
+            {
+                if (blockPair.Value[0].Release == 0)
+                {
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
+                }
+                else if (blockPair.Value[0].Release + blockPair.Value[0].Duration == makespan)
+                {
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
+                }
+                else if (blockPair.Value.Count <= 2)
+                {
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
+                }
+                else
+                {
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
+                }
+            }
+            return swapOperations;
+        }
     }
-}
 }

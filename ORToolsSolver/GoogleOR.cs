@@ -1,5 +1,6 @@
 ﻿using Google.OrTools.Sat;
 using Projektseminar.Instance;
+using System.Diagnostics;
 
 namespace Projektseminar.ORToolsSolver
 {
@@ -10,7 +11,7 @@ namespace Projektseminar.ORToolsSolver
             CurrentProblem = currentProblem;
             BestProblem = currentProblem;
         }
-
+        Stopwatch orWatch = new Stopwatch(); //Initialisiere eine Stopwatch um die Laufzeit zu messen.
         public void DoORSolver()
         {
             int numMachines = 0;
@@ -93,6 +94,7 @@ namespace Projektseminar.ORToolsSolver
             model.Minimize(objVar);
 
             // Solve
+            orWatch.Start();
             CpSolver solver = new CpSolver();
             CpSolverStatus status = solver.Solve(model);
             Console.WriteLine($"Solve status: {status}");
@@ -120,13 +122,15 @@ namespace Projektseminar.ORToolsSolver
                     // Sort by starting time.
                     machine.Schedule.Sort();
                 }
-
+                int placeHolder = 0;
+                orWatch.Stop();
                 BestProblem.SetRelatedTasks();
                 BestProblem.Recalculate();
-                BestProblem.ProblemAsDiagramm(@"..\Or.html", false);
+                BestProblem.ProblemAsDiagramm(@"..\Or.html", false, placeHolder, orWatch.Elapsed);
 
             }
         }
+
 
         /*public void Log(string instanceName, int seedValue, TimeSpan runtime, string priorityRule = "")
         {
