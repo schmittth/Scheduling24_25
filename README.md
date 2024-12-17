@@ -11,13 +11,14 @@ Github-CI:<br>
 [github_macos_link]: ./../../actions/workflows/amd64_macos.yml
 [github_windows_status]: ./../../actions/workflows/amd64_windows.yml/badge.svg
 [github_windows_link]: ./../../actions/workflows/amd64_windows.yml
-
 [github_amd64_docker_status]: ./../../actions/workflows/amd64_docker.yml/badge.svg
 [github_amd64_docker_link]: ./../../actions/workflows/amd64_docker.yml
 
 # Introduction
 
-Sample project explaining how to use Google OR-Tools in a .Net project.
+Projektseminar für das Modul "Scheduling" an der TH Nürnberg im Wintersemester 24/25
+
+Die Testdaten können über die Testing-Branches abgerufen werden.
 
 # Build
 
@@ -38,9 +39,9 @@ dotnet pack -c Release
 ```
 
 ## Testing
+
 You can test using the provided Dockerfile
 
 ```sh
 docker build --tag=dotnet_or-tools .
 ```
-
