@@ -64,7 +64,7 @@ namespace Projektseminar
 
             if (solverChoice == 2 || solverChoice == 3)
             {
-                priorityRule = Dialog.ChoosePriorityRule();
+                priorityRule = "LTT";//Dialog.ChoosePriorityRule();
                 neighboorhood = Dialog.ChooseNeighboorhood();
             }
 
@@ -149,6 +149,7 @@ namespace Projektseminar
                         problem = localSearch.DoLocalSearch();
 
                         stopwatch.Stop();
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}{instanceCounter}\diagramm.html", true, seedValue, stopwatch.Elapsed);
 
                         localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Local Search", iterations: 0, priorityRule: gifflerThompson.PriorityRule);
 
