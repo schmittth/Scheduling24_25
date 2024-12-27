@@ -40,6 +40,7 @@ namespace Projektseminar.MetaHeuristic
                     Dictionary<int, List<Tuple<Instance.Task, Instance.Task, Machine>>> dict = CurrentProblem.GetNeighboorhood(Neighboorhood);
 
                     newProblem = new Problem(CurrentProblem);
+                    do { 
                     List<Tuple<Instance.Task, Instance.Task, Machine>> randomNeighbor = dict[random.Next(0, dict.Count)];
 
                     foreach (Tuple<Instance.Task, Instance.Task, Machine> tuple in randomNeighbor)
@@ -47,7 +48,10 @@ namespace Projektseminar.MetaHeuristic
                         newProblem.SwapTasks(tuple.Item1, tuple.Item2, tuple.Item3);
                     }
 
-                    if (CurrentProblem.Makespan > newProblem.Makespan)
+                }
+                while (!newProblem.ConfirmFeasability()) ;
+
+                if (CurrentProblem.Makespan > newProblem.Makespan)
                     {
                         if (BestProblem.Makespan > newProblem.Makespan)
                         {
