@@ -24,10 +24,11 @@ namespace Projektseminar
             Tuple<int, int, int, int, int> randomInstanceSize = null;
             List<string> subFiles = new List<string>();
             int instanceAmount = 0;
+
             if (instanceChoice == "Random") //Wenn randomisierte Instanz lasse Instanzgröße auswählen
             {
                 instanceAmount = Dialog.ChooseInstanceAmount(); //Bestimme wie oft Instanzen generiert werden sollen   
-                randomInstanceSize = Dialog.ChooseRandomInstanceSize(); //Größe der randomisierten Instanz auswählen
+                randomInstanceSize = Dialog.ChooseRandomInstanceSize(); //Größe der randomisierten Instanz auswählen               
             }
             else if (instanceChoice.EndsWith(".txt")) //When ein .txt-File selektiert wird nur eine Instanz geladen
             {
@@ -50,13 +51,6 @@ namespace Projektseminar
                 instanceAmount = subFiles.Count;
             }
 
-            if (instanceAmount == 1) //Wenn Anzahl an Instanzen gleich 1 lasse Seed auswählen
-            {
-                seedChoice = Dialog.SeedAlgorithm();
-                randomInstanceSize = Dialog.ChooseRandomInstanceSize();
-
-            }
-
             int solverChoice = Dialog.ChooseSolver(); //Lasse Lösungsansatz auswählen
             string priorityRule = ""; //Initialisiere PriortityRule String
             string neighboorhood = ""; //Initialisiere Nachbarschafts String
@@ -71,6 +65,7 @@ namespace Projektseminar
             Tuple<double, int> simAnnealParams = null;
             if (solverChoice == 2)
             {
+                seedChoice = Dialog.SeedAlgorithm();
                 simAnnealParams = Dialog.ChooseSimAnnealParameters();
             }
 
@@ -90,7 +85,7 @@ namespace Projektseminar
                 Importer importer = new Importer();
                 if (instanceChoice == "Random")
                 {
-                    importer.ImportRandomInstance(randomInstanceSize.Item1, randomInstanceSize.Item2, seedValue, randomInstanceSize.Item3, randomInstanceSize.Item4, randomInstanceSize.Item5);
+                    importer.ImportRandomInstance(randomInstanceSize.Item1, randomInstanceSize.Item2, randomInstanceSize.Item3, randomInstanceSize.Item4, randomInstanceSize.Item5);
                 }
                 else if (instanceChoice.EndsWith(".txt"))
                 {
@@ -109,7 +104,7 @@ namespace Projektseminar
                 if (solverChoice == 2 || solverChoice == 3)
                 {
                     problem = gifflerThompson.InitialSolution();
-                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}{instanceCounter}\diagrammInitial.html", false, seedValue, stopwatch.Elapsed);
+                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\diagrammInitial.html", false, seedValue, stopwatch.Elapsed);
                 }
                 stopwatch.Reset();
 

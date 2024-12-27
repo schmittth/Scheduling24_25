@@ -66,9 +66,9 @@ namespace Projektseminar
         }
 
         //Generiere eine zufällige Instanz basierend auf den Übergabeparametern
-        public void ImportRandomInstance(int jobAmount, int machineAmount, int seedValue, int minTaskPerJob, int minTaskTime, int maxTaskTime)
+        public void ImportRandomInstance(int jobAmount, int machineAmount, int minTaskPerJob, int minTaskTime, int maxTaskTime)
         {
-            Random rand = new Random(seedValue); //Initieren neuen Random mit SeedValue
+            Random rand = new Random(); //Initieren neuen Random mit SeedValue
 
             //Iteriere durch Menge an zu erstellenden Jobs.
             for (int jobCounter = 0; jobCounter < jobAmount; jobCounter++)

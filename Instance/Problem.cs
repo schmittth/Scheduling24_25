@@ -41,18 +41,12 @@ namespace Projektseminar.Instance
 
         }
 
-        //Klon-Konstruktor
+        //Klon-Konstruktor der zu kopierendes Problem enthält. Kopiertes Projekt ist this.
         public Problem(Problem existingProblem)
         {
-            /*Debug*/
-            //Console.WriteLine("INFORMATION: Building new Problem");
+            Horizon = existingProblem.Horizon; //Kopiere den Horizon in ein neues Element
 
-            /*Performance*/
-            //Stopwatch copyWatch = new Stopwatch();
-            //copyWatch.Start();
-
-            Horizon = existingProblem.Horizon;
-
+            //Kopiere alle Maschinen in Liste in das neue Projekt
             foreach (Machine machine in existingProblem.Machines)
             {
                 Machine cloneMachine = new Machine(machine.Id);
@@ -61,11 +55,13 @@ namespace Projektseminar.Instance
                 machines.Add(cloneMachine);
             }
 
+            //Kopiere alle Jobs in Listen im neuen Projekt
             foreach (Job job in existingProblem.Jobs)
             {
                 Job cloneJob = new Job(job.Id);
                 jobs.Add(cloneJob);
 
+                //Kopiere alle Tasks in Liste in neuerstellten Job
                 foreach (Task task in job.Tasks)
                 {
                     Task cloneTask = new Task(machines[task.Machine.Id], cloneJob, task.Duration, task.Id);
@@ -82,6 +78,7 @@ namespace Projektseminar.Instance
                 }
             }
 
+            //Kopiere die Schedule des alten Problems ins neue Problem
             foreach (Machine machine in existingProblem.Machines)
             {
                 foreach (Task task in machine.Schedule)
@@ -90,13 +87,9 @@ namespace Projektseminar.Instance
                 }
             }
 
-            Setups = existingProblem.Setups;
+            Setups = existingProblem.Setups; //Kopiere die Setups
 
-            SetRelatedTasks();
-
-            /*Performance*/
-            //copyWatch.Stop();
-            //Console.WriteLine($"Copy Watch ran {copyWatch.Elapsed.Minutes} Minutes {copyWatch.Elapsed.Seconds} Seconds {copyWatch.Elapsed.Milliseconds} Milliseconds {copyWatch.Elapsed.Nanoseconds} Nanoseconds");
+            SetRelatedTasks(); //Führe einmal Methode aus um alle Objektreferenzen wieder herzustellen.
         }
 
         //Methoden
@@ -104,42 +97,59 @@ namespace Projektseminar.Instance
         //Problem als Diagramm in den angegebenen Pfad schreiben
         public void ProblemAsDiagramm(string filepath, bool openOnWrite, int seedValue, TimeSpan watchTime)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(filepath));
+            Directory.CreateDirectory(Path.GetDirectoryName(filepath)); //Erstelle den Ordner wenn noch nicht vorhanden.
 
-            File.Copy(@"..\..\..\Diagramms\template.html", filepath, true);
+            File.Copy(@"..\..\..\Diagramms\template.html", filepath, true); //Kopiere das Template-File in neues Diagramm
 
+            //Füge dem Diagramm neue Zeilen hinzu
             using (StreamWriter sw = File.AppendText(filepath))
             {
-                Dictionary<int, string> jobColors = new Dictionary<int, string>();
+                Dictionary<int, string> jobColors = new Dictionary<int, string>(); //Initialsiere ein Dictionary um Jobs zu Farben zu mappen
                 var random = new Random();
+                string coloration = "";
 
-                int makespan = CalculateMakespan();
+                int makespan = CalculateMakespan(); //Instanziiere Integer mit Makespan
+                int setupCount = 0; //Instanziiere Integer um Setups zu zählen
 
-                var sortedJobs = Jobs.SelectMany(job => job.Tasks.Select(task => new { Task = task, MachineId = task.Machine.Id })).OrderBy(entry => entry.MachineId).ThenBy(entry => entry.Task.Start).GroupBy(entry => entry.MachineId);
-
-                foreach (var machineGroup in sortedJobs)
+                //Erstelle für jeden eingeplanten Task eine neue Zeile
+                foreach (Machine machine in Machines)
                 {
-                    foreach (var entry in machineGroup)
+                    foreach (Task task in machine.Schedule)
                     {
-                        var task = entry.Task;
-                        sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Job '+'{task.Job.Id}', 'Duration: ' + '{task.Duration}'+ ', Job: ' + '{task.Job.Id}' + ', Task:' + '{task.Id}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End})],");
+                        //Wenn Job des aktuellen Tasks noch keine Farbe hat, erstelle neue.
+                        if (!jobColors.ContainsKey(task.Job.Id))
+                        {
+                            jobColors.Add(task.Job.Id, String.Format("#{0:X6}", random.Next(0x1000000)));                          
+                        }
 
+                        //Wenn Task ein Setup hat füge Zeile für Setup hinzu.
                         if (task.Setup != 0)
                         {
-                            sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Setup',  '{task.Setup}' , new Date(0, 0, 0, 0, 0, {task.Start - task.Setup}) , new Date(0, 0, 0, 0, 0, {task.Start})],");
+                            //Schreibe Zeile für Setup. Setze Farbe auf Schwarz
+                            sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Setup{setupCount}',  'Duration: {task.Setup}' , new Date(0, 0, 0, 0, 0, {task.Start - task.Setup}) , new Date(0, 0, 0, 0, 0, {task.Start})],");
+                            coloration = coloration + "'#000000',";
+                            setupCount++;
                         }
+
+                        //Schreibe Zeile für Task. Setze zufällige Farbe aus Array
+                        sw.WriteLine($"[ 'Machine {task.Machine.Id}' , '{task.Job.Id}_{task.Id}', 'Duration: {task.Duration}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End})],");
+                        coloration = coloration + $"'{jobColors[task.Job.Id]}',";
+                        
                     }
                 }
+                coloration.Remove(coloration.Length - 1); //Lösche letztes Komma 
+
+                //Schreibe weitere notwendige Zeilen
                 sw.WriteLine("]);");
-                sw.WriteLine("");
-                sw.WriteLine("chart.draw(dataTable);");
+                sw.WriteLine($$"""var options = {colors: [{{coloration}}]};""");
+                sw.WriteLine("chart.draw(dataTable, options);");
                 sw.WriteLine("}");
                 sw.WriteLine("</script>");
-                sw.WriteLine("");
                 sw.WriteLine($"<div><p>Makespan: {makespan} Seconds. Seed Value: {seedValue} Processing Time: {watchTime}</p></div>");
                 sw.WriteLine("<div id=\"example3.1\" style=\"height: 1000px;\"></div>");
             }
 
+            //Öffne Diagramm direkt nach Abschluss der Methode
             if (openOnWrite == true)
             {
                 string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -160,34 +170,43 @@ namespace Projektseminar.Instance
             }
         }
 
+        //Problem als Txt-Datei in den angegebenen Pfad exportieren
         public void ProblemAsFile(string filepath)
         {
+            //Erstelle neues Text-File in Dateipfad
             using (StreamWriter instanceWriter = File.CreateText(filepath))
             {
+                //Schreibe Meta-Informationen
                 instanceWriter.WriteLine("#Meta infos");
                 instanceWriter.WriteLine($"{Jobs.Count},{Machines.Count}");
                 instanceWriter.WriteLine("#Processing times");
 
+                //Schreibe Zeile für jeden Job
                 foreach (Job job in jobs)
                 {
                     List<int> jobLine = new List<int>();
-                    jobLine.Add(job.Tasks.Count);
+                    jobLine.Add(job.Tasks.Count); //Erster Wert enthält Anzahl der Operationen
+
+                    //Schreibe einen Wert für jeden Task im Job
                     foreach (Task task in job.Tasks)
                     {
                         jobLine.Add(task.Machine.Id + 1);
                         jobLine.Add(task.Duration);
                     }
-                    instanceWriter.WriteLine(String.Join(",", jobLine));
+                    instanceWriter.WriteLine(String.Join(",", jobLine)); //Konkateniere alle Strings mit ,
                 }
+
+                //Schreibe Zeile für jeden Job
                 instanceWriter.WriteLine("#Setup times");
                 for (int rowJob = 0; rowJob < jobs.Count; rowJob++)
                 {
                     List<int> setupLine = new List<int>();
+                    //Schreibe Wert für jeden Job
                     for (int colJob = 0; colJob < jobs.Count; colJob++)
                     {
                         setupLine.Add(setups[Tuple.Create(rowJob, colJob)]);
                     }
-                    instanceWriter.WriteLine(String.Join(",", setupLine));
+                    instanceWriter.WriteLine(String.Join(",", setupLine)); //Konkateniere alle Strings mit ,
                 }
             }
         }
@@ -238,7 +257,6 @@ namespace Projektseminar.Instance
             //critWatch.Start();
 
             Dictionary<Machine, List<Task>> critTasks = new Dictionary<Machine, List<Task>>();
-            int makespan = CalculateMakespan();
 
             for (int j = 0; j < machines.Count(); j++)
             {
@@ -246,7 +264,7 @@ namespace Projektseminar.Instance
                 for (int i = 0; i < machines[j].Schedule.Count; i++)
                 {
                     Task task = machines[j].Schedule[i];
-                    if (task.Release + task.Tail == makespan)
+                    if (task.Release + task.Tail == CalculateMakespan())
                     {
                         critTasks[machines[j]].Add(task);
                         //Console.WriteLine($"INFORMATION:Task {task.Id} in Job {task.Job.Id} is critical");
@@ -495,7 +513,7 @@ namespace Projektseminar.Instance
 
             //Problem returnProblem = problem;
 
-            int makespan = CalculateMakespan();
+            //int makespan = CalculateMakespan();
 
             foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
             {
@@ -591,31 +609,41 @@ namespace Projektseminar.Instance
                         {
                             currentBlock++;
                         }
-
                     }
                 }
             }
 
-            int makespan = this.CalculateMakespan();
+            //Iteriere durch jeden Block an Tasks
             foreach (KeyValuePair<Tuple<Machine, int>, List<Task>> blockPair in critBlocks)
             {
+                int lastTaskIndex = blockPair.Value.Count - 1; //Einmal definieren um Laufzeit zu sparen
+
+                //Für den ersten Block werden die letzten zwei Tasks getauscht
                 if (blockPair.Value[0].Release == 0)
                 {
-                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[lastTaskIndex], blockPair.Value[lastTaskIndex].preMachineTask, blockPair.Key.Item1) });
                 }
-                else if (blockPair.Value[0].Release + blockPair.Value[0].Duration == makespan)
+
+                //Für den letzten Block werden die ersten zwei Tasks getauscht
+                else if (blockPair.Value[lastTaskIndex].Release + blockPair.Value[lastTaskIndex].Duration == this.CalculateMakespan())
                 {
                     swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
                 }
-                else if (blockPair.Value.Count <= 2)
+
+                //Für den 
+                else if ((lastTaskIndex + 1) == 2)
                 {
                     swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
                 }
                 else
                 {
-                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[blockPair.Value.Count - 1], blockPair.Value[blockPair.Value.Count - 1].preMachineTask, blockPair.Key.Item1) });
+                    swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[lastTaskIndex], blockPair.Value[lastTaskIndex].preMachineTask, blockPair.Key.Item1) });
                     swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) });
                 }
+
+
+
+
             }
             return swapOperations;
         }
