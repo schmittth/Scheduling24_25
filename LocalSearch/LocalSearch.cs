@@ -15,12 +15,12 @@ namespace Projektseminar.LocalSearch
 
         public Problem DoLocalSearch()
         {
-            int makespan;
+            int oldMakespan;
             do
             {
                 Dictionary<int, List<Tuple<Instance.Task, Instance.Task, Machine>>> dict = BestProblem.GetNeighboorhood(Neighborhood);
 
-                makespan = BestProblem.CalculateMakespan();
+                oldMakespan = BestProblem.Makespan;
 
                 foreach (List<Tuple<Instance.Task, Instance.Task, Machine>> list in dict.Values)
                 {
@@ -31,16 +31,13 @@ namespace Projektseminar.LocalSearch
                         newProblem.SwapTasks(tuple.Item1, tuple.Item2, tuple.Item3);
                     }
 
-                    int newMakespan = newProblem.CalculateMakespan();
-
-                    if (newMakespan < makespan)
+                    if (newProblem.Makespan < BestProblem.Makespan)
                     {
                         BestProblem = newProblem;
-                        makespan = newMakespan;
                     }
                 }
             }
-            while (makespan > BestProblem.CalculateMakespan());
+            while (oldMakespan > BestProblem.Makespan);
 
             return BestProblem;
         }

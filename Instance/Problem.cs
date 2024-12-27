@@ -1,15 +1,10 @@
-using Google.OrTools.LinearSolver;
-using Google.OrTools.ModelBuilder;
-using System.Runtime.ConstrainedExecution;
-
 namespace Projektseminar.Instance
 {
     internal class Problem
     {
         // Eigenschaften
-        public int Id { get; }
-        public int Horizon { get => horizon; set => horizon = value; }
-        public int Makespan { get; set; }
+        public int Horizon { get => horizon; set => horizon = value; } //Horizon: Eine ausreichend hohe Zahl
+        public int Makespan { get => makespan; set => makespan = value; } //Makespan: Die gesammte Laufzeit dieses Problems
 
         public List<Machine> Machines
         {
@@ -32,7 +27,8 @@ namespace Projektseminar.Instance
         private List<Machine> machines = new List<Machine>();
         private Dictionary<Tuple<int, int>, int> setups = new Dictionary<Tuple<int, int>, int>();
 
-        private int horizon = 0;
+        private int horizon;
+        private int makespan;
 
         //Konstruktoren
 
@@ -45,7 +41,8 @@ namespace Projektseminar.Instance
         //Klon-Konstruktor der zu kopierendes Problem enthält. Kopiertes Projekt ist this.
         public Problem(Problem existingProblem)
         {
-            Horizon = existingProblem.Horizon; //Kopiere den Horizon in ein neues Element
+            horizon = existingProblem.Horizon; //Kopiere den Horizon in ein neues Element
+            makespan = existingProblem.Makespan;
 
             //Kopiere alle Maschinen in Liste in das neue Projekt
             foreach (Machine machine in existingProblem.Machines)
@@ -109,7 +106,6 @@ namespace Projektseminar.Instance
                 var random = new Random();
                 string coloration = "";
 
-                int makespan = CalculateMakespan(); //Instanziiere Integer mit Makespan
                 int setupCount = 0; //Instanziiere Integer um Setups zu zählen
 
                 //Erstelle für jeden eingeplanten Task eine neue Zeile
@@ -120,22 +116,22 @@ namespace Projektseminar.Instance
                         //Wenn Job des aktuellen Tasks noch keine Farbe hat, erstelle neue.
                         if (!jobColors.ContainsKey(task.Job.Id))
                         {
-                            jobColors.Add(task.Job.Id, String.Format("#{0:X6}", random.Next(0x1000000)));                          
+                            jobColors.Add(task.Job.Id, String.Format("#{0:X6}", random.Next(0x1000000)));
                         }
 
                         //Wenn Task ein Setup hat füge Zeile für Setup hinzu.
                         if (task.Setup != 0)
                         {
                             //Schreibe Zeile für Setup. Setze Farbe auf Schwarz
-                            sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Setup{setupCount}',  'Duration: {task.Setup}' , new Date(0, 0, 0, 0, 0, {task.Start - task.Setup}) , new Date(0, 0, 0, 0, 0, {task.Start})],");
+                            sw.WriteLine($"[ 'Machine {task.Machine.Id}' , 'Setup{setupCount}',  'Duration: {task.Setup} Start: {task.Start - task.Setup} End: {task.Start}' , new Date(0, 0, 0, 0, 0, {task.Start - task.Setup}) , new Date(0, 0, 0, 0, 0, {task.Start})],");
                             coloration = coloration + "'#000000',";
                             setupCount++;
                         }
 
                         //Schreibe Zeile für Task. Setze zufällige Farbe aus Array
-                        sw.WriteLine($"[ 'Machine {task.Machine.Id}' , '{task.Job.Id}_{task.Id}', 'Duration: {task.Duration}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End})],");
+                        sw.WriteLine($"[ 'Machine {task.Machine.Id}' , '{task.Job.Id}_{task.Id}', 'Duration: {task.Duration} Start: {task.Start} End: {task.End}' , new Date(0, 0, 0, 0, 0, {task.Start}) , new Date(0, 0, 0, 0, 0, {task.End})],");
                         coloration = coloration + $"'{jobColors[task.Job.Id]}',";
-                        
+
                     }
                 }
                 coloration.Remove(coloration.Length - 1); //Lösche letztes Komma 
@@ -150,19 +146,15 @@ namespace Projektseminar.Instance
                 sw.WriteLine("<div id=\"example3.1\" style=\"height: 1000px;\"></div>");
             }
 
-            //Öffne Diagramm direkt nach Abschluss der Methode
-            if (openOnWrite == true)
+            //Öffne Diagramm direkt nach Schreiben des Diagramms
+            if (openOnWrite == true) //Öffne wenn Parameter ist wahr
             {
-                string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
-                string sFile = System.IO.Path.Combine(sCurrentDirectory, filepath);
-                string sFilePath = Path.GetFullPath(sFile);
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.Process process = new System.Diagnostics.Process(); //Starte neuen Process
                 try
                 {
                     process.StartInfo.UseShellExecute = true;
-                    process.StartInfo.FileName = sFilePath;
-                    process.Start();
+                    process.StartInfo.FileName = Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filepath)); //Definiere Dateinamen zum öffnen
+                    process.Start(); //Starte Prozess
                 }
                 catch (Exception e)
                 {
@@ -250,10 +242,9 @@ namespace Projektseminar.Instance
         public Dictionary<Machine, List<Task>> GetCriticalTasks()
         {
             Dictionary<Machine, List<Task>> critTasks = new Dictionary<Machine, List<Task>>(); //Initialisiere Dictionary
-            int makespan = CalculateMakespan(); //Einmal Makespan kalkulieren für Performance
 
             //Iteriere durch alle Maschinen 
-            for (int machineId = 0; machineId < machines.Count(); machineId++) 
+            for (int machineId = 0; machineId < machines.Count(); machineId++)
             {
                 critTasks.Add(machines[machineId], new List<Task>()); //Füge diese Maschine als Schlüssel hinzu
 
@@ -263,7 +254,7 @@ namespace Projektseminar.Instance
                     Task task = machines[machineId].Schedule[taskOnMachine];
 
                     //Wenn Release und Tail addiert Makespan ergeben ist der Task kritisch
-                    if (task.Release + task.Tail == CalculateMakespan())
+                    if (task.Release + task.Tail == makespan)
                     {
                         critTasks[machines[machineId]].Add(task); //Füge Task dem Dict mit der Maschine als Schlüssel hinzu
                     }
@@ -389,13 +380,13 @@ namespace Projektseminar.Instance
                 currentTask.Release = Math.Max(releasePM, releasePJ);
                 currentTask.Start = currentTask.Release;
                 currentTask.End = currentTask.Start + currentTask.Duration;
-                currentTask.Machine.Load = currentTask.End; 
+                currentTask.Machine.Load = currentTask.End;
 
                 if (currentTask.sucJobTask is not null)
                 {
                     if (currentTask.sucJobTask.preMachineTask is null || currentTask.sucJobTask.preMachineTask.Release != -1)
                     {
-                        releaseQueue.Enqueue(currentTask.sucJobTask);                      
+                        releaseQueue.Enqueue(currentTask.sucJobTask);
                     }
                 }
 
@@ -430,12 +421,6 @@ namespace Projektseminar.Instance
 
                 currentTask.Tail = Math.Max(tailSM, tailSJ); //Update Tail mit dem Job oder Maschinen Maximum
 
-                /*if (currentTask.sucMachineTask == null && currentTask.sucJobTask == null)
-                {
-                    this.Makespan = currentTask.Release + currentTask.Tail;
-                }*/
-                //Console.WriteLine($"RESULT:Updated Tail of Job{currentTask.Job.Id}_Task{currentTask.Id}");
-
                 //Füge der Liste den Vorgänger im Job dieses Tasks hinzu
                 if (currentTask.preJobTask is not null)
                 {
@@ -454,6 +439,7 @@ namespace Projektseminar.Instance
                     }
                 }
             }
+            makespan = CalculateMakespan(); //Setze den Makespan
         }
 
         public bool ConfirmFeasability()
@@ -497,10 +483,6 @@ namespace Projektseminar.Instance
         {
             Dictionary<Machine, List<Task>> critTasks = GetCriticalTasks();
             Dictionary<int, List<Tuple<Task, Task, Machine>>> swapOperations = new Dictionary<int, List<Tuple<Task, Task, Machine>>>();
-
-            //Problem returnProblem = problem;
-
-            //int makespan = CalculateMakespan();
 
             foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
             {
@@ -574,7 +556,7 @@ namespace Projektseminar.Instance
                 int currentBlock = 0;
 
                 if (critPair.Value.Count > 1)
-                {                 
+                {
                     for (int i = 0; i < critPair.Value.Count - 1; i++)
                     {
                         if ((!critBlocks.ContainsKey(Tuple.Create(critPair.Key, currentBlock)) && critPair.Value[i].sucMachineTask is not null))
@@ -610,11 +592,11 @@ namespace Projektseminar.Instance
                 }
 
                 //Für den letzten Block werden die ersten zwei Tasks getauscht
-                else if (blockPair.Value[lastTaskIndex].Release + blockPair.Value[lastTaskIndex].Duration == this.CalculateMakespan()) //Wenn Release und Dauer addiert den Makespan ergeben ist der letzte Task im Block der absolut letzte.
+                else if (blockPair.Value[lastTaskIndex].Release + blockPair.Value[lastTaskIndex].Duration == makespan) //Wenn Release und Dauer addiert den Makespan ergeben ist der letzte Task im Block der absolut letzte.
                 {
                     swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) }); //Tausche der ersten und zweiten Task im Block
                 }
-                
+
                 //In allen anderen Fällen
                 else
                 {
@@ -622,7 +604,7 @@ namespace Projektseminar.Instance
                     if ((lastTaskIndex + 1) > 2)
                     {
                         swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[lastTaskIndex], blockPair.Value[lastTaskIndex].preMachineTask, blockPair.Key.Item1) }); //Tausche den letzten und vorletzten Task im Block
-                    }                 
+                    }
                     swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task, Machine>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask, blockPair.Key.Item1) }); //Tausche der ersten und zweiten Task im Block
                 }
             }

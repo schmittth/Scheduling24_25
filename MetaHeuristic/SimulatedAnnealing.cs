@@ -1,5 +1,4 @@
 ﻿using Projektseminar.Instance;
-using System.Collections.Concurrent;
 
 namespace Projektseminar.MetaHeuristic
 {
@@ -27,77 +26,42 @@ namespace Projektseminar.MetaHeuristic
         //Methoden
         public Problem DoSimulatedAnnealing(int seedValue)
         {
-
-            Random random = new Random(seedValue);
-            Problem newProblem;
+            Random random = new Random(seedValue); //Initialisiere Zufallswert
+            Problem newProblem; //Deklariere Variable für neues Problem
 
             while (Temperature > 1)
             {
-                /*Debug*/              
-                //CurrentProblem.ProblemAsDiagramm(@$"G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\diagrammAnnealingTemp{Temperature}.html");
-
                 Console.WriteLine($"Current Temperature Simulated Annealing {Temperature}");
+                //CurrentProblem = BestProblem; //Alternative mit bestem Problem weitermachen
 
                 for (int i = 0; i < Iterations; i++)
                 {
-                    /*Debug*/
-                    //Console.WriteLine($"Current Iteration Simulated Annealing {i}");                  
-                    //CurrentProblem.ProblemAsDiagramm(@$"G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Projektseminar\diagrammAnnealingTemp{Temperature}Iteration{i}.html");
-
                     Dictionary<int, List<Tuple<Instance.Task, Instance.Task, Machine>>> dict = CurrentProblem.GetNeighboorhood(Neighboorhood);
 
-                    List<int> invalidNumber = new List<int>();
+                    newProblem = new Problem(CurrentProblem);
+                    List<Tuple<Instance.Task, Instance.Task, Machine>> randomNeighbor = dict[random.Next(0, dict.Count)];
 
-                    do
+                    foreach (Tuple<Instance.Task, Instance.Task, Machine> tuple in randomNeighbor)
                     {
-                        newProblem = new Problem(CurrentProblem);
-
-                        int chooseNeighbor;
-
-                            chooseNeighbor = random.Next(0, dict.Count);
-
-
-
-                        List<Tuple<Instance.Task, Instance.Task, Machine>> randomNeighbor = dict[chooseNeighbor];
-
-                        foreach (Tuple<Instance.Task, Instance.Task, Machine> tuple in randomNeighbor)
-                        {
-                            newProblem.SwapTasks(tuple.Item1, tuple.Item2, tuple.Item3);
-                        }
+                        newProblem.SwapTasks(tuple.Item1, tuple.Item2, tuple.Item3);
                     }
-                    while (!newProblem.ConfirmFeasability());
 
-                    /*Debug*/
-
-                    int curMakespan = CurrentProblem.CalculateMakespan();
-                    int newMakespan = newProblem.CalculateMakespan();
-
-                    //Console.WriteLine($"New Makespan: {newMakespan}, Old Makespan {curMakespan}");
-
-                    if (curMakespan > newMakespan)
+                    if (CurrentProblem.Makespan > newProblem.Makespan)
                     {
-                        /*Debug*/
-                        //Console.WriteLine($"Iteration{i} Solution accepted - better than current");
-                        
-                        CurrentProblem = newProblem;
-                        if (BestProblem.CalculateMakespan() > newMakespan)
+                        if (BestProblem.Makespan > newProblem.Makespan)
                         {
-                            
                             BestProblem = newProblem;
-                            /*Debug*/
-                            //Console.WriteLine($"Iteration{i} Solution accepted - better than best");
                         }
+                        CurrentProblem = newProblem;
                     }
                     else
                     {
-                        int delta = newMakespan - curMakespan;
+                        int delta = newProblem.Makespan - CurrentProblem.Makespan;
                         double exponent = -delta / Temperature;
                         double probability = Math.Pow(Math.E, exponent);
                         if (random.NextDouble() < probability)
                         {
                             CurrentProblem = newProblem;
-                            /*Debug*/
-                            //Console.WriteLine($"Iteration{i} Solution accepted - but worse");
                         }
                     }
                 }
