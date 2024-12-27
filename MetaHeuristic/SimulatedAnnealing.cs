@@ -13,7 +13,7 @@ namespace Projektseminar.MetaHeuristic
         //Variablen
 
         //Konstruktoren
-        public SimulatedAnnealing(Problem problem, double coolingFactor, int iterations, string neighboorhood)
+        public SimulatedAnnealing(Problem problem, double coolingFactor, int iterations, string neighboorhood, int maxRuntime = 60)
         {
             this.CurrentProblem = problem; //Übergebenes Problem wird als aktuelles Problem gesetzt
             this.BestProblem = problem; //Bei Instanzierung ist bestes Problem = aktuelles Problem
@@ -21,6 +21,7 @@ namespace Projektseminar.MetaHeuristic
             this.CoolingFactor = coolingFactor; //Abkühlungfaktor wird von Konsole übergeben.
             this.Iterations = iterations; //Anzahl an Iterationen wird von Konsole übergeben.
             this.Neighboorhood = neighboorhood; //Nachbarschaft wird von Konsole übergeben.
+            this.MaxRuntimeInSeconds = maxRuntime;
         }
 
         //Methoden
@@ -29,7 +30,7 @@ namespace Projektseminar.MetaHeuristic
             Random random = new Random(seedValue); //Initialisiere Zufallswert
             Problem newProblem; //Deklariere Variable für neues Problem
 
-            while (Temperature > 1)
+            while (Temperature > 1 && Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
             {
                 Console.WriteLine($"Current Temperature Simulated Annealing {Temperature}");
                 //CurrentProblem = BestProblem; //Alternative mit bestem Problem weitermachen

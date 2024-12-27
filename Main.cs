@@ -119,8 +119,6 @@ namespace Projektseminar
                         ORToolsSolver.GoogleOR newSolver = new ORToolsSolver.GoogleOR(problem);
                         newSolver.DoORSolver();
 
-                        stopwatch.Stop();
-
                         newSolver.Log(instanceChoice, seedValue, stopwatch.Elapsed, "GoogleOR"); //Logge die Ausführung
 
                         break;
@@ -136,7 +134,7 @@ namespace Projektseminar
 
                         simAnneal.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighboorhood, gifflerThompson.PriorityRule);
 
-                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\diagramm.html", true, seedValue, stopwatch.Elapsed);
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\diagramm.html", true, seedValue, simAnneal.Stopwatch.Elapsed);
                         problem.ProblemAsFile($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\file.txt");
                         break;
                     case 3:

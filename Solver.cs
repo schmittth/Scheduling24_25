@@ -1,4 +1,5 @@
 ﻿using Projektseminar.Instance;
+using System.Diagnostics;
 
 namespace Projektseminar
 {
@@ -6,8 +7,19 @@ namespace Projektseminar
     {
         public Problem CurrentProblem { get; set; }
         public Problem BestProblem { get; set; }
+        public int MaxRuntimeInSeconds { get; set; }
+        public Stopwatch Stopwatch { get => stopwatch; set => value = stopwatch; }
+
+        private Stopwatch stopwatch = new Stopwatch();
+
+        public Solver()
+        {
+            stopwatch.Start();
+        }
+
         public void Log(string instanceName, int seedValue, TimeSpan runtime, string solverType, double coolingFactor = 0, int iterations = 0, string neighborhood = "", string priorityRule = "")
         {
+            stopwatch.Stop();
 
             int minTaskAmount = 0;
             int minTaskTime = 0;
