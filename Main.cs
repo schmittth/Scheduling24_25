@@ -58,7 +58,8 @@ namespace Projektseminar
 
             if (solverChoice == 2 || solverChoice == 3)
             {
-                priorityRule = Dialog.ChoosePriorityRule();
+                //priorityRule = Dialog.ChoosePriorityRule();
+                priorityRule = "LTT";
                 neighboorhood = Dialog.ChooseNeighboorhood();
             }
 
@@ -96,54 +97,43 @@ namespace Projektseminar
                     importer.ImportInstanceFromFile(subFiles[instanceCounter]);
                 }
 
-
                 Problem problem = importer.GenerateProblem();
-                stopwatch.Start();
+               
                 GifflerThompson gifflerThompson = new GifflerThompson(problem, priorityRule);
-                stopwatch.Stop();
+
                 if (solverChoice == 2 || solverChoice == 3)
                 {
                     problem = gifflerThompson.InitialSolution();
-                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\diagrammInitial.html", false, seedValue, stopwatch.Elapsed);
+                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\initialSolution.html", false, seedValue, stopwatch.Elapsed);
                 }
-                stopwatch.Reset();
 
                 switch (solverChoice) //Switch-Case Anweisungen basierend auf der Solver-Auswahl.
                 {
                     //Solver: Google OR-Tools
                     case 1:
-
-                        stopwatch.Start();
-
                         //Erstelle neues OR-Solver Objekt und löse das Problem.
-                        ORToolsSolver.GoogleOR newSolver = new ORToolsSolver.GoogleOR(problem);
-                        newSolver.DoORSolver();
+                        ORToolsSolver.GoogleOR googleor = new ORToolsSolver.GoogleOR(problem);
+                        problem = googleor.DoORSolver();
 
-                        newSolver.Log(instanceChoice, seedValue, stopwatch.Elapsed, "GoogleOR"); //Logge die Ausführung
+                        googleor.Log(instanceChoice, seedValue, googleor.Stopwatch.Elapsed, "GoogleOR"); //Logge die Ausführung
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\googleOr.html", true, seedValue, googleor.Stopwatch.Elapsed);
 
                         break;
                     //Solver: Simulated Annealing
                     case 2:
-
-                        stopwatch.Start();
                         SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, simAnnealParams.Item1, simAnnealParams.Item2, neighboorhood);
-
                         problem = simAnneal.DoSimulatedAnnealing(seedValue);
 
-                        stopwatch.Stop();
-
-                        simAnneal.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighboorhood, gifflerThompson.PriorityRule);
-
-                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\diagramm.html", true, seedValue, simAnneal.Stopwatch.Elapsed);
-                        problem.ProblemAsFile($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\file.txt");
+                        simAnneal.Log(instanceChoice, seedValue, simAnneal.Stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighboorhood, gifflerThompson.PriorityRule);
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\simAnneal.html", true, seedValue, simAnneal.Stopwatch.Elapsed);
+                        //problem.ProblemAsFile($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\instanceExport.txt");
                         break;
                     case 3:
                         LocalSearch.LocalSearch localSearch = new LocalSearch.LocalSearch(problem, neighboorhood);
                         problem = localSearch.DoLocalSearch();
 
-                        stopwatch.Stop();
-
                         localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Local Search", iterations: 0, priorityRule: gifflerThompson.PriorityRule);
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\localSearch.html", true, seedValue, localSearch.Stopwatch.Elapsed);
 
                         break;
                 }

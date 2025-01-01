@@ -79,9 +79,7 @@ namespace Projektseminar.OpeningHeuristic
                 if (planTask.Machine.Schedule.Count > 0)
                 {
                     prevTask = planTask.Machine.Schedule[planTask.Machine.Schedule.Count - 1];
-
                     planTask.Setup = BestProblem.Setups[Tuple.Create(prevTask.Job.Id, planTask.Job.Id)];
-
                     planTask.Start = Math.Max(planTask.Machine.Load + planTask.Setup, planTask.Release);
                 }
                 else
@@ -93,12 +91,8 @@ namespace Projektseminar.OpeningHeuristic
                 planTask.Position = planTask.Machine.Schedule.Count();
                 planTask.Machine.Schedule.Add(planTask);
 
-
-                //Setze die Endzeit des Tasks auf die Startzeit + Verarbeitungszeit
-                planTask.End = planTask.Start + planTask.Duration;
-
-                //Setze den aktuellen Load der Maschine auf das Ende des eingeplanten Tasks.
-                planTask.Machine.Load = planTask.End;
+                planTask.End = planTask.Start + planTask.Duration; //Setze die Endzeit des Tasks auf die Startzeit + Verarbeitungszeit
+                planTask.Machine.Load = planTask.End; //Setze den aktuellen Load der Maschine auf das Ende des eingeplanten Tasks.
 
                 //Setze die Releasezeit des nächsten Tasks im Job auf das Ende des aktuellen Tasks
                 if (planTask.Id + 1 < planTask.Job.Tasks.Count)
@@ -108,6 +102,7 @@ namespace Projektseminar.OpeningHeuristic
             }
         }
 
+        //Methode um Liste an allen einplanparen Tasks zurückzugeben
         private List<Instance.Task> GetPlannableTasks()
         {
             List<Instance.Task> plannableTasks = new List<Instance.Task>();
@@ -127,81 +122,86 @@ namespace Projektseminar.OpeningHeuristic
             return plannableTasks;
         }
 
+        //Initiale Methode um initiale Releases zu bestimmen
         private void Init()
         {
             foreach (Job job in this.BestProblem.Jobs)
             {
+                //Setze alle initialen Werte
                 foreach (Instance.Task task in job.Tasks)
                 {
                     task.Start = 0;
                     task.End = 0;
-
-                    //Setze den Release für alle einplanbaren Jobs auf 0
-                    if (task.Id == 0)
-                    {
-                        task.Release = 0;
-                    }
-
-                    //Setze den Release für alle NICHT einplanbaren Jobs auf näherungsweise unendlich
-                    else
-                    {
-                        task.Release = BestProblem.Horizon;
-                    }
+                    task.Release = BestProblem.Horizon;
+                    
                     task.Machine.Load = 0;
                 }
+                job.Tasks[0].Release = 0; //Setze den Release für alle einplanbaren Jobs auf 0
             }
         }
+
+        //Methode um nach Prioritätsregel den nächsten Task zurückzugeben
         private Instance.Task GetTaskByPriorityRule(string priorityRule, List<Instance.Task> sameMachineTasks)
         {
-            int prio;
+            int value;
             Instance.Task planTask = null;
             switch (priorityRule)
             {
                 case "STT":
-                    prio = BestProblem.Horizon;
+                    value = BestProblem.Horizon;
+
+                    //Iteriere durch alle Tasks auf der gleichen Maschine um den mit der kleinsten Bearbeitungszeit zu finden
                     foreach (Instance.Task task in sameMachineTasks)
                     {
-                        if (task.Duration < prio)
+                        //Wenn die Laufzeit dieses Tasks kleiner als die aktuell kleinste, setze Wert neu
+                        if (task.Duration < value)
                         {
-                            prio = task.Duration;
+                            value = task.Duration;
                             planTask = task;
                         }
                     }
                     break;
                 case "LTT":
-                    prio = 0;
+                    value = 0;
+
+                    //Iteriere durch alle Tasks auf der gleichen Maschine um den mit der längsten Bearbeitungszeit zu finden
                     foreach (Instance.Task task in sameMachineTasks)
                     {
-                        if (task.Duration > prio)
+                        //Wenn die Laufzeit dieses Tasks größer als die aktuell größte, setze Wert neu
+                        if (task.Duration > value)
                         {
-                            prio = task.Duration;
+                            value = task.Duration;
                             planTask = task;
                         }
                     }
                     break;
                 case "LPT":
-                    prio = 0;
+                    value = 0;
+
+                    //Iteriere durch alle Tasks auf der gleichen Maschine um den zu finden dessen Job die längste Bearbeitungszeit hat
                     foreach (Instance.Task task in sameMachineTasks)
                     {
-                        if (task.Job.TotalDuration > prio)
+                        //Wenn die gesamte Joblaufzeit größer als die aktuell größte, setze Wert neu
+                        if (task.Job.TotalDuration > value)
                         {
-                            prio = task.Job.TotalDuration;
+                            value = task.Job.TotalDuration;
                             planTask = task;
                         }
                     }
                     break;
                 case "SPT":
-                    prio = BestProblem.Horizon;
+                    value = BestProblem.Horizon;
+
+                    //Iteriere durch alle Tasks auf der gleichen Maschine um den zu finden dessen Job die kürzeste Bearbeitungszeit hat
                     foreach (Instance.Task task in sameMachineTasks)
                     {
-                        if (task.Job.TotalDuration < prio)
+                        //Wenn die gesamte Joblaufzeit kleiner als die aktuell kleinste, setze Wert neu
+                        if (task.Job.TotalDuration < value)
                         {
-                            prio = task.Job.TotalDuration;
+                            value = task.Job.TotalDuration;
                             planTask = task;
                         }
                     }
-                    break;
-                default:
                     break;
             }
             return planTask;

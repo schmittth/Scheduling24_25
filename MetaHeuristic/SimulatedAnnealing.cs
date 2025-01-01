@@ -13,7 +13,7 @@ namespace Projektseminar.MetaHeuristic
         //Variablen
 
         //Konstruktoren
-        public SimulatedAnnealing(Problem problem, double coolingFactor, int iterations, string neighboorhood, int maxRuntime = 60)
+        public SimulatedAnnealing(Problem problem, double coolingFactor, int iterations, string neighboorhood)
         {
             this.CurrentProblem = problem; //Übergebenes Problem wird als aktuelles Problem gesetzt
             this.BestProblem = problem; //Bei Instanzierung ist bestes Problem = aktuelles Problem
@@ -21,7 +21,6 @@ namespace Projektseminar.MetaHeuristic
             this.CoolingFactor = coolingFactor; //Abkühlungfaktor wird von Konsole übergeben.
             this.Iterations = iterations; //Anzahl an Iterationen wird von Konsole übergeben.
             this.Neighboorhood = neighboorhood; //Nachbarschaft wird von Konsole übergeben.
-            this.MaxRuntimeInSeconds = maxRuntime;
         }
 
         //Methoden
@@ -35,24 +34,43 @@ namespace Projektseminar.MetaHeuristic
                 Console.WriteLine($"Current Temperature Simulated Annealing {Temperature}");
                 //CurrentProblem = BestProblem; //Alternative mit bestem Problem weitermachen
 
+                //Iteriere über die Anzahl an Iterationen
                 for (int i = 0; i < Iterations; i++)
                 {
-                    Dictionary<int, List<Tuple<Instance.Task, Instance.Task, Machine>>> dict = CurrentProblem.GetNeighboorhood(Neighboorhood);
+                    Dictionary<int, List<Tuple<Instance.Task, Instance.Task, Machine>>> dict = CurrentProblem.GetNeighboorhood(Neighboorhood); //Instanziiere Dict mit Nachbarschaften
+                    List<int> cyclicNeighbors = new List<int>(); //Erstelle Liste mit zkylischen Nachbarschaften
 
-                    newProblem = new Problem(CurrentProblem);
-                    do { 
-                    List<Tuple<Instance.Task, Instance.Task, Machine>> randomNeighbor = dict[random.Next(0, dict.Count)];
-
-                    foreach (Tuple<Instance.Task, Instance.Task, Machine> tuple in randomNeighbor)
+                    //Iteriere bis eine nicht-zyklische Lösung gefunden wurde
+                    do
                     {
-                        newProblem.SwapTasks(tuple.Item1, tuple.Item2, tuple.Item3);
+                        newProblem = new Problem(CurrentProblem); //Kopiere aktuelles Problem
+                        int chooseNeighbor;
+
+                        //Iteriere solange bis ein nicht-zyklischer Nachbar gewählt wurde
+                        do
+                        {
+                            chooseNeighbor = random.Next(0, dict.Count); //Wähle Zufallszahl zwischen 0 und allen Nachbarschaften
+                            /*if (cyclicNeighbors.Count > 1)
+                            {
+                                string cyclicString = cyclicNeighbors.ToString();
+                                Console.WriteLine($"Invalids: {cyclicString}");
+                            }*/
+                        } 
+                        while (cyclicNeighbors.Contains(chooseNeighbor));
+                        cyclicNeighbors.Add(chooseNeighbor); //Füge ausgewählte Nachbarschaft, Liste hinzu
+
+                        //Führe alle Tauschschritte aus
+                        foreach (Tuple<Instance.Task, Instance.Task, Machine> tuple in dict[chooseNeighbor])
+                        {
+                            newProblem.SwapTasks(tuple.Item1, tuple.Item2, tuple.Item3);
+                        }
                     }
+                    while (!newProblem.CheckCyclicity());
 
-                }
-                while (!newProblem.ConfirmFeasability()) ;
-
-                if (CurrentProblem.Makespan > newProblem.Makespan)
+                    //Wenn neuer Makespan besser als aktueller, ersetze aktuelles Problem
+                    if (CurrentProblem.Makespan > newProblem.Makespan)
                     {
+                        //Wenn neuer Makespan besser als bester, ersetze bestes Problem
                         if (BestProblem.Makespan > newProblem.Makespan)
                         {
                             BestProblem = newProblem;
@@ -61,16 +79,18 @@ namespace Projektseminar.MetaHeuristic
                     }
                     else
                     {
-                        int delta = newProblem.Makespan - CurrentProblem.Makespan;
-                        double exponent = -delta / Temperature;
-                        double probability = Math.Pow(Math.E, exponent);
+                        int delta = newProblem.Makespan - CurrentProblem.Makespan; //Berechne ganzzahlige Differenz zwischen aktuellem und neuem Makespan als Delta
+                        double exponent = -delta / Temperature; //Berechne Quotient aus Delta und aktueller Temperatur als Gleitkommazahl
+                        double probability = Math.Pow(Math.E, exponent); //Berechne Wahrscheinlichkeit aus eulersche Konstante hoch berechnetem Exponent
+                        
+                        //Akzeptiere geringeren Makespan mit berechneter Zufallswahrscheinlichkeot
                         if (random.NextDouble() < probability)
                         {
                             CurrentProblem = newProblem;
                         }
                     }
                 }
-                Temperature = Temperature * CoolingFactor;
+                Temperature = Temperature * CoolingFactor; //Reduziere Temperatur entsprechend des Abkühlungsfaktors
             }
             return BestProblem;
         }

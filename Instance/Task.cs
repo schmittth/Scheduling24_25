@@ -1,35 +1,37 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
+using Google.OrTools.Sat;
 
 namespace Projektseminar.Instance
 {
     internal class Task : IComparable
     {
         //Eigenschaften
-        public int Id { get; set; }
-        public Machine Machine { get; set; }
+        public int Id { get; set; } //Id ist der Identifier für jeden Task innerhalb seines Jobs
+        public Machine Machine { get; set; } //Machine ist die Maschine auf welcher der Task ausgeführt wird
+        public int Setup { get; set; } //Setup ist die dem Task vorgelagerte Setupzeit
+        public Job Job { get; set; } //Job ist der Auftrag zu welchem der Task gehört
+        public int Start { get; set; } //Start ist die Zeit wann der Task tatsächlich beginnt
+        public int End { get; set; } //End ist die Zeit wann der Task tatsächlich zu Ende ist
+        public int Duration { get; set; } //Duration ist die BEarbeitungszeit des Tasks
+        public int Position { get; set; } //Position ist die Position dieses Tasks im aktuellen Maschinenplan
+        public int Release { get; set; } //Release ist früheste Startzeit eines Tasks
+        public int Tail { get; set; } //Tail ist die Länge des längsten Pfades vom aktuellen Task bis zum Ende.
+        public Task preMachineTask { get; set; } //preMachineTask ist der vorhergehende Tasks auf der gleichen Maschine
+        public Task sucMachineTask { get; set; } //sucMachineTask ist der nachfolgende Task auf der gleichen Maschine
+        public Task preJobTask { get; set; } //preJobTask ist der vorhergehende Task im gleichen Job
+        public Task sucJobTask { get; set; } //sucJobTask ist der nachfolgende Task im gleichen Job
 
-        //Tasks können ein vorgelagertes Setup haben.
-        public int Setup { get; set; }
-        public Job Job { get; set; }
-        public int Start { get; set; }
-        public int End { get; set; }
-        public int Duration { get; set; }
-        public int Position { get; set; }
-
-        //Release ist früheste Startzeit eines Tasks
-        public int Release { get; set; }
-
-        //Tail ist die Länge des längsten Pfades vom aktuellen Task bis zum Ende.
-        public int Tail { get; set; }
-        public Task preMachineTask { get; set; }
-        public Task sucMachineTask { get; set; }
-        public Task preJobTask { get; set; }
-        public Task sucJobTask { get; set; }
+        public IntVar StartIntVar { get; set; }
+        public IntVar EndIntVar { get; set; }
+        public IntervalVar DurationIntVar { get; set; }
 
 
         //Variablen
 
         //Konstruktoren
+
+        //Konstruktor um Task mit grundsätzlichen Werten zu erstellen
         public Task(Machine machine, Job job, int duration, int id)
         {
             Machine = machine;

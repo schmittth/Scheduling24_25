@@ -442,7 +442,7 @@ namespace Projektseminar.Instance
             makespan = CalculateMakespan(); //Setze den Makespan
         }
 
-        public bool ConfirmFeasability()
+        public bool CheckCyclicity()
         {
             foreach (Machine machine in Machines)
             {

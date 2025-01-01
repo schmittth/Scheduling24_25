@@ -10,8 +10,8 @@ namespace Projektseminar
 
 
         //Variablen
-        Dictionary<int, List<Tuple<int, int>>> jobs = new Dictionary<int, List<Tuple<int, int>>>(); //Job wird identifiziert durch eine ID; Job enthält Tasks.
-        Dictionary<Tuple<int, int>, Tuple<int, int>> tasks = new Dictionary<Tuple<int, int>, Tuple<int, int>>(); //Task wird identifiziert durch eine ID und seinen Job; Task enthält Laufzeit und Maschine 
+        Dictionary<int, List<Tuple<int, int>>> jobs = new Dictionary<int, List<Tuple<int, int>>>(); //Job wird identifiziert durch eine Id; Job enthält Tasks.
+        Dictionary<Tuple<int, int>, Tuple<int, int>> tasks = new Dictionary<Tuple<int, int>, Tuple<int, int>>(); //Task wird identifiziert durch eine Id und seinen Job; Task enthält Laufzeit und Maschine 
         Dictionary<Tuple<int, int>, int> setups = new Dictionary<Tuple<int, int>, int>(); //Setup wird identifiziert durch vorheriger und nachfolgender Job; Setup enthält Laufzeit
         List<int> machines = new List<int>();//Maschine ist definiert durch Id
 

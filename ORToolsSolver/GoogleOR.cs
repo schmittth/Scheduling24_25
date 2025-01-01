@@ -1,6 +1,6 @@
 ﻿using Google.OrTools.Sat;
 using Projektseminar.Instance;
-using System.Diagnostics;
+using System.Reflection.PortableExecutable;
 
 namespace Projektseminar.ORToolsSolver
 {
@@ -9,107 +9,81 @@ namespace Projektseminar.ORToolsSolver
         public GoogleOR(Problem currentProblem)
         {
             CurrentProblem = currentProblem;
-            BestProblem = currentProblem;
+            BestProblem = new Problem(CurrentProblem); //Hier ist wichtig das eine Kopie des aktuellen Projektes gemacht wird.
         }
-        Stopwatch orWatch = new Stopwatch(); //Initialisiere eine Stopwatch um die Laufzeit zu messen.
-        public void DoORSolver()
+        public Problem DoORSolver()
         {
-            int numMachines = 0;
-            int horizon = 0;
-
-            foreach (Job job in CurrentProblem.Jobs)
-            {
-                foreach (Instance.Task task in job.Tasks)
-                {
-                    numMachines = Math.Max(numMachines, 1 + task.Machine.Id);
-                    horizon += task.Duration;
-                }
-            }
-
-            int[] allMachines = Enumerable.Range(0, numMachines).ToArray();
-
-            // Creates the model.
+            //Instanziiere CP-Modell
             CpModel model = new CpModel();
 
-            Dictionary<Tuple<int, int>, Tuple<int, IntVar, IntVar, IntervalVar>> allTasks = new Dictionary<Tuple<int, int>, Tuple<int, IntVar, IntVar, IntervalVar>>(); // (start, end, duration)
-            Dictionary<int, List<Tuple<int, IntVar, IntVar, IntervalVar>>> machineToIntervals = new Dictionary<int, List<Tuple<int, IntVar, IntVar, IntervalVar>>>();
-
-
+            //Iteriere durch alle Jobs
             foreach (Job job in CurrentProblem.Jobs)
             {
                 foreach (Instance.Task task in job.Tasks)
                 {
-                    string suffix = $"_{job.Id}_{task.Id}";
-                    IntVar start = model.NewIntVar(0, horizon, "start" + suffix);
-                    IntVar end = model.NewIntVar(0, horizon, "end" + suffix);
-                    IntervalVar interval = model.NewIntervalVar(start, task.Duration, end, "interval" + suffix);
-                    var key = Tuple.Create(job.Id, task.Id);
-                    var taskTuple = Tuple.Create(job.Id, start, end, interval);
-                    allTasks[key] = taskTuple;
-                    if (!machineToIntervals.ContainsKey(task.Machine.Id))
-                    {
-                        machineToIntervals.Add(task.Machine.Id, new List<Tuple<int, IntVar, IntVar, IntervalVar>>());
-                    }
-                    machineToIntervals[task.Machine.Id].Add(taskTuple);
+                    string suffix = $"_{job.Id}_{task.Id}"; //Suffix um Variablen im Modell zu Identifizieren
 
+                    //Erstellen der Variablen für jeden Task
+                    task.StartIntVar = model.NewIntVar(0, CurrentProblem.Horizon, "start" + suffix);
+                    task.EndIntVar = model.NewIntVar(0, CurrentProblem.Horizon, "end" + suffix);
+                    task.DurationIntVar = model.NewIntervalVar(task.StartIntVar, task.Duration, task.EndIntVar, "interval" + suffix);
+
+                    CurrentProblem.Machines[task.Machine.Id].Schedule.Add(task); //Füge Tasks in beliebiger Reihenfolge der Schedule hinzu
                 }
             }
 
-
-            foreach (int machine in allMachines)
-                foreach (var job_j in machineToIntervals[machine])
-                    foreach (var job_u in machineToIntervals[machine])
-                        if (job_j != job_u)
+            //Für jeden Task muss hinzugefügt werden, wenn Task1 auf Task2 dann so, wenn Task 2 auf Task 1 dann so
+            foreach (var machine in CurrentProblem.Machines)
+                foreach (var job1 in machine.Schedule)
+                    foreach (var job2 in machine.Schedule)
+                        if (job1 != job2) //Wenn beIde Jobs gleich sind müssen keine Setup-Zeiten bedacht werden
                         {
+                            //Füge Constraints für die Setup-Zeiten hinzu
                             BoolVar logic_var = model.NewBoolVar("");
-                            model.Add(job_u.Item2 >= job_j.Item3 + CurrentProblem.Setups[Tuple.Create(job_j.Item1, job_u.Item1)]).OnlyEnforceIf(logic_var);
-                            model.Add(job_j.Item2 >= job_u.Item3 + CurrentProblem.Setups[Tuple.Create(job_u.Item1, job_j.Item1)]).OnlyEnforceIf(logic_var.Not());
+                            model.Add(job2.StartIntVar >= job1.EndIntVar + CurrentProblem.Setups[Tuple.Create(job1.Job.Id, job2.Job.Id)]).OnlyEnforceIf(logic_var); //Setup-Zeit Job 2 nach Job 1 wird bedacht wenn bool: true
+                            model.Add(job1.StartIntVar >= job2.EndIntVar + CurrentProblem.Setups[Tuple.Create(job2.Job.Id, job1.Job.Id)]).OnlyEnforceIf(logic_var.Not()); //Setup-Zeit Job 1 nach Job 2 wird bedacht wenn bool: false
                         }
 
-
-
-            // Precedences inside a job.
-            for (int jobID = 0; jobID < CurrentProblem.Jobs.Count; ++jobID)
+            //Constraints hinzufügen, sodass die Reihenfolge innerhalb eines Jobs eingehalten wird
+            for (int jobId = 0; jobId < CurrentProblem.Jobs.Count; ++jobId)
             {
-                var job = CurrentProblem.Jobs[jobID];
-                for (int taskID = 0; taskID < job.Tasks.Count - 1; ++taskID)
+                var job = CurrentProblem.Jobs[jobId];
+                for (int taskId = 0; taskId < job.Tasks.Count - 1; ++taskId)
                 {
-                    var key = Tuple.Create(jobID, taskID);
-                    var nextKey = Tuple.Create(jobID, taskID + 1);
-                    model.Add(allTasks[nextKey].Item2 >= allTasks[key].Item3);
+                    model.Add(CurrentProblem.Jobs[jobId].Tasks[taskId + 1].StartIntVar >= CurrentProblem.Jobs[jobId].Tasks[taskId].EndIntVar); //Constraint
                 }
             }
 
-            // Makespan objective.
-            IntVar objVar = model.NewIntVar(0, horizon, "makespan");
+            IntVar objVar = model.NewIntVar(0, CurrentProblem.Horizon, "makespan"); //Definiere Makespanvariable
 
-            List<IntVar> ends = new List<IntVar>();
-            for (int jobID = 0; jobID < CurrentProblem.Jobs.Count; ++jobID)
+            List<IntVar> ends = new List<IntVar>(); //Enumerable mit allen End-Variablen
+            
+            //Füge die End-Variable von jedem letzten Task in jedem Job zum Array hinzi
+            for (int jobId = 0; jobId < CurrentProblem.Jobs.Count; ++jobId)
             {
-                var job = CurrentProblem.Jobs[jobID];
-                var key = Tuple.Create(jobID, job.Tasks.Count - 1);
-                ends.Add(allTasks[key].Item3);
+                ends.Add(CurrentProblem.Jobs[jobId].Tasks[CurrentProblem.Jobs[jobId].Tasks.Count - 1].EndIntVar);
             }
-            model.AddMaxEquality(objVar, ends);
-            model.Minimize(objVar);
 
-            // Solve
-            orWatch.Start();
+            model.AddMaxEquality(objVar, ends); //Der Makespan kann nicht kleiner als der größte Endzeitpunkt aller letzten Tasks werden
+            model.Minimize(objVar); //Zielfunktion ist die Minimierung des Makespans
+
+            //Löse das Problem
             CpSolver solver = new CpSolver();
+            solver.StringParameters = $"max_time_in_seconds:{MaxRuntimeInSeconds}.0"; //Maximale Laufzeit des Solvers
             CpSolverStatus status = solver.Solve(model);
             Console.WriteLine($"Solve status: {status}");
 
+            //Exportiere Problem als Diagramm
             if (status == CpSolverStatus.Optimal || status == CpSolverStatus.Feasible)
             {
                 Console.WriteLine("Solution:");
 
-                Dictionary<int, List<Instance.Task>> assignedJobs = new Dictionary<int, List<Instance.Task>>();
+                //Schreibe alle Werte des gelösten Problems in das beste Problem
                 foreach (Job job in BestProblem.Jobs)
                 {
                     foreach (Instance.Task task in job.Tasks)
                     {
-                        var key = Tuple.Create(job.Id, task.Id);
-                        int start = (int)solver.Value(allTasks[key].Item2);
+                        int start = (int)solver.Value(CurrentProblem.Jobs[job.Id].Tasks[task.Id].StartIntVar);
 
                         task.Start = start;
                         task.End = task.Start + task.Duration;
@@ -117,53 +91,18 @@ namespace Projektseminar.ORToolsSolver
                         BestProblem.Machines[task.Machine.Id].Schedule.Add(task);
                     }
                 }
-                foreach (Machine machine in BestProblem.Machines)
+
+                //Sortiere alle Maschinen
+                foreach (var machine in BestProblem.Machines)
                 {
                     // Sort by starting time.
                     machine.Schedule.Sort();
                 }
-                int placeHolder = 0;
-                orWatch.Stop();
+
                 BestProblem.SetRelatedTasks();
                 BestProblem.Recalculate();
-                BestProblem.ProblemAsDiagramm(@"..\Or.html", false, placeHolder, orWatch.Elapsed);
-
             }
+            return BestProblem;
         }
-
-
-        /*public void Log(string instanceName, int seedValue, TimeSpan runtime, string priorityRule = "")
-        {
-
-            int minTaskAmount = 0;
-            int minTaskTime = 0;
-            int maxTaskTime = 0;
-
-            foreach (Job job in CurrentProblem.Jobs)
-            {
-                if (minTaskAmount > job.Tasks.Count)
-                {
-                    minTaskAmount = job.Tasks.Count;
-                }
-
-                foreach (Instance.Task task in job.Tasks)
-                {
-                    if (task.Duration < minTaskTime)
-                    {
-                        minTaskTime = task.Duration;
-                    }
-                    if (task.Duration > maxTaskTime)
-                    {
-                        maxTaskTime = task.Duration;
-                    }
-
-                }
-            }
-
-            using (StreamWriter sw = File.AppendText((@$"..\..\..\LogFile.csv")))
-            {
-                sw.WriteLine($"{instanceName};{CurrentProblem.Jobs.Count};{CurrentProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};GoogleOR;;;;;{runtime};{seedValue}"); 
-            }            
-        }*/
     }
 }

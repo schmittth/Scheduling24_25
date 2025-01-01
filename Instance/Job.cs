@@ -5,8 +5,7 @@
         //Eigenschaften
         public Guid Guid { get; }
         public int Id { get; }
-
-        public int TotalDuration { get; set; }
+        public int TotalDuration { get; set; } //Kumulierte Laufzeit aller in ihm enthaltenen Tasks
 
         public List<Task> Tasks
         {
