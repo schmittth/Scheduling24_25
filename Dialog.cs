@@ -53,7 +53,7 @@ namespace Projektseminar
                 Console.WriteLine($"{0}. Random Instance");
 
                 //Gebe alle .txt-files direkt in der Projektmappe aus
-                Console.WriteLine("Single Instances:");               
+                Console.WriteLine("Single Instances:");
                 for (int i = 1; i <= allInstances.Length; i++)
                 {
                     Console.WriteLine($"{i}. {allInstances[i - 1]}");
@@ -73,7 +73,7 @@ namespace Projektseminar
                     Console.WriteLine($"{j}. {allSubDirectories[j - (allInstances.Length + allDirectories.Count + 1)]}");
                 }
                 instanceChoiceString = Console.ReadLine(); //Lese Instanzauswahl ein
-            } 
+            }
             while (!(int.TryParse(instanceChoiceString, out instanceChoiceInt) && instanceChoiceInt >= 0 && instanceChoiceInt <= allInstances.Length + allSubDirectories.Count + allDirectories.Count)); //Erzwinge Auswahl erneut wenn nicht innerhalb der Grenzen
 
             //Gebe Dateipfad oder "Random" zurück
@@ -149,8 +149,9 @@ namespace Projektseminar
 
         public static Tuple<double, int> ChooseSimAnnealParameters()
         {
-            Console.WriteLine("Please provide a cooling factor (Please use , for decimal values) :");
-            double coolingFactor = Double.Parse(Console.ReadLine());
+            //Console.WriteLine("Please provide a cooling factor (Please use , for decimal values) :");
+            //double coolingFactor = Double.Parse(Console.ReadLine());
+            double coolingFactor = 0.8;
 
             Console.WriteLine("How many iterations should be ran for each temperature:");
             int iterations = Int32.Parse(Console.ReadLine());
