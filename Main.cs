@@ -60,13 +60,13 @@ namespace Projektseminar
             {
                 //priorityRule = Dialog.ChoosePriorityRule();
                 priorityRule = "LTT";
-                neighboorhood = Dialog.ChooseNeighboorhood();
+                neighboorhood = "N3";
             }
 
             Tuple<double, int> simAnnealParams = null;
             if (solverChoice == 2)
             {
-                seedChoice = Dialog.SeedAlgorithm();
+                seedChoice = 0;
                 simAnnealParams = Dialog.ChooseSimAnnealParameters();
             }
 
@@ -98,7 +98,7 @@ namespace Projektseminar
                 }
 
                 Problem problem = importer.GenerateProblem();
-               
+
                 GifflerThompson gifflerThompson = new GifflerThompson(problem, priorityRule);
 
                 if (solverChoice == 2 || solverChoice == 3)
