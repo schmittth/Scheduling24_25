@@ -1,1 +1,5 @@
 "Instance"; "JobAmount"; "MachineAmount"; "MinTaskAmount"; "MinTaskTime"; "MaxTaskTime"; "Solver"; "CoolingFactor"; "Iterations"; "Neighborhood"; "PriorityRule"; "RunTime"; "SeedValue"
+../../../Diagramms\ClassroomInstanceSet10;30;20;0;0;100;Simulated Annealing;0,99;1000;N3;LTT;00:01:30.1466636;1806407809;2716
+../../../Diagramms\ClassroomInstanceSet10;30;20;0;0;100;Simulated Annealing;0,99;1000;N3;LTT;00:01:30.0046697;433891544;2772
+../../../Diagramms\ClassroomInstanceSet10;30;20;0;0;100;Simulated Annealing;0,99;1000;N3;LTT;00:01:30.1725612;1203156195;2733
+../../../Diagramms\ClassroomInstanceSet3;10;5;0;0;98;Simulated Annealing;0,99;1000;N3;LTT;00:01:30.0074768;1956617348;596

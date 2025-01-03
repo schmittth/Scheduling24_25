@@ -18,17 +18,17 @@ namespace Projektseminar.LocalSearch
             //Iteriere bis keine Verbesserung mehr gefunden oder Zeit abgelaufen
             while(Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
             {
-                Dictionary<int, List<Tuple<Instance.Task, Instance.Task, Machine>>> dict = CurrentProblem.GetNeighboorhood(Neighborhood); //Erlange alle Nachbarschaften
+                Dictionary<int, List<Tuple<Instance.Task, Instance.Task>>> dict = CurrentProblem.GetNeighboorhood(Neighborhood); //Erlange alle Nachbarschaften
 
                 //Führe alle Nachbarschaften aus
-                foreach (List<Tuple<Instance.Task, Instance.Task, Machine>> list in dict.Values)
+                foreach (List<Tuple<Instance.Task, Instance.Task>> list in dict.Values)
                 {
                     Problem newProblem = new Problem(CurrentProblem); //Kopiere aktuelles Problem
 
                     //Führe alle Tauschschritte aus
-                    foreach (Tuple<Instance.Task, Instance.Task, Machine> tuple in list)
+                    foreach (Tuple<Instance.Task, Instance.Task> tuple in list)
                     {
-                        newProblem.SwapTasks(tuple.Item1, tuple.Item2, tuple.Item3);
+                        newProblem.SwapTasks(tuple.Item1, tuple.Item2);
                     }
 
                     //Wenn Makespan des neuen Problems besser als Makespan des aktuellen Problems wechsle zu neuem Problem 

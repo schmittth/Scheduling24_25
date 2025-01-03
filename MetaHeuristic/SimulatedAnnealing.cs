@@ -30,6 +30,7 @@ namespace Projektseminar.MetaHeuristic
             Problem newProblem; //Deklariere Variable für neues Problem
 
             while (Temperature > 1 && Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
+            //while (Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
             {
                 Console.WriteLine($"Current Temperature Simulated Annealing {Temperature}");
                 //CurrentProblem = BestProblem; //Alternative mit bestem Problem weitermachen
@@ -37,7 +38,7 @@ namespace Projektseminar.MetaHeuristic
                 //Iteriere über die Anzahl an Iterationen
                 for (int i = 0; i < Iterations; i++)
                 {
-                    Dictionary<int, List<Tuple<Instance.Task, Instance.Task, Machine>>> dict = CurrentProblem.GetNeighboorhood(Neighboorhood); //Instanziiere Dict mit Nachbarschaften
+                    Dictionary<int, List<Tuple<Instance.Task, Instance.Task>>> dict = CurrentProblem.GetNeighboorhood(Neighboorhood); //Instanziiere Dict mit Nachbarschaften
                     List<int> cyclicNeighbors = new List<int>(); //Erstelle Liste mit zkylischen Nachbarschaften
 
                     //Iteriere bis eine nicht-zyklische Lösung gefunden wurde
@@ -60,9 +61,9 @@ namespace Projektseminar.MetaHeuristic
                         cyclicNeighbors.Add(chooseNeighbor); //Füge ausgewählte Nachbarschaft, Liste hinzu
 
                         //Führe alle Tauschschritte aus
-                        foreach (Tuple<Instance.Task, Instance.Task, Machine> tuple in dict[chooseNeighbor])
+                        foreach (var tuple in dict[chooseNeighbor])
                         {
-                            newProblem.SwapTasks(tuple.Item1, tuple.Item2, tuple.Item3);
+                            newProblem.SwapTasks(tuple.Item1, tuple.Item2);
                         }
                     }
                     while (!newProblem.CheckCyclicity());
@@ -91,6 +92,10 @@ namespace Projektseminar.MetaHeuristic
                     }
                 }
                 Temperature = Temperature * CoolingFactor; //Reduziere Temperatur entsprechend des Abkühlungsfaktors
+                /*if (Temperature < 1)
+                {
+                    Temperature = 100;
+                }*/
             }
             return BestProblem;
         }
