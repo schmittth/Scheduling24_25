@@ -116,3 +116,4 @@ G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Scheduling24_25\obj\Debug\
 G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Scheduling24_25\obj\Debug\net8.0\Projektseminar.pdb
 G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Scheduling24_25\obj\Debug\net8.0\Projektseminar.genruntimeconfig.cache
 G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Scheduling24_25\obj\Debug\net8.0\ref\Projektseminar.dll
+G:\SynologyDrive\Studium\Master\2.Semester\Scheduling\Scheduling24_25\obj\Debug\net8.0\Projektseminar.sourcelink.json
