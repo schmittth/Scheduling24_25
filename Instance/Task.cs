@@ -15,7 +15,6 @@ namespace Projektseminar.Instance
         public int End { get; set; } //End ist die Zeit wann der Task tatsächlich zu Ende ist
         public int Duration { get; set; } //Duration ist die BEarbeitungszeit des Tasks
         public int Position { get; set; } //Position ist die Position dieses Tasks im aktuellen Maschinenplan
-        public int Release { get; set; } //Release ist früheste Startzeit eines Tasks
         public int Tail { get; set; } //Tail ist die Länge des längsten Pfades vom aktuellen Task bis zum Ende.
         public Task preMachineTask { get; set; } //preMachineTask ist der vorhergehende Tasks auf der gleichen Maschine
         public Task sucMachineTask { get; set; } //sucMachineTask ist der nachfolgende Task auf der gleichen Maschine

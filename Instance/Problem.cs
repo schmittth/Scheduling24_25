@@ -27,9 +27,9 @@ namespace Projektseminar.Instance
 
         //Variablen
 
-        private List<Job> jobs = new List<Job>();
-        private List<Machine> machines = new List<Machine>();
-        private Dictionary<Tuple<int, int>, int> setups = new Dictionary<Tuple<int, int>, int>();
+        private List<Job> jobs;
+        private List<Machine> machines;
+        private Dictionary<Tuple<int, int>, int> setups;
 
         private int horizon;
         private int makespan;
@@ -39,19 +39,25 @@ namespace Projektseminar.Instance
         //Parameterloser Konstruktor
         public Problem()
         {
-
+            jobs = new List<Job>();
+            machines = new List<Machine>();
+            setups = new Dictionary<Tuple<int, int>, int>();
         }
 
         //Klon-Konstruktor der zu kopierendes Problem enthält. Kopiertes Projekt ist this.
-        public Problem(Problem existingProblem)
+        public Problem(Problem existingProblem, int jobsLength = 0, int machinesLength = 0)
         {
+            //Initialisiere diese Listen mit definierter Länge um Rechenleistung zu sparek
+            jobs = new List<Job>(existingProblem.Jobs.Capacity);
+            machines = new List<Machine>(existingProblem.Machines.Capacity);
+
             horizon = existingProblem.Horizon; //Kopiere den Horizon in ein neues Element
             makespan = existingProblem.Makespan; //Kopiere den Makespan in ein neues Problem
 
             //Kopiere alle Maschinen in Liste in das neue Projekt
             foreach (Machine machine in existingProblem.Machines)
             {
-                Machine cloneMachine = new Machine(machine.Id);
+                Machine cloneMachine = new Machine(machine.Id, machine.Schedule.Capacity); //Erstelle Maschine mit vordefinierter Länge für Schedule
                 cloneMachine.Load = machine.Load;
 
                 machines.Add(cloneMachine);
@@ -60,7 +66,7 @@ namespace Projektseminar.Instance
             //Kopiere alle Jobs in Listen im neuen Projekt
             foreach (Job job in existingProblem.Jobs)
             {
-                Job cloneJob = new Job(job.Id);
+                Job cloneJob = new Job(job.Id,job.Tasks.Capacity); //Erstelle Job mit vordefinierter Länge für Tasks
                 jobs.Add(cloneJob);
 
                 //Kopiere alle Tasks in Liste in neuerstellten Job
@@ -72,7 +78,6 @@ namespace Projektseminar.Instance
                     cloneTask.Start = task.Start;
                     cloneTask.End = task.End;
 
-                    cloneTask.Release = task.Release;
                     cloneTask.Setup = task.Setup;
                     cloneTask.Tail = task.Tail;
 
@@ -259,7 +264,7 @@ namespace Projektseminar.Instance
                     Task task = machines[machineId].Schedule[taskOnMachine];
 
                     //Wenn Release und Tail addiert Makespan ergeben ist der Task kritisch
-                    if (task.Release + task.Tail == makespan)
+                    if (task.Start + task.Tail == makespan)
                     {
                         critTasks[machines[machineId]].Add(task); //Füge Task dem Dict mit der Maschine als Schlüssel hinzu
                     }
@@ -355,7 +360,7 @@ namespace Projektseminar.Instance
                     {
                         releaseQueue.Enqueue(task);
                     }
-                    task.Release = -1;
+                    task.Start = -1;
 
                     if (task.sucMachineTask == null && task.sucJobTask == null)
                     {
@@ -374,30 +379,29 @@ namespace Projektseminar.Instance
 
                 if (currentTask.preMachineTask is not null)
                 {
-                    releasePM = currentTask.preMachineTask.Release + currentTask.preMachineTask.Duration + currentTask.Setup;
+                    releasePM = currentTask.preMachineTask.Start + currentTask.preMachineTask.Duration + currentTask.Setup;
                 }
 
                 if (currentTask.preJobTask is not null)
                 {
-                    releasePJ = currentTask.preJobTask.Release + currentTask.preJobTask.Duration;
+                    releasePJ = currentTask.preJobTask.Start + currentTask.preJobTask.Duration;
                 }
 
-                currentTask.Release = Math.Max(releasePM, releasePJ);
-                currentTask.Start = currentTask.Release;
+                currentTask.Start = Math.Max(releasePM, releasePJ);
                 currentTask.End = currentTask.Start + currentTask.Duration;
                 currentTask.Machine.Load = currentTask.End;
 
-                if (currentTask.sucJobTask is not null && (currentTask.sucJobTask.preMachineTask is null || currentTask.sucJobTask.preMachineTask.Release != -1))
+                if (currentTask.sucJobTask is not null && (currentTask.sucJobTask.preMachineTask is null || currentTask.sucJobTask.preMachineTask.Start != -1))
                 {
-                    //if (currentTask.sucJobTask.preMachineTask is null || currentTask.sucJobTask.preMachineTask.Release != -1)
+                    //if (currentTask.sucJobTask.preMachineTask is null || currentTask.sucJobTask.preMachineTask.Start != -1)
                     //{
                         releaseQueue.Enqueue(currentTask.sucJobTask);
                     //}
                 }
 
-                if (currentTask.sucMachineTask is not null && (currentTask.sucMachineTask.preJobTask == null || currentTask.sucMachineTask.preJobTask.Release != -1))
+                if (currentTask.sucMachineTask is not null && (currentTask.sucMachineTask.preJobTask == null || currentTask.sucMachineTask.preJobTask.Start != -1))
                 {
-                    //if (currentTask.sucMachineTask.preJobTask == null || currentTask.sucMachineTask.preJobTask.Release != -1)
+                    //if (currentTask.sucMachineTask.preJobTask == null || currentTask.sucMachineTask.preJobTask.Start != -1)
                     //{
                         releaseQueue.Enqueue(currentTask.sucMachineTask);
                     //} 
@@ -453,7 +457,7 @@ namespace Projektseminar.Instance
             {
                 foreach (Task task in machine.Schedule)
                 {
-                    if (task.Tail == -1 || task.Release == -1)
+                    if (task.Tail == -1 || task.Start == -1)
                     {
                         return false;
                     }
@@ -613,13 +617,13 @@ namespace Projektseminar.Instance
                 int operationsCount = swapOperations.Count;
 
                 //Für den ersten Block werden die letzten zwei Tasks getauscht
-                if (blockPair.Value[0].Release == 0)
+                if (blockPair.Value[0].Start == 0)
                 {
                     swapOperations.TryAdd(operationsCount, new List<Tuple<Task, Task>> { Tuple.Create(blockPair.Value[lastTaskIndex], blockPair.Value[lastTaskIndex].preMachineTask) }); //Tausche den letzten und vorletzten Task im Block
                 }
 
                 //Für den letzten Block werden die ersten zwei Tasks getauscht
-                else if (blockPair.Value[lastTaskIndex].Release + blockPair.Value[lastTaskIndex].Duration == makespan) //Wenn Release und Dauer addiert den Makespan ergeben ist der letzte Task im Block der absolut letzte.
+                else if (blockPair.Value[lastTaskIndex].Start + blockPair.Value[lastTaskIndex].Duration == makespan) //Wenn Release und Dauer addiert den Makespan ergeben ist der letzte Task im Block der absolut letzte.
                 {
                     swapOperations.TryAdd(operationsCount, new List<Tuple<Task, Task>> { Tuple.Create(blockPair.Value[0], blockPair.Value[0].sucMachineTask) }); //Tausche der ersten und zweiten Task im Block
                 }

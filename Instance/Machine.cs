@@ -13,13 +13,13 @@
         public int Load { get; set; }
 
         //Variablen
-
-        public List<Task> schedule = new List<Task>();
+        public List<Task> schedule;
 
         //Konstruktoren
-        public Machine(int id)
+        public Machine(int id, int scheduleLength = 0)
         {
             Id = id;
+            schedule = new List<Task>(scheduleLength);
         }
     }
 }

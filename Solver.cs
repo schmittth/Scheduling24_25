@@ -14,7 +14,7 @@ namespace Projektseminar
 
         public Solver()
         {
-            MaxRuntimeInSeconds = 10;
+            MaxRuntimeInSeconds = 600;
             stopwatch.Start();
         }
 

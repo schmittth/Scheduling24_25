@@ -3,7 +3,6 @@
     internal class Job
     {
         //Eigenschaften
-        public Guid Guid { get; }
         public int Id { get; }
         public int TotalDuration { get; set; } //Kumulierte Laufzeit aller in ihm enthaltenen Tasks
 
@@ -14,14 +13,13 @@
         }
 
         //Variablen
-        private List<Task> tasks = new List<Task>();
+        private List<Task> tasks;
 
         //Konstruktoren
-        public Job(int id)
+        public Job(int id, int tasksLength = 0)
         {
-            Guid = Guid.NewGuid();
             Id = id;
-
+            tasks = new List<Task>();
         }
 
         //Methoden

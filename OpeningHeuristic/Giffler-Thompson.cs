@@ -7,14 +7,14 @@ namespace Projektseminar.OpeningHeuristic
         //Eigenschaften
         public string PriorityRule
         {
-            get => priorityRule; 
+            get => priorityRule;
             set => priorityRule = value;
         }
 
 
         //Variablen
         private string priorityRule;
-        
+
         //Konstruktoren
         public GifflerThompson(Problem problem, string priorityRule)
         {
@@ -80,13 +80,13 @@ namespace Projektseminar.OpeningHeuristic
                 {
                     prevTask = planTask.Machine.Schedule[planTask.Machine.Schedule.Count - 1];
                     planTask.Setup = BestProblem.Setups[Tuple.Create(prevTask.Job.Id, planTask.Job.Id)];
-                    planTask.Start = Math.Max(planTask.Machine.Load + planTask.Setup, planTask.Release);
+                    planTask.Start = Math.Max(planTask.Machine.Load + planTask.Setup, planTask.Start);
                 }
                 else
                 {
-                    planTask.Start = Math.Max(planTask.Machine.Load, planTask.Release);
+                    planTask.Start = Math.Max(planTask.Machine.Load, planTask.Start);
                 }
-              
+
                 //Füge dem Schedule der Maschine den identifizierten Task hinzu.
                 planTask.Position = planTask.Machine.Schedule.Count();
                 planTask.Machine.Schedule.Add(planTask);
@@ -97,7 +97,7 @@ namespace Projektseminar.OpeningHeuristic
                 //Setze die Releasezeit des nächsten Tasks im Job auf das Ende des aktuellen Tasks
                 if (planTask.Id + 1 < planTask.Job.Tasks.Count)
                 {
-                    planTask.Job.Tasks[planTask.Id + 1].Release = planTask.End;
+                    planTask.Job.Tasks[planTask.Id + 1].Start = planTask.End;
                 }
             }
         }
@@ -111,7 +111,7 @@ namespace Projektseminar.OpeningHeuristic
                 foreach (Instance.Task task in job.Tasks)
                 {
                     //Wenn die Startzeit kleiner als BigN ist und der Task noch nicht eingeplant, wird er der Liste hinzugefügt.
-                    if (task.Release < BestProblem.Horizon && task.Start == 0 && task.End == 0)
+                    if (task.Start < BestProblem.Horizon && task.End == 0)
                     {
                         plannableTasks.Add(task);
                         //Pro Job wird nur der erste Task eingeplant.
@@ -132,11 +132,11 @@ namespace Projektseminar.OpeningHeuristic
                 {
                     task.Start = 0;
                     task.End = 0;
-                    task.Release = BestProblem.Horizon;
-                    
+                    task.Start = BestProblem.Horizon;
+
                     task.Machine.Load = 0;
                 }
-                job.Tasks[0].Release = 0; //Setze den Release für alle einplanbaren Jobs auf 0
+                job.Tasks[0].Start = 0; //Setze den Release für alle einplanbaren Jobs auf 0
             }
         }
 
