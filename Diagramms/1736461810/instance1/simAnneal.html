@@ -1,0 +1,62 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+  google.charts.load("current", {packages:["timeline"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+
+    var container = document.getElementById('example3.1');
+    var chart = new google.visualization.Timeline(container);
+    var dataTable = new google.visualization.DataTable();
+	  dataTable.addColumn({ type: 'string', id: 'MachineNumber' });
+    dataTable.addColumn({ type: 'string', id: 'JobTask' });
+    dataTable.addColumn({ type: 'string', role: 'tooltip' });
+    dataTable.addColumn({ type: 'date', id: 'Start' });
+    dataTable.addColumn({ type: 'date', id: 'End' });
+	  dataTable.addRows([
+[ 'Machine 0' , '6_0', 'Duration: 61 Start: 0 End: 61' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 61)],
+[ 'Machine 0' , 'Setup0',  'Duration: 10 Start: 61 End: 71' , new Date(0, 0, 0, 0, 0, 61) , new Date(0, 0, 0, 0, 0, 71)],
+[ 'Machine 0' , '3_0', 'Duration: 49 Start: 71 End: 120' , new Date(0, 0, 0, 0, 0, 71) , new Date(0, 0, 0, 0, 0, 120)],
+[ 'Machine 0' , 'Setup1',  'Duration: 39 Start: 120 End: 159' , new Date(0, 0, 0, 0, 0, 120) , new Date(0, 0, 0, 0, 0, 159)],
+[ 'Machine 0' , '0_0', 'Duration: 75 Start: 159 End: 234' , new Date(0, 0, 0, 0, 0, 159) , new Date(0, 0, 0, 0, 0, 234)],
+[ 'Machine 0' , 'Setup2',  'Duration: 21 Start: 234 End: 255' , new Date(0, 0, 0, 0, 0, 234) , new Date(0, 0, 0, 0, 0, 255)],
+[ 'Machine 0' , '1_2', 'Duration: 77 Start: 255 End: 332' , new Date(0, 0, 0, 0, 0, 255) , new Date(0, 0, 0, 0, 0, 332)],
+[ 'Machine 0' , 'Setup3',  'Duration: 16 Start: 332 End: 348' , new Date(0, 0, 0, 0, 0, 332) , new Date(0, 0, 0, 0, 0, 348)],
+[ 'Machine 0' , '4_1', 'Duration: 29 Start: 348 End: 377' , new Date(0, 0, 0, 0, 0, 348) , new Date(0, 0, 0, 0, 0, 377)],
+[ 'Machine 0' , 'Setup4',  'Duration: 10 Start: 377 End: 387' , new Date(0, 0, 0, 0, 0, 377) , new Date(0, 0, 0, 0, 0, 387)],
+[ 'Machine 0' , '5_2', 'Duration: 57 Start: 387 End: 444' , new Date(0, 0, 0, 0, 0, 387) , new Date(0, 0, 0, 0, 0, 444)],
+[ 'Machine 0' , 'Setup5',  'Duration: 22 Start: 444 End: 466' , new Date(0, 0, 0, 0, 0, 444) , new Date(0, 0, 0, 0, 0, 466)],
+[ 'Machine 0' , '2_2', 'Duration: 57 Start: 466 End: 523' , new Date(0, 0, 0, 0, 0, 466) , new Date(0, 0, 0, 0, 0, 523)],
+[ 'Machine 1' , '1_0', 'Duration: 57 Start: 0 End: 57' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 57)],
+[ 'Machine 1' , 'Setup6',  'Duration: 12 Start: 57 End: 69' , new Date(0, 0, 0, 0, 0, 57) , new Date(0, 0, 0, 0, 0, 69)],
+[ 'Machine 1' , '5_0', 'Duration: 98 Start: 69 End: 167' , new Date(0, 0, 0, 0, 0, 69) , new Date(0, 0, 0, 0, 0, 167)],
+[ 'Machine 1' , 'Setup7',  'Duration: 22 Start: 167 End: 189' , new Date(0, 0, 0, 0, 0, 167) , new Date(0, 0, 0, 0, 0, 189)],
+[ 'Machine 1' , '2_0', 'Duration: 49 Start: 189 End: 238' , new Date(0, 0, 0, 0, 0, 189) , new Date(0, 0, 0, 0, 0, 238)],
+[ 'Machine 1' , 'Setup8',  'Duration: 16 Start: 238 End: 254' , new Date(0, 0, 0, 0, 0, 238) , new Date(0, 0, 0, 0, 0, 254)],
+[ 'Machine 1' , '0_1', 'Duration: 70 Start: 254 End: 324' , new Date(0, 0, 0, 0, 0, 254) , new Date(0, 0, 0, 0, 0, 324)],
+[ 'Machine 1' , 'Setup9',  'Duration: 36 Start: 324 End: 360' , new Date(0, 0, 0, 0, 0, 324) , new Date(0, 0, 0, 0, 0, 360)],
+[ 'Machine 1' , '3_2', 'Duration: 49 Start: 360 End: 409' , new Date(0, 0, 0, 0, 0, 360) , new Date(0, 0, 0, 0, 0, 409)],
+[ 'Machine 1' , 'Setup10',  'Duration: 16 Start: 409 End: 425' , new Date(0, 0, 0, 0, 0, 409) , new Date(0, 0, 0, 0, 0, 425)],
+[ 'Machine 1' , '4_2', 'Duration: 40 Start: 425 End: 465' , new Date(0, 0, 0, 0, 0, 425) , new Date(0, 0, 0, 0, 0, 465)],
+[ 'Machine 1' , 'Setup11',  'Duration: 34 Start: 465 End: 499' , new Date(0, 0, 0, 0, 0, 465) , new Date(0, 0, 0, 0, 0, 499)],
+[ 'Machine 1' , '6_2', 'Duration: 35 Start: 499 End: 534' , new Date(0, 0, 0, 0, 0, 499) , new Date(0, 0, 0, 0, 0, 534)],
+[ 'Machine 2' , '4_0', 'Duration: 73 Start: 0 End: 73' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 73)],
+[ 'Machine 2' , 'Setup12',  'Duration: 13 Start: 73 End: 86' , new Date(0, 0, 0, 0, 0, 73) , new Date(0, 0, 0, 0, 0, 86)],
+[ 'Machine 2' , '1_1', 'Duration: 59 Start: 86 End: 145' , new Date(0, 0, 0, 0, 0, 86) , new Date(0, 0, 0, 0, 0, 145)],
+[ 'Machine 2' , 'Setup13',  'Duration: 16 Start: 145 End: 161' , new Date(0, 0, 0, 0, 0, 145) , new Date(0, 0, 0, 0, 0, 161)],
+[ 'Machine 2' , '3_1', 'Duration: 35 Start: 161 End: 196' , new Date(0, 0, 0, 0, 0, 161) , new Date(0, 0, 0, 0, 0, 196)],
+[ 'Machine 2' , 'Setup14',  'Duration: 24 Start: 196 End: 220' , new Date(0, 0, 0, 0, 0, 196) , new Date(0, 0, 0, 0, 0, 220)],
+[ 'Machine 2' , '6_1', 'Duration: 48 Start: 220 End: 268' , new Date(0, 0, 0, 0, 0, 220) , new Date(0, 0, 0, 0, 0, 268)],
+[ 'Machine 2' , 'Setup15',  'Duration: 11 Start: 268 End: 279' , new Date(0, 0, 0, 0, 0, 268) , new Date(0, 0, 0, 0, 0, 279)],
+[ 'Machine 2' , '5_1', 'Duration: 61 Start: 279 End: 340' , new Date(0, 0, 0, 0, 0, 279) , new Date(0, 0, 0, 0, 0, 340)],
+[ 'Machine 2' , 'Setup16',  'Duration: 22 Start: 340 End: 362' , new Date(0, 0, 0, 0, 0, 340) , new Date(0, 0, 0, 0, 0, 362)],
+[ 'Machine 2' , '2_1', 'Duration: 73 Start: 362 End: 435' , new Date(0, 0, 0, 0, 0, 362) , new Date(0, 0, 0, 0, 0, 435)],
+[ 'Machine 2' , 'Setup17',  'Duration: 16 Start: 435 End: 451' , new Date(0, 0, 0, 0, 0, 435) , new Date(0, 0, 0, 0, 0, 451)],
+[ 'Machine 2' , '0_2', 'Duration: 99 Start: 451 End: 550' , new Date(0, 0, 0, 0, 0, 451) , new Date(0, 0, 0, 0, 0, 550)],
+]);
+var options = {colors: ['#E98268','#000000','#EC9ADA','#000000','#F0C0CB','#000000','#ED872D','#000000','#40C6CA','#000000','#88BB2B','#000000','#7352D7','#ED872D','#000000','#88BB2B','#000000','#7352D7','#000000','#F0C0CB','#000000','#EC9ADA','#000000','#40C6CA','#000000','#E98268','#40C6CA','#000000','#ED872D','#000000','#EC9ADA','#000000','#E98268','#000000','#88BB2B','#000000','#7352D7','#000000','#F0C0CB',]};
+chart.draw(dataTable, options);
+}
+</script>
+<div><p>Makespan: 550 Seconds. Seed Value: 1031643048 Processing Time: 00:00:28.6447133</p></div>
+<div id="example3.1" style="height: 1000px;"></div>
