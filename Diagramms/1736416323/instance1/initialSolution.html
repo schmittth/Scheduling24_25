@@ -1,0 +1,44 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+  google.charts.load("current", {packages:["timeline"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+
+    var container = document.getElementById('example3.1');
+    var chart = new google.visualization.Timeline(container);
+    var dataTable = new google.visualization.DataTable();
+	  dataTable.addColumn({ type: 'string', id: 'MachineNumber' });
+    dataTable.addColumn({ type: 'string', id: 'JobTask' });
+    dataTable.addColumn({ type: 'string', role: 'tooltip' });
+    dataTable.addColumn({ type: 'date', id: 'Start' });
+    dataTable.addColumn({ type: 'date', id: 'End' });
+	  dataTable.addRows([
+[ 'Machine 0' , '4_0', 'Duration: 18 Start: 0 End: 18' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 18)],
+[ 'Machine 0' , 'Setup0',  'Duration: 34 Start: 18 End: 52' , new Date(0, 0, 0, 0, 0, 18) , new Date(0, 0, 0, 0, 0, 52)],
+[ 'Machine 0' , '1_0', 'Duration: 15 Start: 52 End: 67' , new Date(0, 0, 0, 0, 0, 52) , new Date(0, 0, 0, 0, 0, 67)],
+[ 'Machine 0' , 'Setup1',  'Duration: 35 Start: 93 End: 128' , new Date(0, 0, 0, 0, 0, 93) , new Date(0, 0, 0, 0, 0, 128)],
+[ 'Machine 0' , '2_1', 'Duration: 84 Start: 128 End: 212' , new Date(0, 0, 0, 0, 0, 128) , new Date(0, 0, 0, 0, 0, 212)],
+[ 'Machine 0' , 'Setup2',  'Duration: 35 Start: 212 End: 247' , new Date(0, 0, 0, 0, 0, 212) , new Date(0, 0, 0, 0, 0, 247)],
+[ 'Machine 0' , '3_2', 'Duration: 20 Start: 247 End: 267' , new Date(0, 0, 0, 0, 0, 247) , new Date(0, 0, 0, 0, 0, 267)],
+[ 'Machine 1' , '4_1', 'Duration: 68 Start: 18 End: 86' , new Date(0, 0, 0, 0, 0, 18) , new Date(0, 0, 0, 0, 0, 86)],
+[ 'Machine 1' , 'Setup3',  'Duration: 34 Start: 86 End: 120' , new Date(0, 0, 0, 0, 0, 86) , new Date(0, 0, 0, 0, 0, 120)],
+[ 'Machine 1' , '1_1', 'Duration: 68 Start: 120 End: 188' , new Date(0, 0, 0, 0, 0, 120) , new Date(0, 0, 0, 0, 0, 188)],
+[ 'Machine 1' , 'Setup4',  'Duration: 13 Start: 188 End: 201' , new Date(0, 0, 0, 0, 0, 188) , new Date(0, 0, 0, 0, 0, 201)],
+[ 'Machine 1' , '3_1', 'Duration: 16 Start: 201 End: 217' , new Date(0, 0, 0, 0, 0, 201) , new Date(0, 0, 0, 0, 0, 217)],
+[ 'Machine 1' , 'Setup5',  'Duration: 12 Start: 217 End: 229' , new Date(0, 0, 0, 0, 0, 217) , new Date(0, 0, 0, 0, 0, 229)],
+[ 'Machine 1' , '0_1', 'Duration: 14 Start: 229 End: 243' , new Date(0, 0, 0, 0, 0, 229) , new Date(0, 0, 0, 0, 0, 243)],
+[ 'Machine 2' , '3_0', 'Duration: 41 Start: 0 End: 41' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 41)],
+[ 'Machine 2' , 'Setup6',  'Duration: 12 Start: 41 End: 53' , new Date(0, 0, 0, 0, 0, 41) , new Date(0, 0, 0, 0, 0, 53)],
+[ 'Machine 2' , '0_0', 'Duration: 24 Start: 53 End: 77' , new Date(0, 0, 0, 0, 0, 53) , new Date(0, 0, 0, 0, 0, 77)],
+[ 'Machine 2' , 'Setup7',  'Duration: 29 Start: 77 End: 106' , new Date(0, 0, 0, 0, 0, 77) , new Date(0, 0, 0, 0, 0, 106)],
+[ 'Machine 2' , '2_0', 'Duration: 22 Start: 106 End: 128' , new Date(0, 0, 0, 0, 0, 106) , new Date(0, 0, 0, 0, 0, 128)],
+[ 'Machine 2' , 'Setup8',  'Duration: 35 Start: 153 End: 188' , new Date(0, 0, 0, 0, 0, 153) , new Date(0, 0, 0, 0, 0, 188)],
+[ 'Machine 2' , '1_2', 'Duration: 51 Start: 188 End: 239' , new Date(0, 0, 0, 0, 0, 188) , new Date(0, 0, 0, 0, 0, 239)],
+]);
+var options = {colors: ['#37E0D2','#000000','#310B2C','#000000','#FC8335','#000000','#BCE80E','#37E0D2','#000000','#310B2C','#000000','#BCE80E','#000000','#69345E','#BCE80E','#000000','#69345E','#000000','#FC8335','#000000','#310B2C',]};
+chart.draw(dataTable, options);
+}
+</script>
+<div><p>Makespan: 267 Seconds. Seed Value: 82421265 Processing Time: 00:00:00.0000273</p></div>
+<div id="example3.1" style="height: 1000px;"></div>
