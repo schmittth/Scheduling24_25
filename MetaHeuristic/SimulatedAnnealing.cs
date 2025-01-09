@@ -22,16 +22,7 @@ namespace Projektseminar.MetaHeuristic
             this.BestProblem = problem; //Bei Instanzierung ist bestes Problem = aktuelles Problem
             this.Temperature = 100; //Temperatur hardcoded auf 100
             this.CoolingFactor = coolingFactor; //Abkühlungfaktor wird von Konsole übergeben.
-
-            foreach (Job job in problem.Jobs) 
-            {
-                foreach (Instance.Task task in job.Tasks)
-                {
-                    taskCounter++;
-                }
-            }
-
-            this.Iterations = (int)Math.Ceiling((MaxRuntimeInSeconds / (taskCounter * (4 * Math.Pow(10, -7)) * 469))); ; //Anzahl an Iterationen wird von Konsole übergeben.
+            this.Iterations = iterations;
             this.Neighboorhood = neighboorhood; //Nachbarschaft wird von Konsole übergeben.
         }
 
