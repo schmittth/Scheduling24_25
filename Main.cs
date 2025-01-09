@@ -40,7 +40,7 @@ namespace Projektseminar
                 Tuple<double, int> simAnnealParams = null;
                 if (solverChoice == 2)
                 {
-                    simAnnealParams = Tuple.Create(0.99, 25000);
+                    simAnnealParams = Tuple.Create(0.99, 2500);
                 }
 
                 //
