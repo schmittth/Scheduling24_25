@@ -14,7 +14,7 @@ namespace Projektseminar
 
         public Solver()
         {
-            MaxRuntimeInSeconds = 90;
+            MaxRuntimeInSeconds = 600;
             stopwatch.Start();
         }
 
@@ -23,8 +23,9 @@ namespace Projektseminar
             stopwatch.Stop();
 
             int minTaskAmount = 0;
-            int minTaskTime = 0;
+            int minTaskTime = BestProblem.Horizon;
             int maxTaskTime = 0;
+            int allTasksCount = 0;
 
             foreach (Job job in BestProblem.Jobs)
             {
@@ -43,12 +44,12 @@ namespace Projektseminar
                     {
                         maxTaskTime = task.Duration;
                     }
-
+                    allTasksCount++;
                 }
             }
             using (StreamWriter sw = File.AppendText((@$"..\..\..\LogFile.csv")))
             {
-                sw.WriteLine($"{instanceName};{BestProblem.Jobs.Count};{BestProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};{solverType};{coolingFactor};{iterations};{neighborhood};{priorityRule};{runtime};{seedValue};{BestProblem.Makespan}");
+                sw.WriteLine($"{instanceName};{BestProblem.Jobs.Count};{BestProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};{allTasksCount};{solverType};{coolingFactor};{iterations};{neighborhood};{priorityRule};{runtime};{seedValue};{BestProblem.Makespan}");
             }
         }
     }

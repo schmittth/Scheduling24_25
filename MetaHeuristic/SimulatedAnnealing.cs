@@ -30,7 +30,7 @@ namespace Projektseminar.MetaHeuristic
             Random random = new Random(seedValue); //Initialisiere Zufallswert
             Problem newProblem; //Deklariere Variable für neues Problem
 
-            while (Temperature > 1 && Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
+            while (Temperature > 1 && Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds) 
             {
                 Console.WriteLine($"Current Temperature Simulated Annealing {Temperature}");
                 //CurrentProblem = BestProblem; //Alternative mit bestem Problem weitermachen
