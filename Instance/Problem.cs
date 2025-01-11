@@ -66,7 +66,7 @@ namespace Projektseminar.Instance
             //Kopiere alle Jobs in Listen im neuen Projekt
             foreach (Job job in existingProblem.Jobs)
             {
-                Job cloneJob = new Job(job.Id,job.Tasks.Capacity); //Erstelle Job mit vordefinierter Länge für Tasks
+                Job cloneJob = new Job(job.Id, job.Tasks.Capacity); //Erstelle Job mit vordefinierter Länge für Tasks
                 jobs.Add(cloneJob);
 
                 //Kopiere alle Tasks in Liste in neuerstellten Job
@@ -151,7 +151,7 @@ namespace Projektseminar.Instance
                 sw.WriteLine("chart.draw(dataTable, options);");
                 sw.WriteLine("}");
                 sw.WriteLine("</script>");
-                sw.WriteLine($"<div><p>Makespan: {makespan} Seconds. Seed Value: {seedValue} Processing Time: {watchTime}</p></div>");
+                sw.WriteLine($"<div><p>Makespan: {makespan} Seconds. Seed Value: {seedValue}. Processing Time: {watchTime}</p></div>");
                 sw.WriteLine("<div id=\"example3.1\" style=\"height: 1000px;\"></div>");
             }
 
@@ -335,7 +335,7 @@ namespace Projektseminar.Instance
                     }
                     task.Position = taskCounter;
                 }
-            }          
+            }
         }
 
         public void Recalculate()
@@ -395,7 +395,7 @@ namespace Projektseminar.Instance
                 {
                     //if (currentTask.sucJobTask.preMachineTask is null || currentTask.sucJobTask.preMachineTask.Start != -1)
                     //{
-                        releaseQueue.Enqueue(currentTask.sucJobTask);
+                    releaseQueue.Enqueue(currentTask.sucJobTask);
                     //}
                 }
 
@@ -403,7 +403,7 @@ namespace Projektseminar.Instance
                 {
                     //if (currentTask.sucMachineTask.preJobTask == null || currentTask.sucMachineTask.preJobTask.Start != -1)
                     //{
-                        releaseQueue.Enqueue(currentTask.sucMachineTask);
+                    releaseQueue.Enqueue(currentTask.sucMachineTask);
                     //} 
                 }
             }
@@ -435,7 +435,7 @@ namespace Projektseminar.Instance
                 {
                     //if (currentTask.preJobTask.sucMachineTask == null || currentTask.preJobTask.sucMachineTask.Tail != -1)
                     //{
-                        tailQueue.Enqueue(currentTask.preJobTask);
+                    tailQueue.Enqueue(currentTask.preJobTask);
                     //}
                 }
 
@@ -444,7 +444,7 @@ namespace Projektseminar.Instance
                 {
                     //if (currentTask.preMachineTask.sucJobTask == null || currentTask.preMachineTask.sucJobTask.Tail != -1)
                     //{
-                        tailQueue.Enqueue(currentTask.preMachineTask);
+                    tailQueue.Enqueue(currentTask.preMachineTask);
                     //}
                 }
             }
@@ -519,7 +519,7 @@ namespace Projektseminar.Instance
                 int tasksOnMachineCount = critPair.Value.Count;
 
                 //foreach (Task task in critPair.Value)
-                for (int taskCounter = 0; taskCounter < tasksOnMachineCount; taskCounter++) 
+                for (int taskCounter = 0; taskCounter < tasksOnMachineCount; taskCounter++)
                 {
                     Task task = critPair.Value[taskCounter];
                     bool firstNeighbor = false;
@@ -559,7 +559,7 @@ namespace Projektseminar.Instance
                                 swapOperations.TryAdd(swapOperations.Count, new List<Tuple<Task, Task>> { Tuple.Create(task.preMachineTask, task.sucMachineTask) });
                             }
                         }
-                    }                  
+                    }
                 }
             }
             return swapOperations;
@@ -582,7 +582,7 @@ namespace Projektseminar.Instance
                     for (int taskCounter = 0; taskCounter < critPair.Value.Count - 1; taskCounter++)
                     {
                         var blockKey = Tuple.Create(critPair.Key, currentBlock); //Definiere Key für aktuellen Block
-                        
+
                         //Wenn noch kein Block mit diesem Key existiert und der kritische Task einen Nachfolger hat, erstelle neuen Block
                         if ((!critBlocks.ContainsKey(blockKey) && critPair.Value[taskCounter].sucMachineTask is not null))
                         {
