@@ -28,7 +28,7 @@ namespace Projektseminar
                 string neighboorhood = "N3"; //Initialisiere Nachbarschafts String
 
 
-                Tuple<double, int> simAnnealParams = Tuple.Create(0.99, 2500);
+                Tuple<double, int> simAnnealParams = Tuple.Create(0.99, 1000);
 
                 //
                 for (int instanceCounter = 0; instanceCounter < instanceAmount; instanceCounter++)
