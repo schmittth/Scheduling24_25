@@ -36,7 +36,7 @@ namespace Projektseminar.MetaHeuristic
             while (Temperature > 1 && Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
             //while (Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
             {
-                //Console.WriteLine($"Current Temperature Simulated Annealing {Temperature} with {Iterations} Iterations planned");
+                Console.WriteLine($"Current Temperature Simulated Annealing {Temperature} with {Iterations} Iterations planned");
                 //CurrentProblem = BestProblem; //Alternative mit bestem Problem weitermachen
 
                 //Iteriere über die Anzahl an Iterationen
@@ -96,12 +96,6 @@ namespace Projektseminar.MetaHeuristic
                     }
                 }
                 Temperature = Temperature * CoolingFactor; //Reduziere Temperatur entsprechend des Abkühlungsfaktors
-
-                //Console.WriteLine($"{Temperature} | {BestProblem.Makespan}");
-                using (StreamWriter sw = File.AppendText((@$"..\..\..\Datapoints.csv")))
-                {
-                    sw.WriteLine($"{Temperature};{CurrentProblem.Makespan};{BestProblem.Makespan}");
-                }
             }
             return BestProblem;
         }
