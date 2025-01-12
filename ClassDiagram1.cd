@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Projektseminar.Instance.Job">
+    <Position X="7.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAJAAAAAAA=</HashCode>
+      <FileName>Instance\Job.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Projektseminar.Instance.Machine">
+    <Position X="5.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACgAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Instance\Machine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Projektseminar.Instance.Problem">
+    <Position X="11.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIBAiAACAAgAAgAAEBAAABAABFAAAMIQACAAUACQAA=</HashCode>
+      <FileName>Instance\Problem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Projektseminar.Instance.Task">
+    <Position X="9.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAICAAAACDAKAAQkgAAAAAAAAAACAQgAQAACBAAAAAA=</HashCode>
+      <FileName>Instance\Task.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Projektseminar.LocalSearch.LocalSearch" Collapsed="true">
+    <Position X="4.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>LocalSearch\LocalSearch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Projektseminar.Solver" Collapsed="true">
+    <Position X="2.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAgAAAAIAgAAAAAAAAABAAQAAA=</HashCode>
+      <FileName>Solver.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Projektseminar.ScheduleRequestsSat" Collapsed="true">
+    <Position X="6.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Main.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Projektseminar.Importer" Collapsed="true">
+    <Position X="1.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAYAAAQgAAgAAAAAAABAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Importer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Projektseminar.Dialog" Collapsed="true">
+    <Position X="0.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABACAAEAAAACAABAQAAAAgAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Dialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Projektseminar.ORToolsSolver.GoogleOR" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ORToolsSolver\GoogleOR.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Projektseminar.OpeningHeuristic.GifflerThompson" Collapsed="true">
+    <Position X="2.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAAAACoAAAAiAAAAAAA=</HashCode>
+      <FileName>OpeningHeuristic\Giffler-Thompson.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Projektseminar.MetaHeuristic.SimulatedAnnealing">
+    <Position X="2.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAgIAAAAAAAIAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>MetaHeuristic\SimulatedAnnealing.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

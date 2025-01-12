@@ -13,7 +13,7 @@
         public int Load { get; set; }
 
         //Variablen
-        public List<Task> schedule;
+        public List<Projektseminar.Instance.Task> schedule;
 
         //Konstruktoren
         public Machine(int id, int scheduleLength = 0)

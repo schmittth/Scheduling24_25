@@ -38,6 +38,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Google.OrTools" Version="9.10.*" />
   </ItemGroup>
 
