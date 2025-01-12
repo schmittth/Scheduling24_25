@@ -119,3 +119,15 @@ Instance;" ""JobAmount""";" ""MachineAmount""";" ""MinTaskAmount""";" ""MinTaskT
 ../../../Diagramms/ClassroomInstanceSet9\ClassroomInstanceSet9_1.txt;20;20;0;10;100;400;Simulated Annealing;0,99;1000;N3;LTT;00:00:56.9298046;1596935472;2142
 ../../../Diagramms/ClassroomInstanceSet9\ClassroomInstanceSet9_2.txt;20;20;0;10;100;400;Simulated Annealing;0,99;1000;N3;LTT;00:00:57.2992466;1956559296;2203
 ../../../Diagramms/ClassroomInstanceSet9\ClassroomInstanceSet9_3.txt;20;20;0;10;100;400;Simulated Annealing;0,99;1000;N3;LTT;00:00:57.3769572;1169463936;2188
+../../../Diagramms\ClassroomInstanceSet1;5;3;0;0;94;Simulated Annealing;0,99;100;N3;LTT;00:00:00.9987996;1934475729;392
+../../../Diagramms\ClassroomInstanceSet1;5;3;0;0;84;Simulated Annealing;0,99;100;N3;LTT;00:00:00.8801992;1026427947;231
+../../../Diagramms\ClassroomInstanceSet1;5;3;0;0;70;Simulated Annealing;0,99;100;N3;LTT;00:00:00.8059650;1875043486;297
+../../../Diagramms\ClassroomInstanceSet6;15;10;0;0;100;Simulated Annealing;0,99;1000;N3;LTT;00:00:20.7036610;1946178544;1411
+../../../Diagramms\ClassroomInstanceSet10;30;20;0;0;100;Simulated Annealing;0,99;2000;N3;LTT;00:01:30.0002789;221792177;2790
+../../../Diagramms\ClassroomInstanceSet10;30;20;0;0;100;Simulated Annealing;0,99;2000;N3;LTT;00:02:37.9234716;1088313459;2743
+../../../Diagramms\ClassroomInstanceSet3;10;5;0;0;98;Simulated Annealing;0,99;1000;N3;LTT;00:00:06.9664743;475640862;596
+../../../Diagramms\ClassroomInstanceSet3;10;5;0;0;100;Simulated Annealing;0,99;1000;N3;LTT;00:00:06.8744001;277812595;660
+../../../Diagramms\ClassroomInstanceSet3;10;5;0;0;99;Simulated Annealing;0,99;1000;N3;LTT;00:00:07.7827398;1473409179;754
+../../../Diagramms\ClassroomInstanceSet9;20;20;0;0;100;Simulated Annealing;0,99;2000;N3;LTT;00:01:48.9589187;1591183864;2222
+../../../Diagramms\ClassroomInstanceSet9;20;20;0;0;100;Simulated Annealing;0,99;2000;N3;LTT;00:01:46.1728883;464213111;2258
+../../../Diagramms\ClassroomInstanceSet9;20;20;0;0;100;Simulated Annealing;0,99;2000;N3;LTT;00:01:42.6845725;1535676429;2220

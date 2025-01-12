@@ -59,6 +59,7 @@ namespace Projektseminar
             if (solverChoice == 2 || solverChoice == 3)
             {
                 priorityRule = Dialog.ChoosePriorityRule();
+                neighboorhood = Dialog.ChooseNeighboorhood();
                 //priorityRule = "LTT";
                 //neighboorhood = "N5";
             }
