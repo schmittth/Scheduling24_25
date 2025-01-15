@@ -1,0 +1,104 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+  google.charts.load("current", {packages:["timeline"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+
+    var container = document.getElementById('example3.1');
+    var chart = new google.visualization.Timeline(container);
+    var dataTable = new google.visualization.DataTable();
+	  dataTable.addColumn({ type: 'string', id: 'MachineNumber' });
+    dataTable.addColumn({ type: 'string', id: 'JobTask' });
+    dataTable.addColumn({ type: 'string', role: 'tooltip' });
+    dataTable.addColumn({ type: 'date', id: 'Start' });
+    dataTable.addColumn({ type: 'date', id: 'End' });
+	  dataTable.addRows([
+[ 'Machine 0' , '0_0', 'Duration: 17 Start: 0 End: 17' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 17)],
+[ 'Machine 0' , 'Setup0',  'Duration: 21 Start: 17 End: 38' , new Date(0, 0, 0, 0, 0, 17) , new Date(0, 0, 0, 0, 0, 38)],
+[ 'Machine 0' , '1_0', 'Duration: 30 Start: 38 End: 68' , new Date(0, 0, 0, 0, 0, 38) , new Date(0, 0, 0, 0, 0, 68)],
+[ 'Machine 0' , 'Setup1',  'Duration: 29 Start: 68 End: 97' , new Date(0, 0, 0, 0, 0, 68) , new Date(0, 0, 0, 0, 0, 97)],
+[ 'Machine 0' , '2_1', 'Duration: 80 Start: 97 End: 177' , new Date(0, 0, 0, 0, 0, 97) , new Date(0, 0, 0, 0, 0, 177)],
+[ 'Machine 0' , 'Setup2',  'Duration: 11 Start: 222 End: 233' , new Date(0, 0, 0, 0, 0, 222) , new Date(0, 0, 0, 0, 0, 233)],
+[ 'Machine 0' , '9_2', 'Duration: 56 Start: 233 End: 289' , new Date(0, 0, 0, 0, 0, 233) , new Date(0, 0, 0, 0, 0, 289)],
+[ 'Machine 0' , 'Setup3',  'Duration: 39 Start: 289 End: 328' , new Date(0, 0, 0, 0, 0, 289) , new Date(0, 0, 0, 0, 0, 328)],
+[ 'Machine 0' , '5_3', 'Duration: 33 Start: 328 End: 361' , new Date(0, 0, 0, 0, 0, 328) , new Date(0, 0, 0, 0, 0, 361)],
+[ 'Machine 0' , 'Setup4',  'Duration: 15 Start: 361 End: 376' , new Date(0, 0, 0, 0, 0, 361) , new Date(0, 0, 0, 0, 0, 376)],
+[ 'Machine 0' , '4_2', 'Duration: 82 Start: 376 End: 458' , new Date(0, 0, 0, 0, 0, 376) , new Date(0, 0, 0, 0, 0, 458)],
+[ 'Machine 0' , 'Setup5',  'Duration: 32 Start: 488 End: 520' , new Date(0, 0, 0, 0, 0, 488) , new Date(0, 0, 0, 0, 0, 520)],
+[ 'Machine 0' , '8_2', 'Duration: 98 Start: 520 End: 618' , new Date(0, 0, 0, 0, 0, 520) , new Date(0, 0, 0, 0, 0, 618)],
+[ 'Machine 0' , 'Setup6',  'Duration: 11 Start: 618 End: 629' , new Date(0, 0, 0, 0, 0, 618) , new Date(0, 0, 0, 0, 0, 629)],
+[ 'Machine 0' , '3_3', 'Duration: 94 Start: 629 End: 723' , new Date(0, 0, 0, 0, 0, 629) , new Date(0, 0, 0, 0, 0, 723)],
+[ 'Machine 0' , 'Setup7',  'Duration: 13 Start: 723 End: 736' , new Date(0, 0, 0, 0, 0, 723) , new Date(0, 0, 0, 0, 0, 736)],
+[ 'Machine 0' , '7_4', 'Duration: 20 Start: 736 End: 756' , new Date(0, 0, 0, 0, 0, 736) , new Date(0, 0, 0, 0, 0, 756)],
+[ 'Machine 1' , '6_0', 'Duration: 61 Start: 0 End: 61' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 61)],
+[ 'Machine 1' , 'Setup8',  'Duration: 29 Start: 61 End: 90' , new Date(0, 0, 0, 0, 0, 61) , new Date(0, 0, 0, 0, 0, 90)],
+[ 'Machine 1' , '9_0', 'Duration: 83 Start: 90 End: 173' , new Date(0, 0, 0, 0, 0, 90) , new Date(0, 0, 0, 0, 0, 173)],
+[ 'Machine 1' , 'Setup9',  'Duration: 39 Start: 173 End: 212' , new Date(0, 0, 0, 0, 0, 173) , new Date(0, 0, 0, 0, 0, 212)],
+[ 'Machine 1' , '5_1', 'Duration: 41 Start: 212 End: 253' , new Date(0, 0, 0, 0, 0, 212) , new Date(0, 0, 0, 0, 0, 253)],
+[ 'Machine 1' , 'Setup10',  'Duration: 15 Start: 253 End: 268' , new Date(0, 0, 0, 0, 0, 253) , new Date(0, 0, 0, 0, 0, 268)],
+[ 'Machine 1' , '4_1', 'Duration: 67 Start: 268 End: 335' , new Date(0, 0, 0, 0, 0, 268) , new Date(0, 0, 0, 0, 0, 335)],
+[ 'Machine 1' , 'Setup11',  'Duration: 27 Start: 335 End: 362' , new Date(0, 0, 0, 0, 0, 335) , new Date(0, 0, 0, 0, 0, 362)],
+[ 'Machine 1' , '2_3', 'Duration: 97 Start: 362 End: 459' , new Date(0, 0, 0, 0, 0, 362) , new Date(0, 0, 0, 0, 0, 459)],
+[ 'Machine 1' , 'Setup12',  'Duration: 15 Start: 459 End: 474' , new Date(0, 0, 0, 0, 0, 459) , new Date(0, 0, 0, 0, 0, 474)],
+[ 'Machine 1' , '8_1', 'Duration: 46 Start: 474 End: 520' , new Date(0, 0, 0, 0, 0, 474) , new Date(0, 0, 0, 0, 0, 520)],
+[ 'Machine 1' , 'Setup13',  'Duration: 11 Start: 520 End: 531' , new Date(0, 0, 0, 0, 0, 520) , new Date(0, 0, 0, 0, 0, 531)],
+[ 'Machine 1' , '3_2', 'Duration: 58 Start: 531 End: 589' , new Date(0, 0, 0, 0, 0, 531) , new Date(0, 0, 0, 0, 0, 589)],
+[ 'Machine 1' , 'Setup14',  'Duration: 27 Start: 589 End: 616' , new Date(0, 0, 0, 0, 0, 589) , new Date(0, 0, 0, 0, 0, 616)],
+[ 'Machine 1' , '1_3', 'Duration: 33 Start: 616 End: 649' , new Date(0, 0, 0, 0, 0, 616) , new Date(0, 0, 0, 0, 0, 649)],
+[ 'Machine 1' , 'Setup15',  'Duration: 38 Start: 649 End: 687' , new Date(0, 0, 0, 0, 0, 649) , new Date(0, 0, 0, 0, 0, 687)],
+[ 'Machine 1' , '7_3', 'Duration: 21 Start: 687 End: 708' , new Date(0, 0, 0, 0, 0, 687) , new Date(0, 0, 0, 0, 0, 708)],
+[ 'Machine 2' , '3_0', 'Duration: 22 Start: 0 End: 22' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 22)],
+[ 'Machine 2' , 'Setup16',  'Duration: 30 Start: 22 End: 52' , new Date(0, 0, 0, 0, 0, 22) , new Date(0, 0, 0, 0, 0, 52)],
+[ 'Machine 2' , '5_0', 'Duration: 15 Start: 52 End: 67' , new Date(0, 0, 0, 0, 0, 52) , new Date(0, 0, 0, 0, 0, 67)],
+[ 'Machine 2' , 'Setup17',  'Duration: 15 Start: 67 End: 82' , new Date(0, 0, 0, 0, 0, 67) , new Date(0, 0, 0, 0, 0, 82)],
+[ 'Machine 2' , '4_0', 'Duration: 69 Start: 82 End: 151' , new Date(0, 0, 0, 0, 0, 82) , new Date(0, 0, 0, 0, 0, 151)],
+[ 'Machine 2' , 'Setup18',  'Duration: 30 Start: 151 End: 181' , new Date(0, 0, 0, 0, 0, 151) , new Date(0, 0, 0, 0, 0, 181)],
+[ 'Machine 2' , '7_1', 'Duration: 24 Start: 181 End: 205' , new Date(0, 0, 0, 0, 0, 181) , new Date(0, 0, 0, 0, 0, 205)],
+[ 'Machine 2' , 'Setup19',  'Duration: 17 Start: 205 End: 222' , new Date(0, 0, 0, 0, 0, 205) , new Date(0, 0, 0, 0, 0, 222)],
+[ 'Machine 2' , '9_1', 'Duration: 11 Start: 222 End: 233' , new Date(0, 0, 0, 0, 0, 222) , new Date(0, 0, 0, 0, 0, 233)],
+[ 'Machine 2' , 'Setup20',  'Duration: 30 Start: 233 End: 263' , new Date(0, 0, 0, 0, 0, 233) , new Date(0, 0, 0, 0, 0, 263)],
+[ 'Machine 2' , '2_2', 'Duration: 72 Start: 263 End: 335' , new Date(0, 0, 0, 0, 0, 263) , new Date(0, 0, 0, 0, 0, 335)],
+[ 'Machine 2' , 'Setup21',  'Duration: 38 Start: 335 End: 373' , new Date(0, 0, 0, 0, 0, 335) , new Date(0, 0, 0, 0, 0, 373)],
+[ 'Machine 2' , '1_2', 'Duration: 98 Start: 373 End: 471' , new Date(0, 0, 0, 0, 0, 373) , new Date(0, 0, 0, 0, 0, 471)],
+[ 'Machine 2' , 'Setup22',  'Duration: 37 Start: 471 End: 508' , new Date(0, 0, 0, 0, 0, 471) , new Date(0, 0, 0, 0, 0, 508)],
+[ 'Machine 2' , '0_2', 'Duration: 65 Start: 508 End: 573' , new Date(0, 0, 0, 0, 0, 508) , new Date(0, 0, 0, 0, 0, 573)],
+[ 'Machine 2' , 'Setup23',  'Duration: 24 Start: 573 End: 597' , new Date(0, 0, 0, 0, 0, 573) , new Date(0, 0, 0, 0, 0, 597)],
+[ 'Machine 2' , '6_3', 'Duration: 86 Start: 597 End: 683' , new Date(0, 0, 0, 0, 0, 597) , new Date(0, 0, 0, 0, 0, 683)],
+[ 'Machine 3' , '8_0', 'Duration: 36 Start: 0 End: 36' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 36)],
+[ 'Machine 3' , 'Setup24',  'Duration: 11 Start: 36 End: 47' , new Date(0, 0, 0, 0, 0, 36) , new Date(0, 0, 0, 0, 0, 47)],
+[ 'Machine 3' , '3_1', 'Duration: 62 Start: 47 End: 109' , new Date(0, 0, 0, 0, 0, 47) , new Date(0, 0, 0, 0, 0, 109)],
+[ 'Machine 3' , 'Setup25',  'Duration: 27 Start: 109 End: 136' , new Date(0, 0, 0, 0, 0, 109) , new Date(0, 0, 0, 0, 0, 136)],
+[ 'Machine 3' , '1_1', 'Duration: 56 Start: 136 End: 192' , new Date(0, 0, 0, 0, 0, 136) , new Date(0, 0, 0, 0, 0, 192)],
+[ 'Machine 3' , 'Setup26',  'Duration: 28 Start: 192 End: 220' , new Date(0, 0, 0, 0, 0, 192) , new Date(0, 0, 0, 0, 0, 220)],
+[ 'Machine 3' , '6_1', 'Duration: 77 Start: 220 End: 297' , new Date(0, 0, 0, 0, 0, 220) , new Date(0, 0, 0, 0, 0, 297)],
+[ 'Machine 3' , 'Setup27',  'Duration: 10 Start: 297 End: 307' , new Date(0, 0, 0, 0, 0, 297) , new Date(0, 0, 0, 0, 0, 307)],
+[ 'Machine 3' , '7_2', 'Duration: 62 Start: 307 End: 369' , new Date(0, 0, 0, 0, 0, 307) , new Date(0, 0, 0, 0, 0, 369)],
+[ 'Machine 3' , 'Setup28',  'Duration: 17 Start: 369 End: 386' , new Date(0, 0, 0, 0, 0, 369) , new Date(0, 0, 0, 0, 0, 386)],
+[ 'Machine 3' , '9_3', 'Duration: 58 Start: 386 End: 444' , new Date(0, 0, 0, 0, 0, 386) , new Date(0, 0, 0, 0, 0, 444)],
+[ 'Machine 3' , 'Setup29',  'Duration: 15 Start: 444 End: 459' , new Date(0, 0, 0, 0, 0, 444) , new Date(0, 0, 0, 0, 0, 459)],
+[ 'Machine 3' , '0_1', 'Duration: 14 Start: 459 End: 473' , new Date(0, 0, 0, 0, 0, 459) , new Date(0, 0, 0, 0, 0, 473)],
+[ 'Machine 3' , 'Setup30',  'Duration: 19 Start: 473 End: 492' , new Date(0, 0, 0, 0, 0, 473) , new Date(0, 0, 0, 0, 0, 492)],
+[ 'Machine 3' , '2_4', 'Duration: 57 Start: 492 End: 549' , new Date(0, 0, 0, 0, 0, 492) , new Date(0, 0, 0, 0, 0, 549)],
+[ 'Machine 3' , 'Setup31',  'Duration: 11 Start: 549 End: 560' , new Date(0, 0, 0, 0, 0, 549) , new Date(0, 0, 0, 0, 0, 560)],
+[ 'Machine 3' , '5_4', 'Duration: 86 Start: 560 End: 646' , new Date(0, 0, 0, 0, 0, 560) , new Date(0, 0, 0, 0, 0, 646)],
+[ 'Machine 3' , 'Setup32',  'Duration: 15 Start: 646 End: 661' , new Date(0, 0, 0, 0, 0, 646) , new Date(0, 0, 0, 0, 0, 661)],
+[ 'Machine 3' , '4_3', 'Duration: 99 Start: 661 End: 760' , new Date(0, 0, 0, 0, 0, 661) , new Date(0, 0, 0, 0, 0, 760)],
+[ 'Machine 4' , '2_0', 'Duration: 20 Start: 0 End: 20' , new Date(0, 0, 0, 0, 0, 0) , new Date(0, 0, 0, 0, 0, 20)],
+[ 'Machine 4' , 'Setup33',  'Duration: 28 Start: 20 End: 48' , new Date(0, 0, 0, 0, 0, 20) , new Date(0, 0, 0, 0, 0, 48)],
+[ 'Machine 4' , '7_0', 'Duration: 14 Start: 48 End: 62' , new Date(0, 0, 0, 0, 0, 48) , new Date(0, 0, 0, 0, 0, 62)],
+[ 'Machine 4' , 'Setup34',  'Duration: 24 Start: 229 End: 253' , new Date(0, 0, 0, 0, 0, 229) , new Date(0, 0, 0, 0, 0, 253)],
+[ 'Machine 4' , '5_2', 'Duration: 48 Start: 253 End: 301' , new Date(0, 0, 0, 0, 0, 253) , new Date(0, 0, 0, 0, 0, 301)],
+[ 'Machine 4' , 'Setup35',  'Duration: 21 Start: 301 End: 322' , new Date(0, 0, 0, 0, 0, 301) , new Date(0, 0, 0, 0, 0, 322)],
+[ 'Machine 4' , '6_2', 'Duration: 30 Start: 322 End: 352' , new Date(0, 0, 0, 0, 0, 322) , new Date(0, 0, 0, 0, 0, 352)],
+[ 'Machine 4' , 'Setup36',  'Duration: 10 Start: 563 End: 573' , new Date(0, 0, 0, 0, 0, 563) , new Date(0, 0, 0, 0, 0, 573)],
+[ 'Machine 4' , '0_3', 'Duration: 57 Start: 573 End: 630' , new Date(0, 0, 0, 0, 0, 573) , new Date(0, 0, 0, 0, 0, 630)],
+[ 'Machine 4' , 'Setup37',  'Duration: 21 Start: 630 End: 651' , new Date(0, 0, 0, 0, 0, 630) , new Date(0, 0, 0, 0, 0, 651)],
+[ 'Machine 4' , '1_4', 'Duration: 23 Start: 651 End: 674' , new Date(0, 0, 0, 0, 0, 651) , new Date(0, 0, 0, 0, 0, 674)],
+]);
+var options = {colors: ['#1EEC70','#000000','#12B090','#000000','#23A88F','#000000','#170FD8','#000000','#6B3890','#000000','#7B09E4','#000000','#34A66B','#000000','#9F92D2','#000000','#A9FBCA','#1B04C5','#000000','#170FD8','#000000','#6B3890','#000000','#7B09E4','#000000','#23A88F','#000000','#34A66B','#000000','#9F92D2','#000000','#12B090','#000000','#A9FBCA','#9F92D2','#000000','#6B3890','#000000','#7B09E4','#000000','#A9FBCA','#000000','#170FD8','#000000','#23A88F','#000000','#12B090','#000000','#1EEC70','#000000','#1B04C5','#34A66B','#000000','#9F92D2','#000000','#12B090','#000000','#1B04C5','#000000','#A9FBCA','#000000','#170FD8','#000000','#1EEC70','#000000','#23A88F','#000000','#6B3890','#000000','#7B09E4','#23A88F','#000000','#A9FBCA','#000000','#6B3890','#000000','#1B04C5','#000000','#1EEC70','#000000','#12B090',]};
+chart.draw(dataTable, options);
+}
+</script>
+<div><p>Makespan: 760 Seconds. Seed Value: 1001385844. Processing Time: 00:00:01.6583472</p></div>
+<div id="example3.1" style="height: 1000px;"></div>

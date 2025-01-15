@@ -467,7 +467,7 @@ namespace Projektseminar.Instance
         }
 
         //Switch-Case Anweisung zur Auswahl der Nachbarschaft
-        public Dictionary<int, List<Tuple<Task, Task>>> GetNeighboorhood(string searchMethod)
+        public Dictionary<int, List<Tuple<Task, Task>>> GetNeighbors(string searchMethod)
         {
             Dictionary<int, List<Tuple<Task, Task>>> newDict = new Dictionary<int, List<Tuple<Task, Task>>>();
 

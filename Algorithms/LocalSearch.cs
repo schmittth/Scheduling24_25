@@ -1,8 +1,8 @@
 ﻿using Projektseminar.Instance;
 
-namespace Projektseminar.LocalSearch
+namespace Projektseminar.Algorithms
 {
-    internal class LocalSearch : Solver
+    internal class LocalSearch : Standalone.Observer
     {
         public string Neighborhood { get; set; }
 
@@ -16,9 +16,9 @@ namespace Projektseminar.LocalSearch
         public Problem DoLocalSearch()
         {
             //Iteriere bis keine Verbesserung mehr gefunden oder Zeit abgelaufen
-            while(Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
+            while (Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
             {
-                Dictionary<int, List<Tuple<Instance.Task, Instance.Task>>> dict = CurrentProblem.GetNeighboorhood(Neighborhood); //Erlange alle Nachbarschaften
+                Dictionary<int, List<Tuple<Instance.Task, Instance.Task>>> dict = CurrentProblem.GetNeighbors(Neighborhood); //Erlange alle Nachbarschaften
 
                 //Führe alle Nachbarschaften aus
                 foreach (List<Tuple<Instance.Task, Instance.Task>> list in dict.Values)

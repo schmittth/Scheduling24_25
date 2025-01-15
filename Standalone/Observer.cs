@@ -1,9 +1,9 @@
 ﻿using Projektseminar.Instance;
 using System.Diagnostics;
 
-namespace Projektseminar
+namespace Projektseminar.Standalone
 {
-    internal class Solver
+    internal class Observer
     {
         public Problem CurrentProblem { get; set; }
         public Problem BestProblem { get; set; }
@@ -12,7 +12,7 @@ namespace Projektseminar
 
         private Stopwatch stopwatch = new Stopwatch();
 
-        public Solver()
+        public Observer()
         {
             MaxRuntimeInSeconds = 180;
             stopwatch.Start();
@@ -45,7 +45,7 @@ namespace Projektseminar
                     }
                 }
             }
-            using (StreamWriter sw = File.AppendText((@$"..\..\..\LogFile.csv")))
+            using (StreamWriter sw = File.AppendText(@$"..\..\..\LogFile.csv"))
             {
                 sw.WriteLine($"{instanceName};{BestProblem.Jobs.Count};{BestProblem.Machines.Count};{minTaskAmount};{minTaskTime};{maxTaskTime};{solverType};{coolingFactor};{iterations};{neighborhood};{priorityRule};{runtime};{seedValue};{BestProblem.Makespan}");
             }

@@ -1,7 +1,6 @@
-﻿using Projektseminar.Instance;
-using Projektseminar.LocalSearch;
-using Projektseminar.MetaHeuristic;
-using Projektseminar.OpeningHeuristic;
+﻿using Projektseminar.Algorithms;
+using Projektseminar.Instance;
+using Projektseminar.Standalone;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 
@@ -53,15 +52,15 @@ namespace Projektseminar
 
             int solverChoice = Dialog.ChooseSolver(); //Lasse Lösungsansatz auswählen
             string priorityRule = ""; //Initialisiere PriortityRule String
-            string neighboorhood = ""; //Initialisiere Nachbarschafts String
+            string neighborhood = ""; //Initialisiere Nachbarschafts String
 
 
             if (solverChoice == 2 || solverChoice == 3)
             {
                 priorityRule = Dialog.ChoosePriorityRule();
-                neighboorhood = Dialog.ChooseNeighboorhood();
+                neighborhood = Dialog.ChooseNeighboorhood();
                 //priorityRule = "LTT";
-                //neighboorhood = "N5";
+                //neighborhood = "N5";
             }
 
             Tuple<double, int> simAnnealParams = null;
@@ -100,7 +99,7 @@ namespace Projektseminar
 
                 Problem problem = importer.GenerateProblem();
 
-                GifflerThompson gifflerThompson = new GifflerThompson(problem, priorityRule);
+                GifflerThompson2 gifflerThompson = new GifflerThompson2(problem, priorityRule);
 
                 if (solverChoice == 2 || solverChoice == 3)
                 {
@@ -122,15 +121,15 @@ namespace Projektseminar
                         break;
                     //Solver: Simulated Annealing
                     case 2:
-                        SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, simAnnealParams.Item1, simAnnealParams.Item2, neighboorhood);
+                        SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, simAnnealParams.Item1, simAnnealParams.Item2, neighborhood);
                         problem = simAnneal.DoSimulatedAnnealing(seedValue);
 
-                        simAnneal.Log(instanceChoice, seedValue, simAnneal.Stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighboorhood, gifflerThompson.PriorityRule);
+                        simAnneal.Log(instanceChoice, seedValue, simAnneal.Stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighborhood, gifflerThompson.PriorityRule);
                         problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\simAnneal.html", true, seedValue, simAnneal.Stopwatch.Elapsed);
                         //problem.ProblemAsFile($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\instanceExport.txt");
                         break;
                     case 3:
-                        LocalSearch.LocalSearch localSearch = new LocalSearch.LocalSearch(problem, neighboorhood);
+                        LocalSearch localSearch = new LocalSearch.LocalSearch(problem, neighborhood);
                         problem = localSearch.DoLocalSearch();
 
                         localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Local Search", iterations: 0, priorityRule: gifflerThompson.PriorityRule);

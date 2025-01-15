@@ -2,27 +2,27 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Projektseminar.MetaHeuristic
+namespace Projektseminar.Algorithms
 {
-    internal class SimulatedAnnealing : Solver
+    internal class SimulatedAnnealing : Standalone.Observer
     {
         //Eigenschaften
         public double Temperature { get; set; }
         public double CoolingFactor { get; set; }
         public int Iterations { get; set; }
-        public string Neighboorhood { get; set; }
+        public string Neighborhood { get; set; }
 
         //Variablen
 
         //Konstruktoren
         public SimulatedAnnealing(Problem problem, double coolingFactor, int iterations, string neighboorhood)
         {
-            this.CurrentProblem = problem; //Übergebenes Problem wird als aktuelles Problem gesetzt
-            this.BestProblem = problem; //Bei Instanzierung ist bestes Problem = aktuelles Problem
-            this.Temperature = 100; //Temperatur hardcoded auf 100
-            this.CoolingFactor = coolingFactor; //Abkühlungfaktor wird von Konsole übergeben.
-            this.Iterations = iterations; //Anzahl an Iterationen wird von Konsole übergeben.
-            this.Neighboorhood = neighboorhood; //Nachbarschaft wird von Konsole übergeben.
+            CurrentProblem = problem; //Übergebenes Problem wird als aktuelles Problem gesetzt
+            BestProblem = problem; //Bei Instanzierung ist bestes Problem = aktuelles Problem
+            Temperature = 100; //Temperatur hardcoded auf 100
+            CoolingFactor = coolingFactor; //Abkühlungfaktor wird von Konsole übergeben.
+            Iterations = iterations; //Anzahl an Iterationen wird von Konsole übergeben.
+            Neighborhood = neighboorhood; //Nachbarschaft wird von Konsole übergeben.
         }
 
 
@@ -33,7 +33,7 @@ namespace Projektseminar.MetaHeuristic
             Random random = new Random(seedValue); //Initialisiere Zufallswert
             Problem newProblem; //Deklariere Variable für neues Problem
 
-            while (Temperature > 1 && Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
+            while (Temperature > 5 && Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
             //while (Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
             {
                 Console.WriteLine($"Current Temperature Simulated Annealing {Temperature} with {Iterations} Iterations planned");
@@ -42,7 +42,7 @@ namespace Projektseminar.MetaHeuristic
                 //Iteriere über die Anzahl an Iterationen
                 for (int i = 0; i < Iterations && Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds; i++)
                 {
-                    Dictionary<int, List<Tuple<Instance.Task, Instance.Task>>> dict = CurrentProblem.GetNeighboorhood(Neighboorhood); //Instanziiere Dict mit Nachbarschaften
+                    Dictionary<int, List<Tuple<Instance.Task, Instance.Task>>> dict = CurrentProblem.GetNeighbors(Neighborhood); //Instanziiere Dict mit Nachbarschaften
                     List<int> cyclicNeighbors = new List<int>(); //Erstelle Liste mit zkylischen Nachbarschaften
 
                     //Iteriere bis eine nicht-zyklische Lösung gefunden wurde

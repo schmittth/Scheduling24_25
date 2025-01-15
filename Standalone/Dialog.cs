@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Projektseminar
+namespace Projektseminar.Standalone
 {
     internal class Dialog
     {
@@ -53,7 +53,7 @@ namespace Projektseminar
                 Console.WriteLine($"{0}. Random Instance");
 
                 //Gebe alle .txt-files direkt in der Projektmappe aus
-                Console.WriteLine("Single Instances:");               
+                Console.WriteLine("Single Instances:");
                 for (int i = 1; i <= allInstances.Length; i++)
                 {
                     Console.WriteLine($"{i}. {allInstances[i - 1]}");
@@ -73,7 +73,7 @@ namespace Projektseminar
                     Console.WriteLine($"{j}. {allSubDirectories[j - (allInstances.Length + allDirectories.Count + 1)]}");
                 }
                 instanceChoiceString = Console.ReadLine(); //Lese Instanzauswahl ein
-            } 
+            }
             while (!(int.TryParse(instanceChoiceString, out instanceChoiceInt) && instanceChoiceInt >= 0 && instanceChoiceInt <= allInstances.Length + allSubDirectories.Count + allDirectories.Count)); //Erzwinge Auswahl erneut wenn nicht innerhalb der Grenzen
 
             //Gebe Dateipfad oder "Random" zurück
@@ -85,7 +85,7 @@ namespace Projektseminar
             {
                 instanceChoiceString = allInstances[instanceChoiceInt - 1];
             }
-            else if (instanceChoiceInt > allInstances.Length && instanceChoiceInt <= (allInstances.Length + allDirectories.Count))
+            else if (instanceChoiceInt > allInstances.Length && instanceChoiceInt <= allInstances.Length + allDirectories.Count)
             {
                 instanceChoiceString = allDirectories[instanceChoiceInt - (allInstances.Length + 1)];
             }
@@ -150,10 +150,10 @@ namespace Projektseminar
         public static Tuple<double, int> ChooseSimAnnealParameters()
         {
             Console.WriteLine("Please provide a cooling factor (Please use , for decimal values) :");
-            double coolingFactor = Double.Parse(Console.ReadLine());
+            double coolingFactor = double.Parse(Console.ReadLine());
 
             Console.WriteLine("How many iterations should be ran for each temperature:");
-            int iterations = Int32.Parse(Console.ReadLine());
+            int iterations = int.Parse(Console.ReadLine());
             return Tuple.Create(coolingFactor, iterations);
         }
 
@@ -163,7 +163,7 @@ namespace Projektseminar
             int seedChoiceInt = 0;
             string seedChoiceString = Console.ReadLine();
 
-            if (!(int.TryParse(seedChoiceString, out seedChoiceInt)))
+            if (!int.TryParse(seedChoiceString, out seedChoiceInt))
             {
                 Console.WriteLine("Choose default value: \"Random\"");
             }

@@ -1,16 +1,15 @@
 {
   "version": 2,
   "dgSpecHash": "xfQSLuUyHhs=",
-  "success": true,
+  "success": false,
   "projectFilePath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Scheduling24_25\\Projektseminar.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools\\9.10.4067\\google.ortools.9.10.4067.nupkg.sha512",
-    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools.runtime.linux-arm64\\9.10.4067\\google.ortools.runtime.linux-arm64.9.10.4067.nupkg.sha512",
-    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools.runtime.linux-x64\\9.10.4067\\google.ortools.runtime.linux-x64.9.10.4067.nupkg.sha512",
-    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools.runtime.osx-arm64\\9.10.4067\\google.ortools.runtime.osx-arm64.9.10.4067.nupkg.sha512",
-    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools.runtime.osx-x64\\9.10.4067\\google.ortools.runtime.osx-x64.9.10.4067.nupkg.sha512",
-    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools.runtime.win-x64\\9.10.4067\\google.ortools.runtime.win-x64.9.10.4067.nupkg.sha512",
-    "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.protobuf\\3.26.1\\google.protobuf.3.26.1.nupkg.sha512"
-  ],
-  "logs": []
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Der Dienstindex für die Quelle \"https://api.nuget.org/v3/index.json\" konnte nicht geladen werden.",
+      "libraryId": "Google.OrTools"
+    }
+  ]
 }

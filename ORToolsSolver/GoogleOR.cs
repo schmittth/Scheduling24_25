@@ -4,7 +4,7 @@ using System.Reflection.PortableExecutable;
 
 namespace Projektseminar.ORToolsSolver
 {
-    internal class GoogleOR : Solver
+    internal class GoogleOR : Standalone.Observer
     {
         public GoogleOR(Problem currentProblem)
         {

@@ -20,7 +20,6 @@ namespace Projektseminar.Instance
         public Task sucMachineTask { get; set; } //sucMachineTask ist der nachfolgende Task auf der gleichen Maschine
         public Task preJobTask { get; set; } //preJobTask ist der vorhergehende Task im gleichen Job
         public Task sucJobTask { get; set; } //sucJobTask ist der nachfolgende Task im gleichen Job
-
         public IntVar StartIntVar { get; set; }
         public IntVar EndIntVar { get; set; }
         public IntervalVar DurationIntVar { get; set; }

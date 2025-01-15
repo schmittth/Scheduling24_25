@@ -3,7 +3,11 @@
     internal class Machine
     {
         //Eigenschaften
-        public int Id { get; set; }
+        public int Id 
+        { 
+            get => id; 
+            set => id = value; 
+        }
         public List<Task> Schedule
         {
             get => schedule;
@@ -13,12 +17,14 @@
         public int Load { get; set; }
 
         //Variablen
-        public List<Projektseminar.Instance.Task> schedule;
+        private int id;
+        private List<Projektseminar.Instance.Task> schedule;
+        private int load;
 
         //Konstruktoren
         public Machine(int id, int scheduleLength = 0)
         {
-            Id = id;
+            this.id = id;
             schedule = new List<Task>(scheduleLength);
         }
     }

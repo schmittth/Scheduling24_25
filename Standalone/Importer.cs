@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using Projektseminar.Instance;
 
-namespace Projektseminar
+namespace Projektseminar.Standalone
 {
     internal class Importer
     {
@@ -52,7 +52,7 @@ namespace Projektseminar
                     {
 
                         //Immer zwei Spalten bilden ein Task-Tupel
-                        tasks[Tuple.Create(jobs[jobCounter].Count, jobCounter)] = Tuple.Create(allLines[jobCounter + 1][taskCounter + 1], (allLines[jobCounter + 1][taskCounter] - 1));
+                        tasks[Tuple.Create(jobs[jobCounter].Count, jobCounter)] = Tuple.Create(allLines[jobCounter + 1][taskCounter + 1], allLines[jobCounter + 1][taskCounter] - 1);
                         jobs[jobCounter].Add(Tuple.Create(jobs[jobCounter].Count, jobCounter));
                     }
 
@@ -125,7 +125,7 @@ namespace Projektseminar
             //Für jeden Eintrag im Dictionary ein Maschinen-Objekt erstellen
             foreach (int id in machines)
             {
-                Instance.Machine newMachine = new Instance.Machine(id);
+                Machine newMachine = new Machine(id);
                 newInstance.Machines.Add(newMachine);
             }
 
