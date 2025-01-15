@@ -15,7 +15,7 @@
     <Compile Include="Standalone\Importer.cs" />
     <Compile Include="Algorithms\LocalSearch.cs" />
     <Compile Include="Algorithms\SimulatedAnnealing.cs" />
-    <Compile Include="Algorithms\Giffler-Thompson - Kopieren.cs" />
+    <Compile Include="Algorithms\Giffler-Thompson.cs" />
     <Compile Include="Instance\Machine.cs" />
     <Compile Include="ORToolsSolver\GoogleOR.cs" />
     <Compile Include="Main.cs" />

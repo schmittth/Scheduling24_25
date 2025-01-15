@@ -2,7 +2,7 @@
 
 namespace Projektseminar.Algorithms
 {
-    internal class GifflerThompson2 : Standalone.Observer
+    internal class GifflerThompson : Standalone.Observer
     {
         //Eigenschaften
         public string PriorityRule
@@ -17,7 +17,7 @@ namespace Projektseminar.Algorithms
         private Dictionary<Job, Instance.Task> allPlannableTasks = new Dictionary<Job, Instance.Task>();
 
         //Konstruktoren
-        public GifflerThompson2(Problem problem, string priorityRule)
+        public GifflerThompson(Problem problem, string priorityRule)
         {
             CurrentProblem = problem;
             BestProblem = new Problem(problem);
