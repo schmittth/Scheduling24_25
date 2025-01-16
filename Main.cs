@@ -99,7 +99,7 @@ namespace Projektseminar
 
                 Problem problem = importer.GenerateProblem();
 
-                GifflerThompson2 gifflerThompson = new GifflerThompson2(problem, priorityRule);
+                GifflerThompson gifflerThompson = new GifflerThompson(problem, priorityRule);
 
                 if (solverChoice == 2 || solverChoice == 3)
                 {
@@ -129,11 +129,11 @@ namespace Projektseminar
                         //problem.ProblemAsFile($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\instanceExport.txt");
                         break;
                     case 3:
-                        LocalSearch localSearch = new LocalSearch.LocalSearch(problem, neighborhood);
+                        /*LocalSearch localSearch = new LocalSearch.LocalSearch(problem, neighborhood);
                         problem = localSearch.DoLocalSearch();
 
                         localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Local Search", iterations: 0, priorityRule: gifflerThompson.PriorityRule);
-                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\localSearch.html", true, seedValue, localSearch.Stopwatch.Elapsed);
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\localSearch.html", true, seedValue, localSearch.Stopwatch.Elapsed);*/
 
                         break;
                 }

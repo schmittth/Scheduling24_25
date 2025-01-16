@@ -135,3 +135,6 @@ Instance;" ""JobAmount""";" ""MachineAmount""";" ""MinTaskAmount""";" ""MinTaskT
 ../../../Diagramms\ClassroomInstanceSet3;10;5;0;0;98;Simulated Annealing;0,99;100;N3;LTT;00:00:01.6960547;567159005;596
 ../../../Diagramms\ClassroomInstanceSet3;10;5;0;0;100;Simulated Annealing;0,99;100;N3;LTT;00:00:01.5139519;28839378;676
 ../../../Diagramms\ClassroomInstanceSet3;10;5;0;0;99;Simulated Annealing;0,99;100;N3;LTT;00:00:01.6583456;1001385844;760
+../../../Diagramms\ClassroomInstanceSet1;5;3;0;0;94;Simulated Annealing;0,99;200;N3;LTT;00:00:01.2145288;22118701;392
+../../../Diagramms\ClassroomInstanceSet1;5;3;0;0;84;Simulated Annealing;0,99;200;N3;LTT;00:00:01.1563182;1356806228;231
+../../../Diagramms\ClassroomInstanceSet1;5;3;0;0;70;Simulated Annealing;0,99;200;N3;LTT;00:00:01.0494627;1746242814;297

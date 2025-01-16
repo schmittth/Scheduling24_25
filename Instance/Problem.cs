@@ -379,12 +379,12 @@ namespace Projektseminar.Instance
 
                 if (currentTask.preMachineTask is not null)
                 {
-                    releasePM = currentTask.preMachineTask.Start + currentTask.preMachineTask.Duration + currentTask.Setup;
+                    releasePM = currentTask.preMachineTask.End + currentTask.Setup;
                 }
 
                 if (currentTask.preJobTask is not null)
                 {
-                    releasePJ = currentTask.preJobTask.Start + currentTask.preJobTask.Duration;
+                    releasePJ = currentTask.preJobTask.End;
                 }
 
                 currentTask.Start = Math.Max(releasePM, releasePJ);
