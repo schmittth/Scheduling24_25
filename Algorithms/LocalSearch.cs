@@ -18,10 +18,10 @@ namespace Projektseminar.Algorithms
             //Iteriere bis keine Verbesserung mehr gefunden oder Zeit abgelaufen
             while (Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
             {
-                Dictionary<int, List<Tuple<Instance.Task, Instance.Task>>> dict = CurrentProblem.GetNeighbors(Neighborhood); //Erlange alle Nachbarschaften
+                List<List<Tuple<Instance.Task, Instance.Task>>> neighborhoodOperations = CurrentProblem.GetNeighbors(Neighborhood); //Erlange alle Nachbarschaften
 
                 //Führe alle Nachbarschaften aus
-                foreach (List<Tuple<Instance.Task, Instance.Task>> list in dict.Values)
+                foreach (List<Tuple<Instance.Task, Instance.Task>> list in neighborhoodOperations)
                 {
                     Problem newProblem = new Problem(CurrentProblem); //Kopiere aktuelles Problem
 

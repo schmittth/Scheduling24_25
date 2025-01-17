@@ -42,33 +42,30 @@ namespace Projektseminar.Algorithms
                 //Iteriere über die Anzahl an Iterationen
                 for (int i = 0; i < Iterations && Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds; i++)
                 {
-                    Dictionary<int, List<Tuple<Instance.Task, Instance.Task>>> dict = CurrentProblem.GetNeighbors(Neighborhood); //Instanziiere Dict mit Nachbarschaften
+                    List<List<Tuple<Instance.Task, Instance.Task>>> neighborhoodOperations = CurrentProblem.GetNeighbors(Neighborhood); //Instanziiere Dict mit Nachbarschaften
                     List<int> cyclicNeighbors = new List<int>(); //Erstelle Liste mit zkylischen Nachbarschaften
 
                     //Iteriere bis eine nicht-zyklische Lösung gefunden wurde
                     do
                     {
                         newProblem = new Problem(CurrentProblem); //Kopiere aktuelles Problem
-                        int chooseNeighbor;
 
-                        //Iteriere solange bis ein nicht-zyklischer Nachbar gewählt wurde
-                        do
-                        {
-                            chooseNeighbor = random.Next(0, dict.Count); //Wähle Zufallszahl zwischen 0 und allen Nachbarschaften
+
+                        int chooseNeighbor = random.Next(0, neighborhoodOperations.Count); //Wähle Zufallszahl zwischen 0 und allen Nachbarschaften
                             /*if (cyclicNeighbors.Count > 1)
                             {
                                 string cyclicString = cyclicNeighbors.ToString();
                                 Console.WriteLine($"Invalids: {cyclicString}");
                             }*/
-                        }
-                        while (cyclicNeighbors.Contains(chooseNeighbor));
-                        cyclicNeighbors.Add(chooseNeighbor); //Füge ausgewählte Nachbarschaft, Liste hinzu
+                        
 
                         //Führe alle Tauschschritte aus
-                        foreach (var tuple in dict[chooseNeighbor])
+                        foreach (var tuple in neighborhoodOperations[chooseNeighbor])
                         {
                             newProblem.SwapTasks(tuple.Item1, tuple.Item2);
                         }
+
+                        neighborhoodOperations.RemoveAt(chooseNeighbor);
                     }
                     while (!newProblem.CheckCyclicity());
 
