@@ -496,7 +496,7 @@ namespace Projektseminar.Instance
             foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
             {
                 //foreach (Task task in critPair.Value)
-                for (int taskCounter = 0; taskCounter < critPair.Value.Count; taskCounter++)
+                for (int taskCounter = 0; taskCounter < critPair.Value.Count - 1; taskCounter++)
                 {
                     Task task = critPair.Value[taskCounter];
                     if (task.sucMachineTask is not null && critTasks[task.Machine][taskCounter + 1] == task.sucMachineTask)

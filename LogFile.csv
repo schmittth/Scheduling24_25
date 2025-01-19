@@ -141,3 +141,8 @@ Instance;" ""JobAmount""";" ""MachineAmount""";" ""MinTaskAmount""";" ""MinTaskT
 ../../../Diagramms\ClassroomInstanceSet3;10;5;0;0;98;Simulated Annealing;0,99;500;N3;LTT;00:00:02.0498903;690032412;596
 ../../../Diagramms\ClassroomInstanceSet3;10;5;0;0;100;Simulated Annealing;0,99;500;N3;LTT;00:00:01.9340564;2060716440;664
 ../../../Diagramms\ClassroomInstanceSet3;10;5;0;0;99;Simulated Annealing;0,99;500;N3;LTT;00:00:02.0528811;390888985;757
+../../../file.txt;5;5;0;0;80;Simulated Annealing;0,99;5000;N3;LTT;00:00:10.6665845;699169944;320
+../../../file.txt;5;5;0;0;80;Simulated Annealing;0,99;200;N3;LTT;00:00:01.7385211;1284249076;343
+../../../file.txt;5;5;0;0;80;Simulated Annealing;0,99;250;N3;LTT;00:00:02.1264563;233448405;320
+../../../file.txt;5;5;0;0;80;Simulated Annealing;0,99;250;N5;LTT;00:00:01.6290879;1573445225;320
+../../../file.txt;5;5;0;0;80;Simulated Annealing;0,99;100;N5;LTT;00:00:00.7389724;634783484;320
