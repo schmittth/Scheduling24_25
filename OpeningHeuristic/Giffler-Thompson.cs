@@ -155,6 +155,8 @@ namespace Projektseminar.OpeningHeuristic
         {
             int prio;
             Instance.Task planTask = null;
+            HashSet<Job> applicableJobs = new HashSet<Job>();
+
             switch (priorityRule)
             {
                 case "STT":
@@ -201,7 +203,69 @@ namespace Projektseminar.OpeningHeuristic
                         }
                     }
                     break;
-                default:
+                case "LRPT":
+
+                    foreach (Instance.Task task in sameMachineTasks)
+                    {
+                        applicableJobs.Add(task.Job);
+                    }
+
+                    List<Tuple<Job, int>> jobsLRPT = new List<Tuple<Job, int>>();
+
+                    foreach (Job job in applicableJobs)
+                    {
+                        int remainingTime = 0;
+                        foreach (var task in job.Tasks)
+                        {
+                            if (task.Start < BestProblem.Horizon)
+                            {
+                                remainingTime = remainingTime + task.Duration;
+                            }
+                        }
+                        jobsLRPT.Add(Tuple.Create(job, remainingTime));
+                    }
+                    Job longestJob = jobsLRPT.FirstOrDefault(job => job.Item2 == jobsLRPT.Max(j => j.Item2)).Item1;
+
+                    foreach (Instance.Task task in sameMachineTasks)
+                    {
+                        if (task.Job == longestJob)
+                        {
+                            planTask = task;
+                            break;
+                        }
+                    }
+                    break;
+                case "SRPT":
+                    
+                    foreach (Instance.Task task in sameMachineTasks)
+                    {
+                        applicableJobs.Add(task.Job);
+                    }
+
+                    List<Tuple<Job, int>> jobsSRPT = new List<Tuple<Job, int>>();
+
+                    foreach (Job job in applicableJobs)
+                    {
+                        int remainingTime = 0;
+                        foreach (var task in job.Tasks)
+                        {
+                            if (task.Start < BestProblem.Horizon)
+                            {
+                                remainingTime = remainingTime + task.Duration;
+                            }
+                        }
+                        jobsSRPT.Add(Tuple.Create(job, remainingTime));
+                    }
+                    Job shortestJob = jobsSRPT.FirstOrDefault(job => job.Item2 == jobsSRPT.Min(j => j.Item2)).Item1;
+
+                    foreach (Instance.Task task in sameMachineTasks)
+                    {
+                        if (task.Job == shortestJob)
+                        {
+                            planTask = task;
+                            break;
+                        }
+                    }
                     break;
             }
             return planTask;
