@@ -84,7 +84,7 @@ namespace Projektseminar.Algorithms
                 planTask.Position = planTask.Machine.Schedule.Count();
                 planTask.Machine.Schedule.Add(planTask);
 
-                planTask.End = planTask.Start + planTask.Duration; //Setze die Endzeit des Tasks auf die Startzeit + Verarbeitungszeit
+                //planTask.End = planTask.Start + planTask.Duration; //Setze die Endzeit des Tasks auf die Startzeit + Verarbeitungszeit
                 planTask.Machine.Load = planTask.End; //Setze den aktuellen Load der Maschine auf das Ende des eingeplanten Tasks.
 
                 //Setze die Releasezeit des nächsten Tasks im Job auf das Ende des aktuellen Tasks
@@ -114,8 +114,7 @@ namespace Projektseminar.Algorithms
                 //Setze alle initialen Werte
                 foreach (Instance.Task task in job.Tasks)
                 {
-                    task.Start = 0;
-                    task.End = 0;
+                    //task.End = BestProblem.Horizon; ;
                     task.Start = BestProblem.Horizon;
 
                     task.Machine.Load = 0;
@@ -185,6 +184,39 @@ namespace Projektseminar.Algorithms
                         {
                             value = task.Job.TotalDuration;
                             planTask = task;
+                        }
+                    }
+                    break;
+                case "LRPT":
+
+                    HashSet<Job> applicableJobs = new HashSet<Job>();
+                    foreach (Instance.Task task in sameMachineTasks)
+                    {
+                        applicableJobs.Add(task.Job);
+                    }
+
+                    List<Tuple<Job, int>> jobs = new List<Tuple<Job, int>>();
+
+                    foreach (Job job in applicableJobs)
+                    {
+                        int remainingTime = 0;
+                        foreach (var task in job.Tasks)
+                        {
+                            if (task.Start < BestProblem.Horizon)
+                            {
+                                remainingTime = remainingTime + task.Duration;
+                            }
+                        }
+                        jobs.Add(Tuple.Create(job, remainingTime));               
+                    }
+                    Job longestJob = jobs.FirstOrDefault(job => job.Item2 == jobs.Max(j => j.Item2)).Item1;
+
+                    foreach (Instance.Task task in sameMachineTasks)
+                    {
+                        if (task.Job == longestJob)
+                        {
+                            planTask = task;
+                            break;
                         }
                     }
                     break;

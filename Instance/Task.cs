@@ -11,9 +11,23 @@ namespace Projektseminar.Instance
         public Machine Machine { get; set; } //Machine ist die Maschine auf welcher der Task ausgeführt wird
         public int Setup { get; set; } //Setup ist die dem Task vorgelagerte Setupzeit
         public Job Job { get; set; } //Job ist der Auftrag zu welchem der Task gehört
-        public int Start { get; set; } //Start ist die Zeit wann der Task tatsächlich beginnt
-        public int End { get; set; } //End ist die Zeit wann der Task tatsächlich zu Ende ist
-        public int Duration { get; set; } //Duration ist die BEarbeitungszeit des Tasks
+        public int Start  //Start ist die Zeit wann der Task tatsächlich beginnt
+        {
+            get => start;
+            set
+            {
+                start = value;
+                end = value + duration;
+            }
+        }
+        public int Duration //Duration ist die BEarbeitungszeit des Tasks
+        { 
+            get => duration; 
+        } 
+        public int End //End ist die Zeit wann der Task tatsächlich zu Ende ist
+        { 
+            get => end ; 
+        }
         public int Position { get; set; } //Position ist die Position dieses Tasks im aktuellen Maschinenplan
         public int Tail { get; set; } //Tail ist die Länge des längsten Pfades vom aktuellen Task bis zum Ende.
         public Task preMachineTask { get; set; } //preMachineTask ist der vorhergehende Tasks auf der gleichen Maschine
@@ -26,6 +40,9 @@ namespace Projektseminar.Instance
 
 
         //Variablen
+        private int start;
+        private int duration;
+        private int end;
 
         //Konstruktoren
 
@@ -34,7 +51,7 @@ namespace Projektseminar.Instance
         {
             Machine = machine;
             Job = job;
-            Duration = duration;
+            this.duration = duration;
             Id = id;
         }
 
@@ -44,7 +61,7 @@ namespace Projektseminar.Instance
         }
         public Task(int duration, int id)
         {
-            Duration = duration;
+            this.duration = duration;
             Id = id;
         }
 

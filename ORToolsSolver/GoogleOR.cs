@@ -86,7 +86,7 @@ namespace Projektseminar.ORToolsSolver
                         int start = (int)solver.Value(CurrentProblem.Jobs[job.Id].Tasks[task.Id].StartIntVar);
 
                         task.Start = start;
-                        task.End = task.Start + task.Duration;
+                        //task.End = task.Start + task.Duration;
 
                         BestProblem.Machines[task.Machine.Id].Schedule.Add(task);
                     }

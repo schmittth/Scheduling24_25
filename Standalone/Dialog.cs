@@ -120,7 +120,7 @@ namespace Projektseminar.Standalone
         public static string ChoosePriorityRule()
         {
             Console.WriteLine("Please choose a Priority rule: ");
-            string[] availableRules = { "LPT", "SPT", "LTT", "STT" };
+            string[] availableRules = { "LPT", "SPT", "LTT", "STT", "LRPT" };
             Console.Write("Currently supported rules: ");
             string ruleChoice;
 

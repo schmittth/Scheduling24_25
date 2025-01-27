@@ -122,6 +122,7 @@ namespace Projektseminar
                     //Solver: Simulated Annealing
                     case 2:
                         SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, simAnnealParams.Item1, simAnnealParams.Item2, neighborhood);
+                        //simAnneal.CalculateTemperature();
                         problem = simAnneal.DoSimulatedAnnealing(seedValue);
 
                         simAnneal.Log(instanceChoice, seedValue, simAnneal.Stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighborhood, gifflerThompson.PriorityRule);
