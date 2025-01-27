@@ -24,14 +24,12 @@ namespace Projektseminar
                 int instanceAmount = 0;
 
                 subFiles = Directory.GetFiles(subDir, "*.txt", SearchOption.AllDirectories).ToList();
+                Console.WriteLine(subDir);
+
                 instanceAmount = subFiles.Count;
 
+                string priorityRule = "SRPT"; //Initialisiere PriortityRule String
 
-                string priorityRule = "LTT"; //Initialisiere PriortityRule String
-
-                Tuple<double, int> simAnnealParams = Tuple.Create(0.99, 5000);
-
-                //
                 for (int instanceCounter = 0; instanceCounter < instanceAmount; instanceCounter++)
                 {
 
@@ -47,9 +45,11 @@ namespace Projektseminar
 
 
                     problem = gifflerThompson.InitialSolution();
-                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\initialSolution.html", false, seedValue, null);
+                    gifflerThompson.Log(subFiles[instanceCounter], 0, gifflerThompson.Stopwatch.Elapsed, "N/A", priorityRule: priorityRule);
+                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\initialSolution.html", false, seedValue, gifflerThompson.Stopwatch.Elapsed);
 
                 }
+                Thread.Sleep(3000);
             }
         }
     }
