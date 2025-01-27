@@ -249,7 +249,7 @@ namespace Projektseminar.Instance
         }
 
         //Gebe eine Liste von allen kritischen Tasks in einem Problem zurück.
-        public Dictionary<Machine, List<Task>> GetCriticalTasks()
+        public Dictionary<Machine, List<Task>> GetCriticalTasks(bool reverse  = false)
         {
             Dictionary<Machine, List<Task>> critTasks = new Dictionary<Machine, List<Task>>(); //Initialisiere Dictionary
 
@@ -264,9 +264,19 @@ namespace Projektseminar.Instance
                     Task task = machines[machineId].Schedule[taskOnMachine];
 
                     //Wenn Release und Tail addiert Makespan ergeben ist der Task kritisch
-                    if (task.Start + task.Tail == makespan)
+                    if (reverse)
                     {
-                        critTasks[machines[machineId]].Add(task); //Füge Task dem Dict mit der Maschine als Schlüssel hinzu
+                        if (task.Start + task.Tail != makespan)
+                        {
+                            critTasks[machines[machineId]].Add(task); //Füge Task dem Dict mit der Maschine als Schlüssel hinzu
+                        }
+                    }
+                    else if (!reverse)
+                    {
+                        if (task.Start + task.Tail == makespan)
+                        {
+                            critTasks[machines[machineId]].Add(task); //Füge Task dem Dict mit der Maschine als Schlüssel hinzu
+                        }
                     }
                 }
             }
