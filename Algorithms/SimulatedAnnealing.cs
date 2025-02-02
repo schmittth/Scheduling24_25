@@ -25,7 +25,7 @@ namespace Projektseminar.Algorithms
 
 
         //Methoden
-        public List<Tuple<int, int>> GenerateSamples()
+        /*public List<Tuple<int, int>> GenerateSamples()
         {
             int transitionAmount = 10000;
 
@@ -109,7 +109,7 @@ namespace Projektseminar.Algorithms
 
         public Problem DoSimulatedAnnealing(int seedValue)
         {
-            CalculateTemperature(GenerateSamples());
+            //CalculateTemperature(GenerateSamples());
 
             Random random = new Random(seedValue); //Initialisiere Zufallswert
             Problem newProblem; //Deklariere Variable für neues Problem

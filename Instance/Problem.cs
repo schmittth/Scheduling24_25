@@ -551,11 +551,31 @@ namespace Projektseminar.Instance
                             //j, i, p(i) --> Wenn diese Nachbarschaft abgespeichert ist, muss s(j), j, i nicht gespeichert werden.
                             swapOperations.Add([Tuple.Create(task.preMachineTask, task.sucMachineTask)]);
 
-                            firstNeighbor = true;
+                            //firstNeighbor = true;
                         }
+                    }
 
+                    if (task.sucMachineTask is not null && task.sucMachineTask.sucMachineTask is not null) 
+                    {
                         //Der Maschinenvorgänger muss kritisch und damit der vorherige Task auf dieser Maschine sein
-                        if (taskCounter - 1 >= tasksOnMachineCount && critTasks[task.Machine][taskCounter - 1] == task.preMachineTask)
+                        if (taskCounter + 1 < tasksOnMachineCount && critTasks[task.Machine][taskCounter + 1] == task.sucMachineTask)
+                        {
+                            //i, j, s(j) --> task = i 
+
+                            //j, i, s(j)
+                            swapOperations.Add([Tuple.Create(task, task.sucMachineTask)]);
+
+                            //j, s(j), i
+                            swapOperations.Add([Tuple.Create(task, task.sucMachineTask), Tuple.Create(task.sucMachineTask, task.sucMachineTask.sucMachineTask)]);
+
+                            //s(j), j, i
+                            swapOperations.Add([Tuple.Create(task, task.sucMachineTask.sucMachineTask)]);
+                            
+                        }
+                    }
+
+
+                        /*if (taskCounter - 1 >= tasksOnMachineCount && critTasks[task.Machine][taskCounter - 1] == task.preMachineTask)
                         {
                             //i, j, s(j) --> task = j 
 
@@ -570,8 +590,8 @@ namespace Projektseminar.Instance
                             {
                                 swapOperations.Add([Tuple.Create(task.preMachineTask, task.sucMachineTask)]);
                             }
-                        }
-                    }                  
+                        }*/
+                                    
                 }
             }
             return swapOperations;
