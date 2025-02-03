@@ -535,7 +535,7 @@ namespace Projektseminar.Instance
                     bool firstNeighbor = false;
 
                     //if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.sucMachineTask))
-                    if (task.preMachineTask is not null && task.sucMachineTask is not null)
+                    if (task.preMachineTask is not null && task.sucMachineTask is not null && task.End + task.sucMachineTask.Tail == Makespan)
                     {
                         //Der Maschinennachfolger muss kritisch und damit der nächste Task auf dieser Maschine sein
                         if (taskCounter + 1 < tasksOnMachineCount && critTasks[task.Machine][taskCounter + 1] == task.sucMachineTask)
@@ -555,7 +555,7 @@ namespace Projektseminar.Instance
                         }
                     }
 
-                    if (task.sucMachineTask is not null && task.sucMachineTask.sucMachineTask is not null) 
+                    if (task.sucMachineTask is not null && task.sucMachineTask.sucMachineTask is not null && task.End + task.sucMachineTask.Tail == Makespan) 
                     {
                         //Der Maschinenvorgänger muss kritisch und damit der vorherige Task auf dieser Maschine sein
                         if (taskCounter + 1 < tasksOnMachineCount && critTasks[task.Machine][taskCounter + 1] == task.sucMachineTask)
