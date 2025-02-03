@@ -51,24 +51,8 @@ namespace Projektseminar
             }
 
             int solverChoice = Dialog.ChooseSolver(); //Lasse Lösungsansatz auswählen
-            string priorityRule = ""; //Initialisiere PriortityRule String
-            string neighborhood = ""; //Initialisiere Nachbarschafts String
-
-
-            if (solverChoice == 2 || solverChoice == 3)
-            {
-                priorityRule = Dialog.ChoosePriorityRule();
-                neighborhood = Dialog.ChooseNeighboorhood();
-                //priorityRule = "LTT";
-                //neighborhood = "N5";
-            }
-
-            Tuple<double, int> simAnnealParams = null;
-            if (solverChoice == 2)
-            {
-                seedChoice = 0;
-                simAnnealParams = Dialog.ChooseSimAnnealParameters();
-            }
+            string priorityRule = "LTT"; //Initialisiere PriortityRule String
+            string neighborhood = "N3"; //Initialisiere Nachbarschafts String
 
             //
             for (int instanceCounter = 0; instanceCounter < instanceAmount; instanceCounter++)
@@ -121,20 +105,19 @@ namespace Projektseminar
                         break;
                     //Solver: Simulated Annealing
                     case 2:
-                        SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, simAnnealParams.Item1, simAnnealParams.Item2, neighborhood);
+                        SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, 0.99, 2500, neighborhood);
                         //simAnneal.CalculateTemperature();
                         problem = simAnneal.DoSimulatedAnnealing(seedValue);
 
                         simAnneal.Log(instanceChoice, seedValue, simAnneal.Stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighborhood, gifflerThompson.PriorityRule);
                         problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\simAnneal.html", true, seedValue, simAnneal.Stopwatch.Elapsed);
-                        //problem.ProblemAsFile($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\instanceExport.txt");
                         break;
                     case 3:
-                        /*LocalSearch localSearch = new LocalSearch.LocalSearch(problem, neighborhood);
+                        LocalSearch localSearch = new LocalSearch(problem, neighborhood);
                         problem = localSearch.DoLocalSearch();
 
                         localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Local Search", iterations: 0, priorityRule: gifflerThompson.PriorityRule);
-                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\localSearch.html", true, seedValue, localSearch.Stopwatch.Elapsed);*/
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\localSearch.html", true, seedValue, localSearch.Stopwatch.Elapsed);
 
                         break;
                 }
