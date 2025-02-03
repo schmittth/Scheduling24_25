@@ -509,7 +509,7 @@ namespace Projektseminar.Instance
                 for (int taskCounter = 0; taskCounter < critPair.Value.Count - 1; taskCounter++)
                 {
                     Task task = critPair.Value[taskCounter];
-                    if (task.sucMachineTask is not null && critTasks[task.Machine][taskCounter + 1] == task.sucMachineTask)
+                    if (task.sucMachineTask is not null && critTasks[task.Machine][taskCounter + 1] == task.sucMachineTask && (critPair.Value[taskCounter].End + critPair.Value[taskCounter].sucMachineTask.Setup + critPair.Value[taskCounter].sucMachineTask.Tail == Makespan))
                     {
                         swapOperations.Add([Tuple.Create(task, task.sucMachineTask)]);
                     }
@@ -534,43 +534,46 @@ namespace Projektseminar.Instance
                     Task task = critPair.Value[taskCounter];
                     bool firstNeighbor = false;
 
-                    //if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.sucMachineTask))
-                    if (task.preMachineTask is not null && task.sucMachineTask is not null && task.End + task.sucMachineTask.Tail == Makespan)
+                    if (task.sucMachineTask is not null && task.End + task.sucMachineTask.Setup + task.sucMachineTask.Tail == Makespan)
                     {
-                        //Der Maschinennachfolger muss kritisch und damit der nächste Task auf dieser Maschine sein
-                        if (taskCounter + 1 < tasksOnMachineCount && critTasks[task.Machine][taskCounter + 1] == task.sucMachineTask)
+                        //if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.sucMachineTask))
+                        if (task.preMachineTask is not null)
                         {
-                            //p(i), i, j --> task = i
+                            //Der Maschinennachfolger muss kritisch und damit der nächste Task auf dieser Maschine sein
+                            if (taskCounter + 1 < tasksOnMachineCount && critTasks[task.Machine][taskCounter + 1] == task.sucMachineTask)
+                            {
+                                //p(i), i, j --> task = i
 
-                            //p(i), j, i
-                            swapOperations.Add([Tuple.Create(task, task.sucMachineTask)]);
+                                //p(i), j, i
+                                swapOperations.Add([Tuple.Create(task, task.sucMachineTask)]);
 
-                            //j, p(i), i
-                            swapOperations.Add([Tuple.Create(task.preMachineTask, task), Tuple.Create(task, task.sucMachineTask)]);
+                                //j, p(i), i
+                                swapOperations.Add([Tuple.Create(task.preMachineTask, task), Tuple.Create(task, task.sucMachineTask)]);
 
-                            //j, i, p(i) --> Wenn diese Nachbarschaft abgespeichert ist, muss s(j), j, i nicht gespeichert werden.
-                            swapOperations.Add([Tuple.Create(task.preMachineTask, task.sucMachineTask)]);
+                                //j, i, p(i) --> Wenn diese Nachbarschaft abgespeichert ist, muss s(j), j, i nicht gespeichert werden.
+                                swapOperations.Add([Tuple.Create(task.preMachineTask, task.sucMachineTask)]);
 
-                            //firstNeighbor = true;
+                                //firstNeighbor = true;
+                            }
                         }
-                    }
 
-                    if (task.sucMachineTask is not null && task.sucMachineTask.sucMachineTask is not null && task.End + task.sucMachineTask.Tail == Makespan) 
-                    {
-                        //Der Maschinenvorgänger muss kritisch und damit der vorherige Task auf dieser Maschine sein
-                        if (taskCounter + 1 < tasksOnMachineCount && critTasks[task.Machine][taskCounter + 1] == task.sucMachineTask)
+                        if (task.sucMachineTask.sucMachineTask is not null)
                         {
-                            //i, j, s(j) --> task = i 
+                            //Der Maschinenvorgänger muss kritisch und damit der vorherige Task auf dieser Maschine sein
+                            if (taskCounter + 1 < tasksOnMachineCount && critTasks[task.Machine][taskCounter + 1] == task.sucMachineTask)
+                            {
+                                //i, j, s(j) --> task = i 
 
-                            //j, i, s(j)
-                            swapOperations.Add([Tuple.Create(task, task.sucMachineTask)]);
+                                //j, i, s(j)
+                                swapOperations.Add([Tuple.Create(task, task.sucMachineTask)]);
 
-                            //j, s(j), i
-                            swapOperations.Add([Tuple.Create(task, task.sucMachineTask), Tuple.Create(task.sucMachineTask, task.sucMachineTask.sucMachineTask)]);
+                                //j, s(j), i
+                                swapOperations.Add([Tuple.Create(task, task.sucMachineTask), Tuple.Create(task.sucMachineTask, task.sucMachineTask.sucMachineTask)]);
 
-                            //s(j), j, i
-                            swapOperations.Add([Tuple.Create(task, task.sucMachineTask.sucMachineTask)]);
-                            
+                                //s(j), j, i
+                                swapOperations.Add([Tuple.Create(task, task.sucMachineTask.sucMachineTask)]);
+
+                            }
                         }
                     }
 
@@ -622,7 +625,7 @@ namespace Projektseminar.Instance
                         }
 
                         //Wenn der nächste kritische Task der Maschinennachfolger des aktuellen Tasks ist füge diesen zum Block hinzu
-                        if (critPair.Value[taskCounter + 1] == critPair.Value[taskCounter].sucMachineTask)
+                        if (critPair.Value[taskCounter + 1] == critPair.Value[taskCounter].sucMachineTask && (critPair.Value[taskCounter].End + critPair.Value[taskCounter].sucMachineTask.Setup + critPair.Value[taskCounter].sucMachineTask.Tail == Makespan))
                         {
                             critBlocks[blockKey].Add(critPair.Value[taskCounter + 1]); //Füge nächsten Task zum Block hinzu
                         }

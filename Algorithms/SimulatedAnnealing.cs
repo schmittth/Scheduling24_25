@@ -124,11 +124,16 @@ namespace Projektseminar.Algorithms
                 for (int i = 0; i < Iterations && Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds; i++)
                 {
                     List<List<Tuple<Instance.Task, Instance.Task>>> neighborhoodOperations = CurrentProblem.GetNeighbors(Neighborhood); //Instanziiere Dict mit Nachbarschaften
-                    List<int> cyclicNeighbors = new List<int>(); //Erstelle Liste mit zkylischen Nachbarschaften
 
                     //Iteriere bis eine nicht-zyklische Lösung gefunden wurde
                     do
                     {
+                        /*if (neighborhoodOperations.Count == 0)
+                        {
+                            neighborhoodOperations = CurrentProblem.GetNeighbors("N1"); //Instanziiere Dict mit Nachbarschaften
+                            Console.WriteLine($"Used N1 in {i}");
+                        }*/
+
                         newProblem = new Problem(CurrentProblem); //Kopiere aktuelles Problem
 
 
@@ -175,6 +180,8 @@ namespace Projektseminar.Algorithms
                 }
                 Temperature = Temperature * CoolingFactor; //Reduziere Temperatur entsprechend des Abkühlungsfaktors
             }
+            BestProblem.ProblemAsDiagramm("G:/SynologyDrive/Studium/Master/2.Semester/Scheduling/Scheduling24_25/Diagramms/Krise.html", true, 0, Stopwatch.Elapsed);
+            List<List<Tuple<Instance.Task, Instance.Task>>> neighborhoodOperations2 = BestProblem.GetNeighbors(Neighborhood);
             return BestProblem;
         }
     }
