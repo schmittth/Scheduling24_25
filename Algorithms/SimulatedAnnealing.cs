@@ -25,88 +25,6 @@ namespace Projektseminar.Algorithms
 
 
         //Methoden
-        /*public List<Tuple<int, int>> GenerateSamples()
-        {
-            int transitionAmount = 10000;
-
-            Queue<Problem> possibleSuccessors = new Queue<Problem>();
-            List<Tuple<int, int>> transitions = new List<Tuple<int, int>>();
-            Problem initProblem = new Problem(CurrentProblem);
-
-            possibleSuccessors.Enqueue(initProblem);
-
-            //Deklariere Variable für neues Problem
-            while (transitions.Count < transitionAmount)
-            {
-                Problem newProblem = possibleSuccessors.Dequeue();
-
-                List<List<Tuple<Instance.Task, Instance.Task>>> neighborhoodOperations = newProblem.GetNeighbors(Neighborhood);
-
-                foreach (var list in neighborhoodOperations)
-                {
-                    Problem copiedProblem = new Problem(newProblem);
-
-                    foreach (var tuple in list)
-                    {
-                        copiedProblem.SwapTasks(tuple.Item1, tuple.Item2);
-                    }
-
-                    if (copiedProblem.CheckCyclicity() == false)
-                    {
-                        continue;
-                    }
-
-                    if (copiedProblem.Makespan < newProblem.Makespan)
-                    {
-                        transitions.Add(Tuple.Create(newProblem.Makespan - copiedProblem.Makespan, neighborhoodOperations.Count));
-                        possibleSuccessors.Enqueue(copiedProblem);
-                    }
-                }
-            }
-            return transitions;
-        }
-
-        public void CalculateTemperature(List<Tuple<int, int>> samples)
-        {
-
-            double desiredAcceptanceProb = 0.8;
-            double tolerance = 1e-5;
-            double p = 1.0;
-
-            double initTemp = 1;
-
-            while (true)
-            {
-                double num = 0;
-                double denom = 0;
-
-                foreach (var transition in samples)
-                {
-                    double weight = 1.0 / transition.Item2;
-                    num += weight * Math.Exp(-transition.Item1 / initTemp);
-                    denom += weight;
-                }
-
-                if (Math.Abs((num / denom) - desiredAcceptanceProb) < tolerance)
-                {
-                    break;
-                }
-
-                initTemp = initTemp * Math.Pow(Math.Log((num / denom)) / Math.Log(desiredAcceptanceProb), 1.0 / p);
-            }
-
-            Temperature = initTemp;
-        }
-
-        /*public void CalculateCoolingFactor(List<Tuple<int, int>> samples)
-        {           
-            List<int> intList = samples.Select(t => t.Item1).ToList();
-
-            double meanE = intList.Average(); // Mittelwert der Energie
-            double meanE2 = intList.Select(e => e * e).Average(); // Mittelwert von E^2
-            return (meanE2 - meanE * meanE) / (Temperature * Temperature);
-        }*/
-
         public Problem DoSimulatedAnnealing(int seedValue)
         {
             //CalculateTemperature(GenerateSamples());
@@ -114,11 +32,9 @@ namespace Projektseminar.Algorithms
             Random random = new Random(seedValue); //Initialisiere Zufallswert
             Problem newProblem; //Deklariere Variable für neues Problem
 
-            while (Temperature > 5 && Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
-            //while (Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
+            while (Temperature > 1 && Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
             {
                 Console.WriteLine($"Current Temperature Simulated Annealing {Temperature} with {Iterations} Iterations planned");
-                //CurrentProblem = BestProblem; //Alternative mit bestem Problem weitermachen
 
                 //Iteriere über die Anzahl an Iterationen
                 for (int i = 0; i < Iterations && Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds; i++)
@@ -128,22 +44,9 @@ namespace Projektseminar.Algorithms
                     //Iteriere bis eine nicht-zyklische Lösung gefunden wurde
                     do
                     {
-                        /*if (neighborhoodOperations.Count == 0)
-                        {
-                            neighborhoodOperations = CurrentProblem.GetNeighbors("N1"); //Instanziiere Dict mit Nachbarschaften
-                            Console.WriteLine($"Used N1 in {i}");
-                        }*/
-
                         newProblem = new Problem(CurrentProblem); //Kopiere aktuelles Problem
 
-
                         int chooseNeighbor = random.Next(0, neighborhoodOperations.Count); //Wähle Zufallszahl zwischen 0 und allen Nachbarschaften
-                        /*if (cyclicNeighbors.Count > 1)
-                        {
-                            string cyclicString = cyclicNeighbors.ToString();
-                            Console.WriteLine($"Invalids: {cyclicString}");
-                        }*/
-
 
                         //Führe alle Tauschschritte aus
                         foreach (var tuple in neighborhoodOperations[chooseNeighbor])
@@ -180,8 +83,6 @@ namespace Projektseminar.Algorithms
                 }
                 Temperature = Temperature * CoolingFactor; //Reduziere Temperatur entsprechend des Abkühlungsfaktors
             }
-            BestProblem.ProblemAsDiagramm("G:/SynologyDrive/Studium/Master/2.Semester/Scheduling/Scheduling24_25/Diagramms/Krise.html", true, 0, Stopwatch.Elapsed);
-            List<List<Tuple<Instance.Task, Instance.Task>>> neighborhoodOperations2 = BestProblem.GetNeighbors(Neighborhood);
             return BestProblem;
         }
     }
