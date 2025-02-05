@@ -451,6 +451,7 @@ namespace Projektseminar.Instance
             makespan = CalculateMakespan(); //Setze den Makespan
         }
 
+        //Methode um Zyklen in Lösungen zu finden
         public bool IsCyclic()
         {
             bool notCyclic = false;
@@ -458,6 +459,7 @@ namespace Projektseminar.Instance
             {
                 foreach (Task task in machine.Schedule)
                 {
+                    //Wenn noch Werte mit -1 vorhanden sind ist die Lösung nicht valide
                     if (task.Tail == -1 || task.Start == -1)
                     {
                         return notCyclic = true;
