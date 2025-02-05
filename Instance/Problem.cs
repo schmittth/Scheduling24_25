@@ -249,7 +249,7 @@ namespace Projektseminar.Instance
         }
 
         //Gebe eine Liste von allen kritischen Tasks in einem Problem zurück.
-        public Dictionary<Machine, List<Task>> GetCriticalTasks(bool reverse  = false)
+        public Dictionary<Machine, List<Task>> GetCriticalTasks()
         {
             Dictionary<Machine, List<Task>> critTasks = new Dictionary<Machine, List<Task>>(); //Initialisiere Dictionary
 
@@ -264,20 +264,15 @@ namespace Projektseminar.Instance
                     Task task = machines[machineId].Schedule[taskOnMachine];
 
                     //Wenn Release und Tail addiert Makespan ergeben ist der Task kritisch
-                    if (reverse)
-                    {
-                        if (task.Start + task.Tail != makespan)
-                        {
-                            critTasks[machines[machineId]].Add(task); //Füge Task dem Dict mit der Maschine als Schlüssel hinzu
-                        }
-                    }
-                    else if (!reverse)
-                    {
+
                         if (task.Start + task.Tail == makespan)
                         {
                             critTasks[machines[machineId]].Add(task); //Füge Task dem Dict mit der Maschine als Schlüssel hinzu
                         }
-                    }
+                }
+                if (critTasks[machines[machineId]].Count == 0)
+                {
+                    critTasks.Remove(machines[machineId]);
                 }
             }
             return critTasks; //Dieses Dictionary ist für jede Maschine sortiert. d.h. Maschine1[0] kommt vor Maschine1[1] usw.
@@ -294,23 +289,23 @@ namespace Projektseminar.Instance
                 foreach (Task task in job.Tasks)
                 {
                     //Erster Task im Job hat keinen Vorgänger im Job
-                    if (task.Id - 1 >= 0)
-                    {
-                        task.preJobTask = job.Tasks[task.Id - 1];
-                    }
-                    else
+                    if (task.Id == 0)
                     {
                         task.preJobTask = null;
                     }
+                    else
+                    {
+                        task.preJobTask = job.Tasks[task.Id - 1];
+                    }
 
                     //Letzer Task im Job hat keinen Nachfolger
-                    if (task.Id + 1 < taskJobCount)
+                    if (task.Id == taskJobCount - 1)
                     {
-                        task.sucJobTask = job.Tasks[task.Id + 1];
+                        task.sucJobTask = null;
                     }
                     else
                     {
-                        task.sucJobTask = null;
+                        task.sucJobTask = job.Tasks[task.Id + 1];
                     }
                 }
             }
@@ -325,23 +320,23 @@ namespace Projektseminar.Instance
                     Task task = machine.Schedule[taskCounter];
 
                     //Erster Task auf der Maschine hat keinen Vorgänger
-                    if (taskCounter - 1 >= 0)
-                    {
-                        task.preMachineTask = machine.Schedule[taskCounter - 1];
-                    }
-                    else
+                    if (taskCounter == 0)
                     {
                         task.preMachineTask = null;
                     }
+                    else
+                    {
+                        task.preMachineTask = machine.Schedule[taskCounter - 1];
+                    }
 
                     //Letzter Task auf der Maschine hat keinen Nachfolger
-                    if (taskCounter + 1 < taskMachineCount)
+                    if (taskCounter + 1 == taskMachineCount)
                     {
-                        task.sucMachineTask = machine.Schedule[taskCounter + 1];
+                        task.sucMachineTask = null;
                     }
                     else
                     {
-                        task.sucMachineTask = null;
+                        task.sucMachineTask = machine.Schedule[taskCounter + 1];
                     }
                     task.Position = taskCounter;
                 }
@@ -500,7 +495,6 @@ namespace Projektseminar.Instance
 
             foreach (KeyValuePair<Machine, List<Task>> critPair in critTasks)
             {
-                //foreach (Task task in critPair.Value)
                 for (int taskCounter = 0; taskCounter < critPair.Value.Count - 1; taskCounter++)
                 {
                     Task task = critPair.Value[taskCounter];
@@ -523,27 +517,25 @@ namespace Projektseminar.Instance
             {
                 int tasksOnMachineCount = critPair.Value.Count;
 
-                //foreach (Task task in critPair.Value)
                 for (int taskCounter = 0; taskCounter < tasksOnMachineCount; taskCounter++)
                 {
                     Task task = critPair.Value[taskCounter];
                     bool firstNeighbor = false;
-
-                    //if (task.preMachineTask is not null && task.sucMachineTask is not null && critTasks[task.Machine].Contains(task.sucMachineTask))
+                   
                     if (task.preMachineTask is not null && task.sucMachineTask is not null)
                     {
                         //Der Maschinennachfolger muss kritisch und damit der nächste Task auf dieser Maschine sein
                         if (taskCounter + 1 < tasksOnMachineCount && critTasks[task.Machine][taskCounter + 1] == task.sucMachineTask)
                         {
-                            //p(i), i, j --> task = i
+                            //p(i), i, j
 
-                            //p(i), j, i
+                            //Neue Anordnung der Tasks p(i), j, i
                             swapOperations.Add(new List<Tuple<Task, Task>> { Tuple.Create(task, task.sucMachineTask) });
 
-                            //j, p(i), i
+                            //Neue Anordnung der Tasks j, p(i), i
                             swapOperations.Add(new List<Tuple<Task, Task>> { Tuple.Create(task.preMachineTask, task), Tuple.Create(task, task.sucMachineTask) });
 
-                            //j, i, p(i) --> Wenn diese Nachbarschaft abgespeichert ist, muss s(j), j, i nicht gespeichert werden.
+                            //Neue Anordnung der Tasks j, i, p(i) --> Wenn diese Nachbarschaft abgespeichert ist, muss s(j), j, i nicht gespeichert werden.
                             swapOperations.Add(new List<Tuple<Task, Task>> { Tuple.Create(task.preMachineTask, task.sucMachineTask) });
                             firstNeighbor = true;
                         }
@@ -551,15 +543,15 @@ namespace Projektseminar.Instance
                         //Der Maschinenvorgänger muss kritisch und damit der vorherige Task auf dieser Maschine sein
                         if (taskCounter - 1 >= tasksOnMachineCount && critTasks[task.Machine][taskCounter - 1] == task.preMachineTask)
                         {
-                            //i, j, s(j) --> task = j 
+                            //i, j, s(j)
 
-                            //j, i, s(j)
+                            //Neue Anordnung der Tasks j, i, s(j)
                             swapOperations.Add(new List<Tuple<Task, Task>> { Tuple.Create(task.preMachineTask, task) });
 
-                            //j, s(j), i
+                            //Neue Anordnung der Tasks j, s(j), i
                             swapOperations.Add(new List<Tuple<Task, Task>> { Tuple.Create(task, task.sucMachineTask), Tuple.Create(task.preMachineTask, task) });
 
-                            //s(j), j, i
+                            //Neue Anordnung der Tasks s(j), j, i
                             if (!firstNeighbor)
                             {
                                 swapOperations.Add(new List<Tuple<Task, Task>> { Tuple.Create(task.preMachineTask, task.sucMachineTask) });
