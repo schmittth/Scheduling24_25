@@ -35,7 +35,7 @@ namespace Projektseminar.Algorithms
                     if (newProblem.Makespan < CurrentProblem.Makespan)
                     {
                         //Bestätige das Problem nicht zyklisch ist
-                        if (newProblem.CheckCyclicity())
+                        if (newProblem.IsCyclic())
                         {
                             CurrentProblem = newProblem;
                         }

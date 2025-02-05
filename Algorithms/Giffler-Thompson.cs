@@ -114,7 +114,6 @@ namespace Projektseminar.Algorithms
                 //Setze alle initialen Werte
                 foreach (Instance.Task task in job.Tasks)
                 {
-                    //task.End = BestProblem.Horizon; ;
                     task.Start = BestProblem.Horizon;
 
                     task.Machine.Load = 0;

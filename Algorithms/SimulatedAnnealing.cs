@@ -56,7 +56,7 @@ namespace Projektseminar.Algorithms
 
                         neighborhoodOperations.RemoveAt(chooseNeighbor);
                     }
-                    while (!newProblem.CheckCyclicity());
+                    while (newProblem.IsCyclic());
 
                     //Wenn neuer Makespan besser als aktueller, ersetze aktuelles Problem
                     if (CurrentProblem.Makespan > newProblem.Makespan)

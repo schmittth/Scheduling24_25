@@ -451,19 +451,20 @@ namespace Projektseminar.Instance
             makespan = CalculateMakespan(); //Setze den Makespan
         }
 
-        public bool CheckCyclicity()
+        public bool IsCyclic()
         {
+            bool notCyclic = false;
             foreach (Machine machine in Machines)
             {
                 foreach (Task task in machine.Schedule)
                 {
                     if (task.Tail == -1 || task.Start == -1)
                     {
-                        return false;
+                        return notCyclic = true;
                     }
                 }
             }
-            return true;
+            return notCyclic;
         }
 
         //Switch-Case Anweisung zur Auswahl der Nachbarschaft
