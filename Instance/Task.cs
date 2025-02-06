@@ -17,7 +17,7 @@ namespace Projektseminar.Instance
             set
             {
                 start = value;
-                end = value + duration;
+                end = value + duration; //Ende wird automatisch kalkuliert
             }
         }
         public int Duration //Duration ist die BEarbeitungszeit des Tasks
@@ -67,7 +67,7 @@ namespace Projektseminar.Instance
 
         //Methoden
 
-        //Vergleichsmethode für IComparable
+        //Vergleichsmethode für IComparable. Wird für OR Solver benötigt.
         public int CompareTo(object obj)
         {
             if (obj == null)

@@ -3,8 +3,8 @@
     internal class Job
     {
         //Eigenschaften
-        public int Id { get; }
-        public int TotalDuration { get; set; } //Kumulierte Laufzeit aller in ihm enthaltenen Tasks
+        public int Id { get; } //Identifikator jedes Jobs
+        public int TotalDuration { get; set; } //Kumulierte Laufzeit aller im job enthaltenen Tasks
 
         public List<Task> Tasks
         {

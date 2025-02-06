@@ -4,25 +4,6 @@ namespace Projektseminar.Standalone
 {
     internal class Dialog
     {
-        public static int ChooseInstanceAmount()
-        {
-            int instanceAmountChoiceInt;
-            string instanceAmountChoiceString;
-
-            do
-            {
-                Console.WriteLine("Choose how many instances you want to test:");
-                instanceAmountChoiceString = Console.ReadLine(); //Lese Instanzauswahl ein
-                if (instanceAmountChoiceString == "")
-                {
-                    instanceAmountChoiceInt = 1;
-                    break;
-                }
-
-            } while (!(int.TryParse(instanceAmountChoiceString, out instanceAmountChoiceInt) && instanceAmountChoiceInt != 0));
-
-            return instanceAmountChoiceInt;
-        }
         public static string ChooseInstance()
         {
             string[] allInstances = Directory.GetFiles("../../../", "*.txt");
@@ -50,7 +31,6 @@ namespace Projektseminar.Standalone
             do
             {
                 Console.WriteLine("Choose an instance to load by writing the number:");
-                Console.WriteLine($"{0}. Random Instance");
 
                 //Gebe alle .txt-files direkt in der Projektmappe aus
                 Console.WriteLine("Single Instances:");
@@ -74,14 +54,10 @@ namespace Projektseminar.Standalone
                 }
                 instanceChoiceString = Console.ReadLine(); //Lese Instanzauswahl ein
             }
-            while (!(int.TryParse(instanceChoiceString, out instanceChoiceInt) && instanceChoiceInt >= 0 && instanceChoiceInt <= allInstances.Length + allSubDirectories.Count + allDirectories.Count)); //Erzwinge Auswahl erneut wenn nicht innerhalb der Grenzen
+            while (!(int.TryParse(instanceChoiceString, out instanceChoiceInt) && instanceChoiceInt > 0 && instanceChoiceInt <= allInstances.Length + allSubDirectories.Count + allDirectories.Count)); //Erzwinge Auswahl erneut wenn nicht innerhalb der Grenzen
 
             //Gebe Dateipfad oder "Random" zurück
-            if (instanceChoiceInt == 0)
-            {
-                instanceChoiceString = "Random";
-            }
-            else if (instanceChoiceInt <= allInstances.Length)
+            if (instanceChoiceInt <= allInstances.Length)
             {
                 instanceChoiceString = allInstances[instanceChoiceInt - 1];
             }
@@ -120,7 +96,7 @@ namespace Projektseminar.Standalone
         public static string ChoosePriorityRule()
         {
             Console.WriteLine("Please choose a Priority rule: ");
-            string[] availableRules = { "LPT", "SPT", "LTT", "STT", "LRPT" };
+            string[] availableRules = { "LPT", "SPT", "LTT", "STT" };
             Console.Write("Currently supported rules: ");
             string ruleChoice;
 
@@ -157,20 +133,6 @@ namespace Projektseminar.Standalone
             return Tuple.Create(coolingFactor, iterations);
         }
 
-        public static int SeedAlgorithm()
-        {
-            Console.WriteLine("Please type your seed value for random Instance: (Default value: \"Random\")");
-            int seedChoiceInt = 0;
-            string seedChoiceString = Console.ReadLine();
-
-            if (!int.TryParse(seedChoiceString, out seedChoiceInt))
-            {
-                Console.WriteLine("Choose default value: \"Random\"");
-            }
-
-            return seedChoiceInt;
-        }
-
         public static string ChooseNeighboorhood()
         {
             Console.WriteLine("Please choose a neighboorhood:");
@@ -199,80 +161,6 @@ namespace Projektseminar.Standalone
             while (!availableNeighboorhoods.Contains(neighboorhoodChoice));
 
             return neighboorhoodChoice;
-        }
-
-        public static Tuple<int, int, int, int, int> ChooseRandomInstanceSize()
-        {
-            int jobsChoiceInt;
-            string jobsChoiceString;
-
-            do
-            {
-                Console.WriteLine("Please provide an amount of jobs:");
-                jobsChoiceString = Console.ReadLine();
-
-            }
-            while (!(int.TryParse(jobsChoiceString, out jobsChoiceInt) && jobsChoiceInt != 0));
-
-            int machineChoiceInt;
-            string machineChoiceString;
-            do
-            {
-                Console.WriteLine("Please provide a number of machines:");
-                machineChoiceString = Console.ReadLine();
-            }
-            while (!(int.TryParse(machineChoiceString, out machineChoiceInt) && machineChoiceInt != 0));
-
-            int minTaskPerJobInt = 1;
-            string minTaskPerJobString;
-            do
-            {
-                Console.WriteLine("Please type the minimal amount of task each job should have for random Instance: (Default value: \"1\")");
-                minTaskPerJobString = Console.ReadLine();
-                if (minTaskPerJobString == "")
-                {
-                    Console.WriteLine("Choose default value: \"1\"");
-                    minTaskPerJobInt = 1;
-                    break;
-                }
-            }
-            while (!(int.TryParse(minTaskPerJobString, out minTaskPerJobInt) && minTaskPerJobInt != 0 && minTaskPerJobInt <= machineChoiceInt));
-
-            int minTaskTimeInt = 10;
-            string minTaskTimeString;
-            do
-            {
-                Console.WriteLine("Please type the minimal task and setup time for random Instance: (Default value: \"10\")");
-                minTaskTimeString = Console.ReadLine();
-                if (minTaskTimeString == "")
-                {
-                    Console.WriteLine("Choose default value: \"10\"");
-                    minTaskTimeInt = 10;
-                    break;
-                }
-            }
-            while (!(int.TryParse(minTaskTimeString, out minTaskTimeInt) && minTaskTimeInt != 0));
-
-            int maxTaskTimeInt = 100;
-            string maxTaskTimeString;
-            do
-            {
-                Console.WriteLine("Please type your maximal task and setup time for random Instance: (Default value: \"99\")");
-                maxTaskTimeString = Console.ReadLine();
-                if (maxTaskTimeString == "")
-                {
-                    Console.WriteLine("Choose default value: \"99\"");
-                    maxTaskTimeInt = 99;
-                    break;
-                }
-                else
-                {
-                    maxTaskTimeInt += 1;
-                }
-            }
-            while (!(int.TryParse(maxTaskTimeString, out maxTaskTimeInt) && maxTaskTimeInt > minTaskTimeInt));
-
-            return Tuple.Create(jobsChoiceInt, machineChoiceInt, minTaskPerJobInt, minTaskTimeInt, maxTaskTimeInt);
         }
     }
 }

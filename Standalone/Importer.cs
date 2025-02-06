@@ -63,54 +63,9 @@ namespace Projektseminar.Standalone
                     }
                 }
             }
-        }
+        }       
 
-        //Generiere eine zufällige Instanz basierend auf den Übergabeparametern
-        public void ImportRandomInstance(int jobAmount, int machineAmount, int minTaskPerJob, int minTaskTime, int maxTaskTime)
-        {
-            Random rand = new Random(); //Initieren neuen Random mit SeedValue
-
-            //Iteriere durch Menge an zu erstellenden Jobs.
-            for (int jobCounter = 0; jobCounter < jobAmount; jobCounter++)
-            {
-                jobs[jobCounter] = new List<Tuple<int, int>>();
-
-                int taskCountPerJob = rand.Next(minTaskPerJob, machineAmount + 1); //Neuer Zufallsinteger zwischen minimaler Anzahl an Jobs und Menge an Maschinen (+ 1 weil Grenze exklusiv)
-                int taskMachine;
-                List<int> invalidMachine = new List<int>(); //Liste an bereits vergegebenen Maschinen, weil pro Job jede Maschine nur einmal
-
-                //Erstelle Anzahl an Tasks basierend auf oberen Grenzen
-                for (int taskCounter = 0; taskCounter < taskCountPerJob; taskCounter++)
-                {
-                    do
-                    {
-                        taskMachine = rand.Next(machineAmount); //Wähle zufällige Maschine zwischen 0 und Anzahl an Maschine (Exklusiv)
-                    }
-                    while (invalidMachine.Contains(taskMachine)); //Wähle neuen Wert wenn bereits vergeben.
-
-                    invalidMachine.Add(taskMachine);
-
-                    //Erstelle Task in Dictionary und mit Dauer zwischen minimal und maximal (Exklusiv)
-                    tasks[Tuple.Create(jobs[jobCounter].Count, jobCounter)] = Tuple.Create(rand.Next(minTaskTime, maxTaskTime + 1), taskMachine);
-                    jobs[jobCounter].Add(Tuple.Create(jobs[jobCounter].Count, jobCounter));
-                }
-
-                //Erstelle Setup mit Anzahl an Jobs x Jobs
-                for (int setupCounter = 0; setupCounter < jobAmount; setupCounter++)
-                {
-                    setups.Add(Tuple.Create(jobCounter, setupCounter), rand.Next(minTaskTime, maxTaskTime + 1));
-                }
-
-            }
-
-            //Erstelle Maschinen basierend auf Menge der Maschinen
-            for (int machineCounter = 0; machineCounter < machineAmount; machineCounter++)
-            {
-                machines.Add(machineCounter);
-            }
-        }
-
-        //Generiere ein Problem-Object aus dem Dictionary
+        //Generiere ein Problem-Object aus den Dictionaries
         public Problem GenerateProblem()
         {
             Problem newInstance = new Problem();

@@ -86,7 +86,6 @@ namespace Projektseminar.ORToolsSolver
                         int start = (int)solver.Value(CurrentProblem.Jobs[job.Id].Tasks[task.Id].StartIntVar);
 
                         task.Start = start;
-                        //task.End = task.Start + task.Duration;
 
                         BestProblem.Machines[task.Machine.Id].Schedule.Add(task);
                     }
@@ -95,7 +94,7 @@ namespace Projektseminar.ORToolsSolver
                 //Sortiere alle Maschinen
                 foreach (var machine in BestProblem.Machines)
                 {
-                    // Sort by starting time.
+                    //Nach Startzeit sortieren
                     machine.Schedule.Sort();
                 }
 

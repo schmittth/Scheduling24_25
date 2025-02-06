@@ -5,10 +5,10 @@ namespace Projektseminar.Standalone
 {
     internal class Observer
     {
-        public Problem CurrentProblem { get; set; }
-        public Problem BestProblem { get; set; }
-        public int MaxRuntimeInSeconds { get; set; }
-        public Stopwatch Stopwatch { get => stopwatch; set => value = stopwatch; }
+        public Problem CurrentProblem { get; set; } //Übergeordnetes aktuelles Problem
+        public Problem BestProblem { get; set; } //Übergeordnetes bestes Problem
+        public int MaxRuntimeInSeconds { get; set; } //Maximale Laufzeit 
+        public Stopwatch Stopwatch { get => stopwatch; set => value = stopwatch; } //Laufzeitmesser
 
         private Stopwatch stopwatch = new Stopwatch();
 
@@ -22,8 +22,8 @@ namespace Projektseminar.Standalone
         {
             stopwatch.Stop();
 
-            int minTaskAmount = 0;
-            int minTaskTime = 0;
+            int minTaskAmount = BestProblem.Horizon;
+            int minTaskTime = BestProblem.Horizon;
             int maxTaskTime = 0;
 
             foreach (Job job in BestProblem.Jobs)

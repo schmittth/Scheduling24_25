@@ -3,22 +3,22 @@
     internal class Machine
     {
         //Eigenschaften
-        public int Id 
+        public int Id  //Identifikator jeder Maschine
         { 
             get => id; 
             set => id = value; 
         }
-        public List<Task> Schedule
+        public List<Task> Schedule //Ablaufplan jeder Maschine
         {
             get => schedule;
             set => schedule = value;
         }
 
-        public int Load { get; set; }
+        public int Load { get; set; } //Load jeder Maschine
 
         //Variablen
         private int id;
-        private List<Projektseminar.Instance.Task> schedule;
+        private List<Task> schedule;
         private int load;
 
         //Konstruktoren
