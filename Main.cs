@@ -120,7 +120,6 @@ namespace Projektseminar
                         break;
                 }
             }
-            stopwatch.Stop();
         }
     }
 }

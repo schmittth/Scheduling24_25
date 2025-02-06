@@ -63,6 +63,7 @@ namespace Projektseminar.Instance
             foreach (Job job in existingProblem.Jobs)
             {
                 Job cloneJob = new Job(job.Id, job.Tasks.Capacity); //Erstelle Job mit vordefinierter Länge für Tasks
+                cloneJob.TotalDuration = job.TotalDuration;
                 jobs.Add(cloneJob);
 
                 //Kopiere alle Tasks in Liste in neu erstellten Job
