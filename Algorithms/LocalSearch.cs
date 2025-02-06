@@ -18,7 +18,9 @@ namespace Projektseminar.Algorithms
             //Iteriere bis keine Verbesserung mehr gefunden oder Zeit abgelaufen
             while (Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
             {
-                List<List<Tuple<Instance.Task, Instance.Task>>> neighborhoodOperations = CurrentProblem.GetNeighbors(Neighborhood); //Erlange alle Nachbarschaften
+                //Erlange alle Nachbarschaften
+                List<List<Tuple<Instance.Task, Instance.Task>>> neighborhoodOperations = CurrentProblem.GetNeighbors(Neighborhood);
+                Problem currentBestProblem = CurrentProblem;
 
                 //Führe alle Nachbarschaften aus
                 foreach (List<Tuple<Instance.Task, Instance.Task>> list in neighborhoodOperations)
@@ -32,24 +34,24 @@ namespace Projektseminar.Algorithms
                     }
 
                     //Wenn Makespan des neuen Problems besser als Makespan des aktuellen Problems wechsle zu neuem Problem 
-                    if (newProblem.Makespan < CurrentProblem.Makespan)
+                    if (newProblem.Makespan < currentBestProblem.Makespan)
                     {
                         //Bestätige das Problem nicht zyklisch ist
-                        if (newProblem.IsCyclic())
+                        if (!newProblem.IsCyclic())
                         {
-                            CurrentProblem = newProblem;
+                            currentBestProblem = newProblem;
                         }
-                    }
+                    } 
                 }
 
                 //Vergleiche ob sich der Makespan verbessert hat
-                if (BestProblem.Makespan <= CurrentProblem.Makespan)
+                if (BestProblem.Makespan <= currentBestProblem.Makespan)
                 {
                     break; //Wenn sich der Makespan nicht verbessert hat, beende die lokale Suche
                 }
                 else
                 {
-                    BestProblem = CurrentProblem; //Wenn sich der Makespan verbessert hat wechsle zu besserem Problem
+                    BestProblem = currentBestProblem; //Wenn sich der Makespan verbessert hat wechsle zu besserem Problem
                 }
             }
 
