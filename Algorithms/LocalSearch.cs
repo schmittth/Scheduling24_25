@@ -18,28 +18,27 @@ namespace Projektseminar.Algorithms
             //Iteriere bis keine Verbesserung mehr gefunden oder Zeit abgelaufen
             while (Stopwatch.Elapsed.TotalSeconds < MaxRuntimeInSeconds)
             {
-                //Erlange alle Nachbarschaften
-                List<List<Tuple<Instance.Task, Instance.Task>>> neighborhoodOperations = CurrentProblem.GetNeighbors(Neighborhood);
-                Problem currentBestProblem = CurrentProblem;
+                List<List<Tuple<Instance.Task, Instance.Task>>> neighborhoodOperations = CurrentProblem.GetNeighbors(Neighborhood); //Erlange alle Nachbarschaften
+                Problem currentBestProblem = CurrentProblem; //Speichere bestes Problem abhängig vom aktuellen Problem, am Anfang aktuelles Problem
 
                 //Führe alle Nachbarschaften aus
-                foreach (List<Tuple<Instance.Task, Instance.Task>> list in neighborhoodOperations)
+                foreach (List<Tuple<Instance.Task, Instance.Task>> swapSteps in neighborhoodOperations)
                 {
                     Problem newProblem = new Problem(CurrentProblem); //Kopiere aktuelles Problem
 
-                    //Führe alle Tauschschritte aus
-                    foreach (Tuple<Instance.Task, Instance.Task> tuple in list)
+                    //Führe alle Tauschschritte auf kopiertem Problem  aus
+                    foreach (Tuple<Instance.Task, Instance.Task> tuple in swapSteps)
                     {
                         newProblem.SwapTasks(tuple.Item1, tuple.Item2);
                     }
 
-                    //Wenn Makespan des neuen Problems besser als Makespan des aktuellen Problems wechsle zu neuem Problem 
+                    //Wenn Makespan des neuen Problems besser als Makespan des aktuell besten Problems wechsle zu neuem Problem 
                     if (newProblem.Makespan < currentBestProblem.Makespan)
                     {
                         //Bestätige das Problem nicht zyklisch ist
                         if (!newProblem.IsCyclic())
                         {
-                            currentBestProblem = newProblem;
+                            currentBestProblem = newProblem; //Setze aktuell bestes Problem auf neues Problem
                         }
                     } 
                 }
@@ -51,6 +50,7 @@ namespace Projektseminar.Algorithms
                 }
                 else
                 {
+                    CurrentProblem = currentBestProblem;
                     BestProblem = currentBestProblem; //Wenn sich der Makespan verbessert hat wechsle zu besserem Problem
                 }
             }
