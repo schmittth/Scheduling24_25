@@ -187,71 +187,7 @@ namespace Projektseminar.Algorithms
                             planTask = task;
                         }
                     }
-                    break;
-                case "LRPT":
-
-                    foreach (Instance.Task task in sameMachineTasks)
-                    {
-                        applicableJobs.Add(task.Job);
-                    }
-
-                    List<Tuple<Job, int>> jobs = new List<Tuple<Job, int>>();
-
-                    foreach (Job job in applicableJobs)
-                    {
-                        int remainingTime = 0;
-                        foreach (var task in job.Tasks)
-                        {
-                            if (task.Start < BestProblem.Horizon)
-                            {
-                                remainingTime = remainingTime + task.Duration;
-                            }
-                        }
-                        jobs.Add(Tuple.Create(job, remainingTime));               
-                    }
-                    Job longestJob = jobs.FirstOrDefault(job => job.Item2 == jobs.Max(j => j.Item2)).Item1;
-
-                    foreach (Instance.Task task in sameMachineTasks)
-                    {
-                        if (task.Job == longestJob)
-                        {
-                            planTask = task;
-                            break;
-                        }
-                    }
-                    break;
-                case "SRPT":
-
-                    foreach (Instance.Task task in sameMachineTasks)
-                    {
-                        applicableJobs.Add(task.Job);
-                    }
-
-                    List<Tuple<Job, int>> jobsSRPT = new List<Tuple<Job, int>>();
-
-                    foreach (Job job in applicableJobs)
-                    {
-                        int remainingTime = 0;
-                        foreach (var task in job.Tasks)
-                        {
-                            if (task.Start < BestProblem.Horizon)
-                            {
-                                remainingTime = remainingTime + task.Duration;
-                            }
-                        }
-                        jobsSRPT.Add(Tuple.Create(job, remainingTime));
-                    }
-                    Job shortestJob = jobsSRPT.FirstOrDefault(job => job.Item2 == jobsSRPT.Min(j => j.Item2)).Item1;
-
-                    foreach (Instance.Task task in sameMachineTasks)
-                    {
-                        if (task.Job == shortestJob)
-                        {
-                            planTask = task;
-                            break;
-                        }
-                    }
-                    break;
+                    break;        
             }
             return planTask;
         }

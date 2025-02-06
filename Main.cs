@@ -1,6 +1,7 @@
 ﻿using Projektseminar.Algorithms;
 using Projektseminar.Instance;
 using Projektseminar.Standalone;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 
 namespace Projektseminar
@@ -12,7 +13,6 @@ namespace Projektseminar
         //Methoden
         public static void Main(string[] args)
         {
-            Stopwatch stopwatch = new Stopwatch(); //Initialisiere eine Stopwatch um die Laufzeit zu messen.
             int unixTimestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds; //Generiere sog. Unix-Timestamp.
             int seedValue = 0; //Initialisiere eine Int der den Random-Seed für diese Ausführung entält. Setze auf 0
 
@@ -43,14 +43,31 @@ namespace Projektseminar
             }
 
             int solverChoice = Dialog.ChooseSolver(); //Lasse Lösungsansatz auswählen
-            string priorityRule = "LTT"; //Initialisiere PriortityRule String
-            string neighborhood = "N3"; //Initialisiere Nachbarschafts String
+            string priorityRule = ""; //Initialisiere PriortityRule String
+            string neighborhood = ""; //Initialisiere Nachbarschafts String
+
+
+            if (solverChoice == 2 || solverChoice == 3)
+            {
+                priorityRule = Dialog.ChoosePriorityRule();
+                neighborhood = Dialog.ChooseNeighboorhood();
+                //priorityRule = "LTT";
+                //neighborhood = "N5";
+            }
+
+            Tuple<double, int> simAnnealParams = null;
+            if (solverChoice == 2)
+            {
+                simAnnealParams = Dialog.ChooseSimAnnealParameters();
+            }
 
             //
             for (int instanceCounter = 0; instanceCounter < instanceAmount; instanceCounter++)
             {
-                Random randSeed = new Random();
-                seedValue = randSeed.Next(0, Int32.MaxValue);
+
+                    Random randSeed = new Random();
+                    seedValue = randSeed.Next(0, Int32.MaxValue);
+                
 
                 Importer importer = new Importer();
                 if (instanceChoice.EndsWith(".txt"))
@@ -81,23 +98,24 @@ namespace Projektseminar
                         problem = googleor.DoORSolver();
 
                         googleor.Log(instanceChoice, seedValue, googleor.Stopwatch.Elapsed, "GoogleOR"); //Logge die Ausführung
-                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\googleOr.html", false, seedValue, googleor.Stopwatch.Elapsed);
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\googleOr.html", true, seedValue, googleor.Stopwatch.Elapsed);
 
                         break;
                     //Solver: Simulated Annealing
                     case 2:
-                        SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, 0.99, 2500, neighborhood);
+                        SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, simAnnealParams.Item1, simAnnealParams.Item2, neighborhood);
                         problem = simAnneal.DoSimulatedAnnealing(seedValue);
 
                         simAnneal.Log(instanceChoice, seedValue, simAnneal.Stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighborhood, gifflerThompson.PriorityRule);
-                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\simAnneal.html", false, seedValue, simAnneal.Stopwatch.Elapsed);
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\simAnneal.html", true, seedValue, simAnneal.Stopwatch.Elapsed);
+                        //problem.ProblemAsFile($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\instanceExport.txt");
                         break;
                     case 3:
                         LocalSearch localSearch = new LocalSearch(problem, neighborhood);
                         problem = localSearch.DoLocalSearch();
 
-                        localSearch.Log(instanceChoice, seedValue, stopwatch.Elapsed, "Local Search", iterations: 0, priorityRule: gifflerThompson.PriorityRule);
-                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\localSearch.html", false, seedValue, localSearch.Stopwatch.Elapsed);
+                        localSearch.Log(instanceChoice, seedValue, localSearch.Stopwatch.Elapsed, "Local Search", iterations: 0, priorityRule: gifflerThompson.PriorityRule);
+                        problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\localSearch.html", true, seedValue, localSearch.Stopwatch.Elapsed);
 
                         break;
                 }
