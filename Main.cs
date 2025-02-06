@@ -24,12 +24,7 @@ namespace Projektseminar
             List<string> subFiles = new List<string>();
             int instanceAmount = 0;
 
-            if (instanceChoice == "Random") //Wenn randomisierte Instanz lasse Instanzgröße auswählen
-            {
-                instanceAmount = Dialog.ChooseInstanceAmount(); //Bestimme wie oft Instanzen generiert werden sollen   
-                randomInstanceSize = Dialog.ChooseRandomInstanceSize(); //Größe der randomisierten Instanz auswählen               
-            }
-            else if (instanceChoice.EndsWith(".txt")) //When ein .txt-File selektiert wird nur eine Instanz geladen
+            if (instanceChoice.EndsWith(".txt")) //When ein .txt-File selektiert wird nur eine Instanz geladen
             {
                 instanceAmount = 1;
             }
@@ -52,7 +47,7 @@ namespace Projektseminar
 
             int solverChoice = Dialog.ChooseSolver(); //Lasse Lösungsansatz auswählen
             string priorityRule = "LTT"; //Initialisiere PriortityRule String
-            string neighborhood = "N3"; //Initialisiere Nachbarschafts String
+            string neighborhood = "N1"; //Initialisiere Nachbarschafts String
 
             //
             for (int instanceCounter = 0; instanceCounter < instanceAmount; instanceCounter++)
@@ -68,11 +63,7 @@ namespace Projektseminar
                 }
 
                 Importer importer = new Importer();
-                if (instanceChoice == "Random")
-                {
-                    importer.ImportRandomInstance(randomInstanceSize.Item1, randomInstanceSize.Item2, randomInstanceSize.Item3, randomInstanceSize.Item4, randomInstanceSize.Item5);
-                }
-                else if (instanceChoice.EndsWith(".txt"))
+                if (instanceChoice.EndsWith(".txt"))
                 {
                     importer.ImportInstanceFromFile(instanceChoice);
                 }
@@ -88,7 +79,7 @@ namespace Projektseminar
                 if (solverChoice == 2 || solverChoice == 3)
                 {
                     problem = gifflerThompson.InitialSolution();
-                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\initialSolution.html", false, seedValue, stopwatch.Elapsed);
+                    problem.ProblemAsDiagramm($@"..\..\..\Diagramms\{unixTimestamp}\instance{instanceCounter}\initialSolution.html", false, seedValue, gifflerThompson.Stopwatch.Elapsed);
                 }
 
                 switch (solverChoice) //Switch-Case Anweisungen basierend auf der Solver-Auswahl.
@@ -106,7 +97,6 @@ namespace Projektseminar
                     //Solver: Simulated Annealing
                     case 2:
                         SimulatedAnnealing simAnneal = new SimulatedAnnealing(problem, 0.99, 2500, neighborhood);
-                        //simAnneal.CalculateTemperature();
                         problem = simAnneal.DoSimulatedAnnealing(seedValue);
 
                         simAnneal.Log(instanceChoice, seedValue, simAnneal.Stopwatch.Elapsed, "Simulated Annealing", simAnneal.CoolingFactor, simAnneal.Iterations, simAnneal.Neighborhood, gifflerThompson.PriorityRule);

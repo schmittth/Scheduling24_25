@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "77jgvvOmrc0=",
+  "dgSpecHash": "37K6y4KzqM8=",
   "success": true,
-  "projectFilePath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Scheduling24_25\\Projektseminar.csproj",
+  "projectFilePath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\anotherSchedRepo\\Projektseminar.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools\\9.11.4210\\google.ortools.9.11.4210.nupkg.sha512",
     "C:\\Users\\Bastian Häußler\\.nuget\\packages\\google.ortools.runtime.linux-arm64\\9.11.4210\\google.ortools.runtime.linux-arm64.9.11.4210.nupkg.sha512",

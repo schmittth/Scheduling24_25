@@ -247,11 +247,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Scheduling24_25\\Projektseminar.csproj",
+      "projectUniqueName": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\anotherSchedRepo\\Projektseminar.csproj",
       "projectName": "Projektseminar",
-      "projectPath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Scheduling24_25\\Projektseminar.csproj",
+      "projectPath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\anotherSchedRepo\\Projektseminar.csproj",
       "packagesPath": "C:\\Users\\Bastian Häußler\\.nuget\\packages\\",
-      "outputPath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Scheduling24_25\\obj\\",
+      "outputPath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\anotherSchedRepo\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Bastian Häußler\\AppData\\Roaming\\NuGet\\NuGet.Config",
