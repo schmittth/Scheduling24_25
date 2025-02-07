@@ -3,23 +3,29 @@
     internal class Machine
     {
         //Eigenschaften
-        public int Id { get; set; }
-        public List<Task> Schedule
+        public int Id  //Identifikator jeder Maschine
+        { 
+            get => id; 
+            set => id = value; 
+        }
+        public List<Task> Schedule //Ablaufplan jeder Maschine
         {
             get => schedule;
             set => schedule = value;
         }
 
-        public int Load { get; set; }
+        public int Load { get; set; } //Load jeder Maschine
 
         //Variablen
-
-        public List<Task> schedule = new List<Task>();
+        private int id;
+        private List<Task> schedule;
+        private int load;
 
         //Konstruktoren
-        public Machine(int id)
+        public Machine(int id, int scheduleLength = 0)
         {
-            Id = id;
+            this.id = id;
+            schedule = new List<Task>(scheduleLength);
         }
     }
 }

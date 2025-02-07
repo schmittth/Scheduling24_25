@@ -11,23 +11,38 @@ namespace Projektseminar.Instance
         public Machine Machine { get; set; } //Machine ist die Maschine auf welcher der Task ausgeführt wird
         public int Setup { get; set; } //Setup ist die dem Task vorgelagerte Setupzeit
         public Job Job { get; set; } //Job ist der Auftrag zu welchem der Task gehört
-        public int Start { get; set; } //Start ist die Zeit wann der Task tatsächlich beginnt
-        public int End { get; set; } //End ist die Zeit wann der Task tatsächlich zu Ende ist
-        public int Duration { get; set; } //Duration ist die BEarbeitungszeit des Tasks
+        public int Start  //Start ist die Zeit wann der Task tatsächlich beginnt
+        {
+            get => start;
+            set
+            {
+                start = value;
+                end = value + duration; //Ende wird automatisch kalkuliert
+            }
+        }
+        public int Duration //Duration ist die BEarbeitungszeit des Tasks
+        { 
+            get => duration; 
+        } 
+        public int End //End ist die Zeit wann der Task tatsächlich zu Ende ist
+        { 
+            get => end ; 
+        }
         public int Position { get; set; } //Position ist die Position dieses Tasks im aktuellen Maschinenplan
-        public int Release { get; set; } //Release ist früheste Startzeit eines Tasks
         public int Tail { get; set; } //Tail ist die Länge des längsten Pfades vom aktuellen Task bis zum Ende.
         public Task preMachineTask { get; set; } //preMachineTask ist der vorhergehende Tasks auf der gleichen Maschine
         public Task sucMachineTask { get; set; } //sucMachineTask ist der nachfolgende Task auf der gleichen Maschine
         public Task preJobTask { get; set; } //preJobTask ist der vorhergehende Task im gleichen Job
         public Task sucJobTask { get; set; } //sucJobTask ist der nachfolgende Task im gleichen Job
-
         public IntVar StartIntVar { get; set; }
         public IntVar EndIntVar { get; set; }
         public IntervalVar DurationIntVar { get; set; }
 
 
         //Variablen
+        private int start;
+        private int duration;
+        private int end;
 
         //Konstruktoren
 
@@ -36,7 +51,7 @@ namespace Projektseminar.Instance
         {
             Machine = machine;
             Job = job;
-            Duration = duration;
+            this.duration = duration;
             Id = id;
         }
 
@@ -46,13 +61,13 @@ namespace Projektseminar.Instance
         }
         public Task(int duration, int id)
         {
-            Duration = duration;
+            this.duration = duration;
             Id = id;
         }
 
         //Methoden
 
-        //Vergleichsmethode für IComparable
+        //Vergleichsmethode für IComparable. Wird für OR Solver benötigt.
         public int CompareTo(object obj)
         {
             if (obj == null)

@@ -11,11 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Dialog.cs" />
-    <Compile Include="Importer.cs" />
-    <Compile Include="LocalSearch\LocalSearch.cs" />
-    <Compile Include="MetaHeuristic\SimulatedAnnealing.cs" />
-    <Compile Include="OpeningHeuristic\Giffler-Thompson.cs" />
+    <Compile Include="Standalone\Dialog.cs" />
+    <Compile Include="Standalone\Importer.cs" />
+    <Compile Include="Algorithms\LocalSearch.cs" />
+    <Compile Include="Algorithms\SimulatedAnnealing.cs" />
+    <Compile Include="Algorithms\Giffler-Thompson.cs" />
     <Compile Include="Instance\Machine.cs" />
     <Compile Include="ORToolsSolver\GoogleOR.cs" />
     <Compile Include="Main.cs" />
@@ -27,7 +27,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Solver.cs" />
+    <Compile Include="Standalone\Observer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.OrTools" Version="9.10.*" />
+    <PackageReference Include="Google.OrTools" Version="9.11.4210" />
   </ItemGroup>
 
 </Project>
