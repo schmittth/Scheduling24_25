@@ -17,30 +17,24 @@ Github-CI:<br>
 
 # Introduction
 
-Sample project explaining how to use Google OR-Tools in a .Net project.
+Scheduling Project of Thomas and Bastian for WiSe 24/25.
 
-# Build
+# IMPORTANT
+- Before running the metaheurisic always close LogFile.csv on your pc.
+- Open Main.cs on a runtime environment of your choice and hit the "Run"- (or Build) Button
+- Choose "Release" in the configuration manager or at least not "Debug", as code will be slower.
 
-```sh
-dotnet build -c Release
-```
+# Final Metaheuristic
 
-# Run
+- Branch FixedParameters / main (contains the same)
+Complete Metaheuristic without any room for change (without changing code), other than choosing the instance. 
 
-```sh
-dotnet run -c Release
-```
+- Dynamic Parameters 
+Metaheuristic with ability to set custom values like IterationMax, CoolingFactor etc.
+Please do not try to pass funky values, but keep it within the limitations of simulated annealing. E.g. CoolingFactor < 1
 
-# Package
-
-```sh
-dotnet pack -c Release
-```
-
-## Testing
-You can test using the provided Dockerfile
-
-```sh
-docker build --tag=dotnet_or-tools .
-```
-
+# Test Branches
+Branches on which testing was performed
+- N(X)CF(X)
+- GifflerThompson
+- LocalSearch

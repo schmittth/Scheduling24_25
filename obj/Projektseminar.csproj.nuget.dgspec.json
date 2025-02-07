@@ -48,7 +48,7 @@
           "dependencies": {
             "Google.OrTools": {
               "target": "Package",
-              "version": "[9.10.*, )"
+              "version": "[9.11.4210, )"
             }
           },
           "imports": [
