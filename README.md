@@ -23,6 +23,7 @@ Scheduling Project of Thomas and Bastian for WiSe 24/25.
 - Before running the metaheurisic always close LogFile.csv on your pc.
 - Open Main.cs on a runtime environment of your choice and hit the "Run"- (or Build) Button
 - Choose "Release" in the configuration manager or at least not "Debug", as code will be slower.
+- The corresponding GANTT-Charts will be written to /<YourLocalDirectory>/Diagramms/<UnixTimestamp> for each tested instance.
 
 # Final Metaheuristic
 
