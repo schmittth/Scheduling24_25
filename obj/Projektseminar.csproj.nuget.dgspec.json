@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\anotherSchedRepo\\Projektseminar.csproj": {}
+    "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Scheduling24_25\\Projektseminar.csproj": {}
   },
   "projects": {
-    "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\anotherSchedRepo\\Projektseminar.csproj": {
+    "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Scheduling24_25\\Projektseminar.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\anotherSchedRepo\\Projektseminar.csproj",
+        "projectUniqueName": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Scheduling24_25\\Projektseminar.csproj",
         "projectName": "Projektseminar",
-        "projectPath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\anotherSchedRepo\\Projektseminar.csproj",
+        "projectPath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Scheduling24_25\\Projektseminar.csproj",
         "packagesPath": "C:\\Users\\Bastian Häußler\\.nuget\\packages\\",
-        "outputPath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\anotherSchedRepo\\obj\\",
+        "outputPath": "G:\\SynologyDrive\\Studium\\Master\\2.Semester\\Scheduling\\Scheduling24_25\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Bastian Häußler\\AppData\\Roaming\\NuGet\\NuGet.Config",
